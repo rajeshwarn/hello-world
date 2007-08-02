@@ -4,11 +4,19 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{20E67E9F-1F0A-40D9-9B47-A56DFBF88B57}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{8C260F85-65AC-40A6-85BF-D89C49052F64}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>iPhoneGUI</RootNamespace>
-    <AssemblyName>iPhoneGUI</AssemblyName>
+    <RootNamespace>Manzana</RootNamespace>
+    <AssemblyName>Manzana</AssemblyName>
+    <SignManifests>false</SignManifests>
+    <ManifestCertificateThumbprint>BE9747EAB7AA175E4B39ADFC2CF977A232EADD6B</ManifestCertificateThumbprint>
+    <ManifestKeyFile>iPhone.Net_TemporaryKey.pfx</ManifestKeyFile>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -18,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Manzana.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,42 +39,21 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="iPhoneList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="iPhoneList.Designer.cs">
-      <DependentUpon>iPhoneList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="ConnectEventHandler.cs" />
+    <Compile Include="iPhone.cs" />
+    <Compile Include="iPhoneFile.cs" />
+    <Compile Include="MobileDevice.cs" />
+    <Compile Include="ConnectEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="iPhoneList.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>iPhoneList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
+    <Compile Include="DeviceNotificationEventArgs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="iTunesMobileDevice.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
