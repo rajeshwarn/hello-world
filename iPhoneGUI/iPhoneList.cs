@@ -23,19 +23,19 @@ namespace iPhoneGUI
         }
 
         public void FillTree() {
-            //			tree.BeginUpdate();
             treeFolders.Nodes.Clear();
-            treeFolders.Nodes.Add(AddNodes("/", "/", -1));
-            //			tree.EndUpdate();
+            FillTree("/","/",-1);
+        }
+
+        public void FillTree(String path, String name, Int32 levels) {
+            treeFolders.Nodes.Add(AddNodes(path, name, levels));
             treeFolders.Nodes[0].Expand();
             treeFolders.SelectedNode = treeFolders.Nodes[0];
-            textStatus.Text = "Connected to iPhone";
         }
 
         public void EmptyTree() {
             treeFolders.Nodes.Clear();
             listFiles.Items.Clear();
-            textStatus.Text = "No iPhone connected";
         }
 
         public TreeNode AddNodes(string path, string name) {
@@ -177,6 +177,90 @@ namespace iPhoneGUI
 
         private void treeFolders_MouseClick(object sender, MouseEventArgs e) {
 
+        }
+
+        private void listFiles_DragEnter(object sender, DragEventArgs e) {
+            if (((e.AllowedEffect & DragDropEffects.Copy) != 0) && (e.Data.GetDataPresent("FilenameW"))) {
+                e.Effect = DragDropEffects.Copy;
+            }
+
+        }
+
+        private void listFiles_DragDrop(object sender, DragEventArgs e) {
+            string target_path;
+            int len;
+            byte[] buffer;
+
+            target_path = treeFolders.SelectedNode.FullPath.Replace("\\", "/");
+            if (target_path == "") {
+                target_path = "/";
+            }
+
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+
+            // FIXME - this won't handle dragged directories
+            buffer = new byte[1024];
+            for (int i = 0; i < files.Length; i++) {
+                using (Stream source = File.OpenRead(files[i])) {
+                    using (Stream target = iPhoneFile.OpenWrite(phone, target_path + "/" + Path.GetFileName(files[i]))) {
+                        while ((len = source.Read(buffer, 0, buffer.Length)) > 0) {
+                            target.Write(buffer, 0, len);
+                        }
+                    }
+                }
+            }
+            // Force a refresh
+            tree_AfterSelect(sender, new TreeViewEventArgs(treeFolders.SelectedNode));
+        }
+
+        void tree_AfterSelect(object sender, TreeViewEventArgs e) {
+            string path;
+            string[] phone_files;
+            ListViewItem item;
+            bool dir;
+            int size;
+
+            path = e.Node.FullPath.Substring(1);
+
+            phone_files = phone.GetFiles(path);
+            listFiles.Items.Clear();
+            for (int i = 0; i < phone_files.Length; i++) {
+                item = new ListViewItem(phone_files[i]);
+                phone.GetFileInfo(path + "/" + phone_files[i], out size, out dir);
+                item.SubItems.Add(String.Format("{0}", size.ToString("#,##0")));
+                listFiles.Items.Add(item);
+            }
+        }
+        protected string[] GetFilenames(DragEventArgs e) {
+            string[] ret;
+
+            Array data = ((IDataObject)e.Data).GetData("FileNameW") as Array;
+            if (data == null) {
+                return null;
+            }
+
+            ret = new string[data.Length];
+
+            for (int i = 0; i < data.Length; i++) {
+                if ((data.GetValue(i) is String)) {
+                    ret[i] = ((string[])data)[i];
+                }
+            }
+            return ret;
+        }
+
+        private void treeFolders_BeforeExpand(object sender, TreeViewCancelEventArgs e) {
+            //AddNodes(e.Node.FullPath.Replace("\\", "/"), e.Node.Name, 2);
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e) {
+            ListView.SelectedListViewItemCollection selectedItems;
+            String path = treeFolders.SelectedNode.FullPath.Replace("\\","/");
+            selectedItems = listFiles.SelectedItems;
+            foreach (ListViewItem item in selectedItems ) {
+                Console.WriteLine(path + ", " + item.Name);
+            }
         }
     }
 }

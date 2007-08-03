@@ -269,9 +269,7 @@ namespace Manzana
 			MobileDevice.AFCDirectoryRead(hAFC, hAFCDir, ref buffer);
 
 			while (buffer!=null) {
-				if (!IsDirectory(FullPath(full_path, buffer))) {
-					paths.Add(buffer);
-				}
+				paths.Add(buffer);
 				MobileDevice.AFCDirectoryRead(hAFC, hAFCDir, ref buffer);
 			}
 			MobileDevice.AFCDirectoryClose(hAFC, hAFCDir);
