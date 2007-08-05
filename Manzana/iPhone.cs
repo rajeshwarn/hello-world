@@ -493,11 +493,23 @@ namespace Manzana
 			return is_dir;
 		}
 
-		/// <summary>
-		/// Deletes an empty directory from a specified path.
-		/// </summary>
-		/// <param name="path">The name of the empty directory to remove. This directory must be writable and empty.</param>
-		public void DeleteDirectory(string path) {
+        /// <summary>
+        /// Deletes the device item specified in parameter "fullname".
+        /// </summary>
+        /// <param name="fullName">The full directory path and name of the item to remove.</param>
+        public void DeleteFromDevice(String fullName) {
+            if (IsDirectory(fullName)) {
+                InternalDeleteDirectory(fullName);
+            } else {
+                DeleteFile(fullName);
+            }
+        }
+
+        /// <summary>
+        /// Deletes an empty directory from a specified path.
+        /// </summary>
+        /// <param name="path">The name of the empty directory to remove. This directory must be writable and empty.</param>
+        public void DeleteDirectory(string path) {
 			string full_path;
 
 			full_path = FullPath(current_directory, path);
