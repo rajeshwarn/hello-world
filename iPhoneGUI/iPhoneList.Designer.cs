@@ -26,7 +26,6 @@ namespace iPhoneGUI
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iPhoneList));
             this.menuMain = new System.Windows.Forms.MenuStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnRefresh = new System.Windows.Forms.ToolStripButton();
@@ -67,12 +66,13 @@ namespace iPhoneGUI
             this.menuMain.Size = new System.Drawing.Size(619, 24);
             this.menuMain.TabIndex = 0;
             this.menuMain.Text = "menuStrip1";
+            this.menuMain.Visible = false;
             // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRefresh});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(619, 25);
             this.toolStrip1.TabIndex = 1;
@@ -80,11 +80,11 @@ namespace iPhoneGUI
             // 
             // btnRefresh
             // 
-            this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
+            this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRefresh.Image = global::iPhoneGUI.Properties.Resources.Repeat;
             this.btnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(49, 22);
+            this.btnRefresh.Size = new System.Drawing.Size(23, 22);
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
@@ -93,7 +93,7 @@ namespace iPhoneGUI
             this.panel1.Controls.Add(this.textBox1);
             this.panel1.Controls.Add(this.buttonGo);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 49);
+            this.panel1.Location = new System.Drawing.Point(0, 25);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(5);
             this.panel1.Size = new System.Drawing.Size(619, 32);
@@ -138,7 +138,7 @@ namespace iPhoneGUI
             // 
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 81);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 57);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -148,7 +148,7 @@ namespace iPhoneGUI
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listFiles);
-            this.splitContainer1.Size = new System.Drawing.Size(619, 384);
+            this.splitContainer1.Size = new System.Drawing.Size(619, 408);
             this.splitContainer1.SplitterDistance = 227;
             this.splitContainer1.TabIndex = 5;
             // 
@@ -158,7 +158,7 @@ namespace iPhoneGUI
             this.treeFolders.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeFolders.Location = new System.Drawing.Point(0, 0);
             this.treeFolders.Name = "treeFolders";
-            this.treeFolders.Size = new System.Drawing.Size(223, 380);
+            this.treeFolders.Size = new System.Drawing.Size(223, 404);
             this.treeFolders.TabIndex = 0;
             this.treeFolders.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeFolders_MouseClick);
             this.treeFolders.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeFolders_BeforeExpand);
@@ -195,7 +195,7 @@ namespace iPhoneGUI
             this.listFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listFiles.Location = new System.Drawing.Point(0, 0);
             this.listFiles.Name = "listFiles";
-            this.listFiles.Size = new System.Drawing.Size(384, 380);
+            this.listFiles.Size = new System.Drawing.Size(384, 404);
             this.listFiles.TabIndex = 0;
             this.listFiles.UseCompatibleStateImageBehavior = false;
             this.listFiles.View = System.Windows.Forms.View.Details;
@@ -231,18 +231,21 @@ namespace iPhoneGUI
             // 
             // cutToolStripMenuItem
             // 
+            this.cutToolStripMenuItem.Enabled = false;
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.cutToolStripMenuItem.Text = "C&ut";
             // 
             // copyToolStripMenuItem
             // 
+            this.copyToolStripMenuItem.Enabled = false;
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.copyToolStripMenuItem.Text = "&Copy";
             // 
             // pasteToolStripMenuItem
             // 
+            this.pasteToolStripMenuItem.Enabled = false;
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.pasteToolStripMenuItem.Text = "&Paste";
