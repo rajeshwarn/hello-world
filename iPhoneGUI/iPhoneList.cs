@@ -117,18 +117,50 @@ namespace iPhoneGUI
                 ListViewItem thisFile = new ListViewItem(file);
                 myPhone.GetFileInfoDetails(path + "/" + file, out fileSize, out fileType);
                 thisFile.SubItems.Add(fileSize.ToString());
-                if (fileType.Equals("REG")) thisFile.SubItems.Add("---");
-                else thisFile.SubItems.Add(fileType);
+                if (fileType.Equals("REG")) {
+                    String fileExt = GetFileExt(file);
+                    switch (fileExt) {
+                        case ".plist":
+                            thisFile.ImageIndex = 22;
+                            break;
+                        case ".m4a":
+                            thisFile.ImageIndex = 3;
+                            break;
+                        case ".mp3":
+                            thisFile.ImageIndex = 4;
+                            break;
+                        case "txt":
+                            thisFile.ImageIndex = 17;
+                            break;
+                        default:
+                            thisFile.ImageIndex = 19;
+                            break;
+                    }
+                    thisFile.SubItems.Add("---");
+                } else {
+                    switch (fileType){
+                        case "DIR":
+                            thisFile.ImageIndex = 41;
+                            break;
+                        default:
+                            thisFile.ImageIndex = 43;
+                            break;
+                    }
+                    thisFile.SubItems.Add(fileType);
+                }
                 listFiles.Items.Add(thisFile);
             }
         }
 
-        private void listFiles_MouseClick(object sender, MouseEventArgs e) {
-
-        }
-
-        private void treeFolders_MouseClick(object sender, MouseEventArgs e) {
-
+        private String GetFileExt(String fileName) {
+            Int32 period = fileName.LastIndexOf(".");
+            String retVal;
+            if ( period > 0 ) {
+                retVal = fileName.Substring(period);
+            } else {
+                retVal = "";
+            }
+            return retVal;
         }
 
         private void listFiles_DragEnter(object sender, DragEventArgs e) {
@@ -205,6 +237,7 @@ namespace iPhoneGUI
         }
 
         private void folderToolStripMenuItem_Click(object sender, EventArgs e) {
+            Console.WriteLine(e.ToString());
 
         }
 
@@ -254,7 +287,7 @@ namespace iPhoneGUI
                         CopyItemFromDevice(newPath, itemPath, items[i]);
                     }
                 } else {
-                    String sourcePath = fromPath + "/"  item;
+                    String sourcePath = fromPath + "/" + item;
                     String destPath = savePath + "\\" + item;
                     if ( item.Contains(".plist") ) {
                         DecodePlist(sourcePath, destPath);
@@ -272,12 +305,31 @@ namespace iPhoneGUI
             }
         }
 
+        private void DecodePlist(String inFile, String outFile) {
+            Byte[] fileBuffer = new Byte[1024];
+            Int32 length;
+            using ( Stream inStream = iPhoneFile.OpenRead(myPhone, inFile) ) {
+                using ( Stream outStream = File.OpenWrite(outFile) ) {
+                    while ( (length = inStream.Read(fileBuffer, 0, fileBuffer.Length)) > 0 ) {
+                        outStream.Write(fileBuffer, 0, length);
+                    }
+                }
+            }
+        }
+
         private void createFolderToolStripMenuItem_Click(object sender, EventArgs e) {
             CreateFolder();
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e) {
             CopyItemsFromDevice();
+        }
+        private void listFiles_MouseClick(object sender, MouseEventArgs e) {
+
+        }
+
+        private void treeFolders_MouseClick(object sender, MouseEventArgs e) {
+
         }
     }
 }

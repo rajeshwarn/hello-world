@@ -74,9 +74,6 @@ namespace iPhoneGUI
             // 
             // menuMain
             // 
-            this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.helpToolStripMenuItem});
             this.menuMain.Location = new System.Drawing.Point(0, 0);
             this.menuMain.Name = "menuMain";
             this.menuMain.Size = new System.Drawing.Size(619, 24);
@@ -162,8 +159,6 @@ namespace iPhoneGUI
             // 
             // toolStrip1
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnRefresh});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(619, 25);
@@ -173,7 +168,7 @@ namespace iPhoneGUI
             // btnRefresh
             // 
             this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRefresh.Image = global::iPhoneGUI.Properties.Resources.Repeat;
+            this.btnRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
             this.btnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(23, 22);
@@ -236,8 +231,6 @@ namespace iPhoneGUI
             // 
             // statusBar
             // 
-            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.textStatus});
             this.statusBar.Location = new System.Drawing.Point(0, 465);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(619, 22);
