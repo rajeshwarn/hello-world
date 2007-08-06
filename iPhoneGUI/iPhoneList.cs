@@ -254,10 +254,15 @@ namespace iPhoneGUI
                         CopyItemFromDevice(newPath, itemPath, items[i]);
                     }
                 } else {
+                    String sourcePath = fromPath + "/"  item;
+                    String destPath = savePath + "\\" + item;
+                    if ( item.Contains(".plist") ) {
+                        DecodePlist(sourcePath, destPath);
+                    }
                     Byte[] fileBuffer = new Byte[1024];
                     Int32 length;
-                    using ( Stream inStream = iPhoneFile.OpenRead(myPhone, fromPath + "/" + item) ) {
-                        using ( Stream outStream = File.OpenWrite(savePath + "\\" + item) ) {
+                    using ( Stream inStream = iPhoneFile.OpenRead(myPhone, sourcePath) ) {
+                        using ( Stream outStream = File.OpenWrite(destPath) ) {
                             while ( (length = inStream.Read(fileBuffer, 0, fileBuffer.Length)) > 0 ) {
                                 outStream.Write(fileBuffer, 0, length);
                             }
