@@ -18,8 +18,8 @@ namespace iPhoneGUI
 
         public iPhoneList() {
             InitializeComponent();
-            myPhone.Connect += new ConnectEventHandler(Connecting);
-            myPhone.Disconnect += new ConnectEventHandler(Connecting);
+            //myPhone.Connect += new ConnectEventHandler(Connecting);
+            //myPhone.Disconnect += new ConnectEventHandler(Connecting);
         }
 
         public void FillTree() {
@@ -48,7 +48,6 @@ namespace iPhoneGUI
 
         public void AddNodes(TreeNode thisNode, String path, Int32 getLevels) {
             String[] dirNames;
-
             textStatus.Text = "Adding folder " + thisNode.Text;
             dirNames = myPhone.GetDirectories(path);
             if (dirNames.Length > 0 && getLevels != 0) {
@@ -59,68 +58,6 @@ namespace iPhoneGUI
                     thisNode.Nodes.Add(childNode);
                     Application.DoEvents();
                 }
-            }
-
-        }
-
-        public void Connecting(object sender, ConnectEventArgs args) {
-            // Check what's in root
-            try {
-
-                myPhone.GetFiles("/");
-
-                // Make sure we have the directory before we set it
-                if (myPhone.Exists("/Library/Ringtones")) {
-                    string[] listFiles;
-
-                    // Set the dir
-                    myPhone.SetCurrentDirectory("/Library/Ringtones");
-
-                    // Get a file listing
-                    Console.WriteLine("Files in {0}:", myPhone.GetCurrentDirectory());
-                    listFiles = myPhone.GetFiles(".");
-                    for (int i = 0; i < listFiles.Length; i++) {
-                        Console.WriteLine(listFiles[i]);
-                    }
-
-                    // Get a directory listing
-                    Console.WriteLine("Directories in {0}/..:", myPhone.GetCurrentDirectory());
-                    listFiles = myPhone.GetDirectories("..");
-                    for (int i = 0; i < listFiles.Length; i++) {
-                        Console.WriteLine(listFiles[i]);
-                    }
-
-                    iPhoneFile file;
-                    // Reading a file on the phone
-                    Console.WriteLine("Contents of file /etc/fstab:");
-                    file = iPhoneFile.Open(myPhone, "/etc/fstab", FileAccess.Read);
-                    file.Seek(5, SeekOrigin.Begin);
-                    Console.WriteLine("Current stream position: {0}", file.Position);
-                    using (StreamReader reader = new StreamReader(file)) {
-                        Console.WriteLine(reader.ReadLine());
-                        Console.WriteLine("Current stream position: {0}", file.Position);
-                        Console.WriteLine(reader.ReadToEnd());
-                    }
-
-                    // Write a new file to the phone
-                    Console.WriteLine("Writing file /testme");
-                    file = iPhoneFile.Open(myPhone, "/testme", FileAccess.Write);
-                    using (StreamWriter writer = new StreamWriter(file)) {
-                        writer.WriteLine("Hello world!");
-                        Console.WriteLine("Position after first line write: {0}", file.Position);
-                        writer.WriteLine("Thats all folks.");
-                        file.SetLength(10);
-                    }
-
-                    Console.WriteLine("Contents of file /testme:");
-                    file = iPhoneFile.Open(myPhone, "/testme", FileAccess.Read);
-                    using (StreamReader reader = new StreamReader(file)) {
-                        Console.WriteLine(reader.ReadToEnd());
-                    }
-                }
-            }
-            catch (Exception err) {
-                Console.WriteLine("Not Connected");
             }
         }
 
@@ -242,6 +179,10 @@ namespace iPhoneGUI
             }
             FillTree(thisNode, path);
             ShowFiles(path);
+        }
+
+        private void deleteToolStripMenuItem2_Click(object sender, EventArgs e) {
+            deleteToolStripMenuItem_Click(sender, e);
         }
     }
 }
