@@ -25,7 +25,7 @@ namespace iPhoneGUI
 
         public void FillTree() {
             treeFolders.Nodes.Clear();
-            treeFolders.Nodes.Add("/var/empty","/var/empty");
+            treeFolders.Nodes.Add("/","/");
             FillTree(treeFolders.TopNode, treeFolders.TopNode.Text);
         }
 
@@ -44,19 +44,28 @@ namespace iPhoneGUI
         }
 
         public void AddNodes(TreeNode thisNode, String path) {
-            AddNodes(thisNode, path, -1);
+            AddNodes(thisNode, path, 1);
         }
 
         public void AddNodes(TreeNode thisNode, String path, Int32 getLevels) {
             String[] dirNames;
             textStatus.Text = "Adding folder " + thisNode.Text;
             dirNames = myPhone.GetDirectories(path);
-            if (dirNames.Length > 0 && getLevels != 0) {
-                for (int i = 0; i < dirNames.Length; i++) {
-                    TreeNode childNode = new TreeNode(dirNames[i]);
-                    childNode.Name = path + "/" + dirNames[i];
-                    AddNodes(childNode, path + "/" + dirNames[i], (getLevels - 1));
+            if (dirNames.Length > 0){
+                if ( getLevels != 0 ) {
+                    for ( int i = 0; i < dirNames.Length; i++ ) {
+                        TreeNode childNode = new TreeNode(dirNames[i]);
+                        childNode.Name = path + "/" + dirNames[i];
+                        AddNodes(childNode, path + "/" + dirNames[i], (getLevels - 1));
+                        thisNode.Nodes.Add(childNode);
+                        thisNode.Tag = "loaded";
+                        Application.DoEvents();
+                    }
+                } else {
+                    TreeNode childNode = new TreeNode(".");
+                    childNode.Name = path + "/.";
                     thisNode.Nodes.Add(childNode);
+                    thisNode.Tag = "notloaded";
                     Application.DoEvents();
                 }
             }
@@ -65,7 +74,7 @@ namespace iPhoneGUI
         private void timerMain_Tick(object sender, EventArgs e)
         {
             if (!connecting && !connected){
-                if (myPhone.IsConnected) {
+                if ( myPhone.IsConnected ) {
                     connecting = true;
                     //Connecting(myPhone, null);
                     this.treeFolders.Nodes.Clear();
@@ -73,6 +82,11 @@ namespace iPhoneGUI
                     this.Show();
                     connecting = false;
                     connected = true;
+                } else {
+                    if ( connected ) {
+                        MessageBox.Show("iPhone Disconnected.");
+                        this.treeFolders.Nodes.Clear();
+                    }
                 }
             }
         }
@@ -164,9 +178,9 @@ namespace iPhoneGUI
 
 
         private void treeFolders_BeforeExpand(object sender, TreeViewCancelEventArgs e) {
-            //foreach (TreeNode childNode in e.Node.Nodes) {
-            //    FillTree(childNode, childNode.FullPath.Replace("\\", "/"));
-            //}
+            if ( e.Node.Tag.ToString() == "notloaded" ) {
+                FillTree(e.Node, e.Node.FullPath.Replace("\\", "/"));
+            }
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -220,6 +234,7 @@ namespace iPhoneGUI
                 DialogResult result = saveTo.ShowDialog();
                 if (result == DialogResult.OK) {
                     String savePath = saveTo.SelectedPath;
+                    lastSaveFolder = savePath;
                     String fromPath = treeFolders.SelectedNode.FullPath.Replace("\\", "/");
                     foreach (ListViewItem item in listFiles.SelectedItems) {
                         CopyItemFromDevice(savePath, fromPath, item.Text);
@@ -230,20 +245,22 @@ namespace iPhoneGUI
 
         private void CopyItemFromDevice(String savePath, String fromPath, String item){
             String itemPath = fromPath + "/" + item;
-            if (myPhone.IsDirectory(itemPath)){
-                String newPath = savePath + "\\" + item;
-                Directory.CreateDirectory(newPath);
-                String[] items = myPhone.GetFiles(itemPath);
-                for (Int32 i = 0; i < items.Length; i++){
-                    CopyItemFromDevice(newPath, itemPath, items[i]);
-                }
-            } else {
-                Byte[] fileBuffer = new Byte[1024];
-                Int32 length;
-                using (Stream inStream = iPhoneFile.OpenRead(myPhone, fromPath + "/" + item)){
-                    using (Stream outStream = File.OpenWrite(savePath + "\\" + item)) {
-                        while ((length = inStream.Read(fileBuffer, 0, fileBuffer.Length)) > 0) {
-                            outStream.Write(fileBuffer, 0, length);
+            if (!item.Equals(".") && !item.Equals("..")){
+                if ( myPhone.IsDirectory(itemPath) ) {
+                    String newPath = savePath + "\\" + item;
+                    Directory.CreateDirectory(newPath);
+                    String[] items = myPhone.GetFiles(itemPath);
+                    for ( Int32 i = 0; i < items.Length; i++ ) {
+                        CopyItemFromDevice(newPath, itemPath, items[i]);
+                    }
+                } else {
+                    Byte[] fileBuffer = new Byte[1024];
+                    Int32 length;
+                    using ( Stream inStream = iPhoneFile.OpenRead(myPhone, fromPath + "/" + item) ) {
+                        using ( Stream outStream = File.OpenWrite(savePath + "\\" + item) ) {
+                            while ( (length = inStream.Read(fileBuffer, 0, fileBuffer.Length)) > 0 ) {
+                                outStream.Write(fileBuffer, 0, length);
+                            }
                         }
                     }
                 }
