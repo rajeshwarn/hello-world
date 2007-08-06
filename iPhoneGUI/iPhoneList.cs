@@ -15,6 +15,7 @@ namespace iPhoneGUI
         internal iPhone myPhone = new iPhone();
         internal Boolean connected = false;
         internal Boolean connecting = false;
+        internal String lastSaveFolder = "";
 
         public iPhoneList() {
             InitializeComponent();
@@ -24,7 +25,7 @@ namespace iPhoneGUI
 
         public void FillTree() {
             treeFolders.Nodes.Clear();
-            treeFolders.Nodes.Add("/","/");
+            treeFolders.Nodes.Add("/var/empty","/var/empty");
             FillTree(treeFolders.TopNode, treeFolders.TopNode.Text);
         }
 
@@ -66,7 +67,7 @@ namespace iPhoneGUI
             if (!connecting && !connected){
                 if (myPhone.IsConnected) {
                     connecting = true;
-                    Connecting(myPhone, null);
+                    //Connecting(myPhone, null);
                     this.treeFolders.Nodes.Clear();
                     FillTree();
                     this.Show();
@@ -120,7 +121,6 @@ namespace iPhoneGUI
             if (((e.AllowedEffect & DragDropEffects.Copy) != 0) && (e.Data.GetDataPresent("FilenameW"))) {
                 e.Effect = DragDropEffects.Copy;
             }
-
         }
 
         private void listFiles_DragDrop(object sender, DragEventArgs e) {
@@ -158,6 +158,7 @@ namespace iPhoneGUI
                         }
                     }
                 }
+                Application.DoEvents();
             }
         }
 
@@ -171,18 +172,90 @@ namespace iPhoneGUI
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e) {
             String path = treeFolders.SelectedNode.FullPath.Replace("\\","/");
             TreeNode thisNode = treeFolders.SelectedNode;
+            Boolean deletedFolder = false;
             if (listFiles.SelectedItems.Count > 0) {
                 foreach (ListViewItem item in listFiles.SelectedItems) {
                     Console.WriteLine(path + ", " + item.Name);
+                    if (myPhone.IsDirectory(path + "/" + item.Text))
+                        deletedFolder = true;
                     myPhone.DeleteFromDevice(path + "/" + item.Text);
                 }
             }
-            FillTree(thisNode, path);
+            if (deletedFolder) 
+                FillTree(thisNode, path);
             ShowFiles(path);
         }
 
         private void deleteToolStripMenuItem2_Click(object sender, EventArgs e) {
             deleteToolStripMenuItem_Click(sender, e);
+        }
+
+        private void folderToolStripMenuItem_Click(object sender, EventArgs e) {
+
+        }
+
+        private void CreateFolder() {
+            timerMain.Enabled = false;
+            TreeNode selectedNode = treeFolders.SelectedNode;
+            String inPath = selectedNode.FullPath.Replace("\\", "/");
+            using (NewFolderForm frmNew = new NewFolderForm()) {
+                frmNew.ActionText = "Folder Name: " + inPath + "/";
+                frmNew.ShowDialog();
+                if (frmNew.DialogResult == DialogResult.OK) {
+                    try {
+                        myPhone.CreateDirectory(inPath + "/" + frmNew.FolderName);
+                        FillTree(selectedNode, inPath);
+                        ShowFiles(inPath);
+                    }
+                    catch (Exception err) {
+                        MessageBox.Show(err.Message);
+                    }
+                }
+            }
+        }
+
+        private void CopyItemsFromDevice() {
+            using (FolderBrowserDialog saveTo = new FolderBrowserDialog()) {
+                saveTo.SelectedPath = lastSaveFolder;
+                DialogResult result = saveTo.ShowDialog();
+                if (result == DialogResult.OK) {
+                    String savePath = saveTo.SelectedPath;
+                    String fromPath = treeFolders.SelectedNode.FullPath.Replace("\\", "/");
+                    foreach (ListViewItem item in listFiles.SelectedItems) {
+                        CopyItemFromDevice(savePath, fromPath, item.Text);
+                    }
+                }
+            }
+        }
+
+        private void CopyItemFromDevice(String savePath, String fromPath, String item){
+            String itemPath = fromPath + "/" + item;
+            if (myPhone.IsDirectory(itemPath)){
+                String newPath = savePath + "\\" + item;
+                Directory.CreateDirectory(newPath);
+                String[] items = myPhone.GetFiles(itemPath);
+                for (Int32 i = 0; i < items.Length; i++){
+                    CopyItemFromDevice(newPath, itemPath, items[i]);
+                }
+            } else {
+                Byte[] fileBuffer = new Byte[1024];
+                Int32 length;
+                using (Stream inStream = iPhoneFile.OpenRead(myPhone, fromPath + "/" + item)){
+                    using (Stream outStream = File.OpenWrite(savePath + "\\" + item)) {
+                        while ((length = inStream.Read(fileBuffer, 0, fileBuffer.Length)) > 0) {
+                            outStream.Write(fileBuffer, 0, length);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void createFolderToolStripMenuItem_Click(object sender, EventArgs e) {
+            CreateFolder();
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e) {
+            CopyItemsFromDevice();
         }
     }
 }
