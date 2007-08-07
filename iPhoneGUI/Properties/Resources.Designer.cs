@@ -88,13 +88,6 @@ namespace iPhoneGUI.Properties {
             }
         }
         
-        internal static System.Drawing.Icon Public {
-            get {
-                object obj = ResourceManager.GetObject("Public", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap Repeat {
             get {
                 object obj = ResourceManager.GetObject("Repeat", resourceCulture);

@@ -72,9 +72,9 @@ namespace iPhoneGUI
             this.fileMenuViewList = new System.Windows.Forms.ToolStripMenuItem();
             this.fileMenuViewDetails = new System.Windows.Forms.ToolStripMenuItem();
             this.imageFilesLarge = new System.Windows.Forms.ImageList(this.components);
-            this.imageFilesSmall = new System.Windows.Forms.ImageList(this.components);
             this.timerMain = new System.Windows.Forms.Timer(this.components);
             this.btnRefresh = new System.Windows.Forms.ToolStripButton();
+            this.imageFilesSmall = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1.SuspendLayout();
             this.panelAction.SuspendLayout();
             this.panelList.Panel1.SuspendLayout();
@@ -172,10 +172,6 @@ namespace iPhoneGUI
             // 
             // toolStrip1
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripRefresh,
-            this.toolStripCopy,
-            this.toolStripDelete});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(619, 25);
@@ -184,7 +180,7 @@ namespace iPhoneGUI
             // 
             // toolStripRefresh
             // 
-            this.toolStripRefresh.Image = global::iPhoneGUI.Properties.Resources.CopyHS;
+            this.toolStripRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
             this.toolStripRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripRefresh.Name = "toolStripRefresh";
             this.toolStripRefresh.Size = new System.Drawing.Size(65, 22);
@@ -480,15 +476,42 @@ namespace iPhoneGUI
             // 
             // imageFilesLarge
             // 
-            this.imageFilesLarge.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageFilesLarge.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageFilesLarge.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageFilesLarge.ImageStream")));
             this.imageFilesLarge.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // imageFilesSmall
-            // 
-            this.imageFilesSmall.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageFilesSmall.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageFilesSmall.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageFilesLarge.Images.SetKeyName(0, "ASX.ico");
+            this.imageFilesLarge.Images.SetKeyName(1, "CDA.ico");
+            this.imageFilesLarge.Images.SetKeyName(2, "M3U.ico");
+            this.imageFilesLarge.Images.SetKeyName(3, "MP3.ico");
+            this.imageFilesLarge.Images.SetKeyName(4, "OGG.ico");
+            this.imageFilesLarge.Images.SetKeyName(5, "WAV.ico");
+            this.imageFilesLarge.Images.SetKeyName(6, "WMA.ico");
+            this.imageFilesLarge.Images.SetKeyName(7, "WMV.ico");
+            this.imageFilesLarge.Images.SetKeyName(8, "ACE.ico");
+            this.imageFilesLarge.Images.SetKeyName(9, "RAR.ico");
+            this.imageFilesLarge.Images.SetKeyName(10, "SIT.ico");
+            this.imageFilesLarge.Images.SetKeyName(11, "ZIP.ico");
+            this.imageFilesLarge.Images.SetKeyName(12, "PSD.ico");
+            this.imageFilesLarge.Images.SetKeyName(13, "BMP.ico");
+            this.imageFilesLarge.Images.SetKeyName(14, "GIF.ico");
+            this.imageFilesLarge.Images.SetKeyName(15, "JPG.ico");
+            this.imageFilesLarge.Images.SetKeyName(16, "PNG.ico");
+            this.imageFilesLarge.Images.SetKeyName(17, "Blank.ico");
+            this.imageFilesLarge.Images.SetKeyName(18, "Document.ico");
+            this.imageFilesLarge.Images.SetKeyName(19, "HTM.ico");
+            this.imageFilesLarge.Images.SetKeyName(20, "HTML.ico");
+            this.imageFilesLarge.Images.SetKeyName(21, "TXT.ico");
+            this.imageFilesLarge.Images.SetKeyName(22, "TXT2.ico");
+            this.imageFilesLarge.Images.SetKeyName(23, "AVI.ico");
+            this.imageFilesLarge.Images.SetKeyName(24, "DivX.ico");
+            this.imageFilesLarge.Images.SetKeyName(25, "MPG.ico");
+            this.imageFilesLarge.Images.SetKeyName(26, "MOV.ico");
+            this.imageFilesLarge.Images.SetKeyName(27, "Open Folder yellow.ico");
+            this.imageFilesLarge.Images.SetKeyName(28, "Closed Folder yellow.ico");
+            this.imageFilesLarge.Images.SetKeyName(29, "Program Files Folder.ico");
+            this.imageFilesLarge.Images.SetKeyName(30, "Control Panel2.ico");
+            this.imageFilesLarge.Images.SetKeyName(31, "My Documents.ico");
+            this.imageFilesLarge.Images.SetKeyName(32, "My Music2.ico");
+            this.imageFilesLarge.Images.SetKeyName(33, "My Pictures4.ico");
             // 
             // timerMain
             // 
@@ -504,6 +527,12 @@ namespace iPhoneGUI
             this.btnRefresh.Size = new System.Drawing.Size(23, 22);
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // imageFilesSmall
+            // 
+            this.imageFilesSmall.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageFilesSmall.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageFilesSmall.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // iPhoneList
             // 
@@ -576,7 +605,6 @@ namespace iPhoneGUI
         private System.Windows.Forms.ToolStripButton toolStripDelete;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ImageList imageFolders;
-        private System.Windows.Forms.ImageList imageFilesSmall;
         private System.Windows.Forms.ImageList imageFilesLarge;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
@@ -584,6 +612,7 @@ namespace iPhoneGUI
         private System.Windows.Forms.ToolStripMenuItem fileMenuViewList;
         private System.Windows.Forms.ToolStripMenuItem fileMenuViewDetails;
         private System.Windows.Forms.ColumnHeader colFileIcon;
+        private System.Windows.Forms.ImageList imageFilesSmall;
     }
 }
 
