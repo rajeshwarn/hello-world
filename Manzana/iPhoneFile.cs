@@ -51,6 +51,7 @@ namespace Manzana
 		private OpenMode	mode;
 		private long		handle;
 		private iPhone		phone;
+        private static String      fileName;
 		#endregion	// Fields;
 
 		#region Constructors
@@ -107,7 +108,7 @@ namespace Manzana
 		/// Gets the length in bytes of the stream . 
 		/// </summary>
 		public override long Length {
-			get { throw new Exception("The method or operation is not implemented."); }
+            get { return phone.FileSize(fileName); }
 		}
 
 		/// <summary>
@@ -257,6 +258,7 @@ namespace Manzana
 			if (ret != 0) {
 				throw new IOException("AFCFileRefOpen failed with error " + ret.ToString());
 			}
+            fileName = path;
 			return new iPhoneFile(phone, handle, mode);
 		}
 
@@ -267,7 +269,14 @@ namespace Manzana
 		/// <param name="path">The file to be opened for reading</param>
 		/// <returns>An unshared <c>iPhoneFile</c> object on the specified path with Write access. </returns>
 		public static iPhoneFile OpenRead(iPhone phone, string path) {
-			return iPhoneFile.Open(phone, path, FileAccess.Read);
+            iPhoneFile retval;
+            try {
+                retval = iPhoneFile.Open(phone, path, FileAccess.Read);
+            }
+            catch ( Exception err ) {
+                throw new IOException(err.Message);
+            }
+            return retval;
 		}
 
 		/// <summary>

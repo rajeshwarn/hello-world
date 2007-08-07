@@ -85,7 +85,41 @@ namespace Manzana
 		}
 		#endregion	// Constructors
 
-		#region Properties
+        #region Enumerators
+        /// <summary>
+        /// Enumerates the unix file types in the file structure.
+        /// <term>ftFile</term>
+        /// <description>Regular file</description>
+        /// <term>ftDir</term>
+        /// <description>Directory</description>
+        /// <term>ftBlockDevice</term>
+        /// <description>Block device</description>
+        /// <term>ftCharDevice</term>
+        /// <description>Character device</description>
+        /// <term>ftFIFO</term>
+        /// <description>FIFO Device</description>
+        /// <term>ftLnk</term>
+        /// <description>File Link</description>
+        /// <term>ftMT</term>
+        /// <description>File type bit mask</description>
+        /// <term>ftSock</term>
+        /// <description>Socket</description>
+        /// </summary>
+        public enum FileTypes
+        {
+            ftFile = 1, 
+            ftDir = 2,
+            ftBlockDevice = 3, 
+            ftCharDevice = 4, 
+            ftFIFO = 5, 
+            ftLink = 6, 
+            ftMT = 7, 
+            ftSock = 8, 
+            ftUnknown = 9
+        }
+        #endregion Enumerators
+
+        #region Properties
 		/// <summary>
 		/// Gets the current activation state of the phone
 		/// </summary>
@@ -284,9 +318,9 @@ namespace Manzana
 		/// <param name="size">Returns the size of the specified file or directory</param>
 		/// <param name="directory">Returns <c>true</c> if the given path describes a directory, false if it is a file.</param>
         public void GetFileInfo(string path, out int size, out Boolean directory){
-            String fileType;
+            FileTypes fileType;
             GetFileInfoDetails(path, out size, out fileType);
-            if (fileType.Equals("DIR"))
+            if (fileType == FileTypes.ftDir)
                 directory = true;
             else
                 directory = false;
@@ -297,20 +331,20 @@ namespace Manzana
 		/// </summary>
 		/// <param name="path">The file or directory for which to retrieve information.</param>
 		/// <param name="size">Returns the size of the specified file or directory</param>
-        /// <param name="filetype">Returns the size of the specified file or directory</param>
-        public void GetFileInfoDetails(string path, out int size, out String filetype) {
+        /// <param name="fileType">Returns the size of the specified file or directory</param>
+        public void GetFileInfoDetails(string path, out int size, out FileTypes fileType) {
 			IntPtr	data;
 			IntPtr	current_data;
 			uint	data_size;
 			uint	offset;
 			string	name;
 			string	value;
-			int		ret;			
+			int		ret;
 
 			data = IntPtr.Zero;
 
 			size = 0;
-            filetype = "---";
+            fileType = FileTypes.ftUnknown;
 			ret = MobileDevice.AFCGetFileInfo(hAFC, path, ref data, out data_size);
 			if (ret != 0) {
 				return;
@@ -339,28 +373,28 @@ namespace Manzana
                         //S_IFSOCK File (#rtl.baseunix.stat record) mode: Socket
                         switch (value) {
                             case "S_IFDIR":
-                                filetype = "DIR";
+                                fileType = FileTypes.ftDir;
                                 break;
                             case "S_IFREG":
-                                filetype = "REG";
+                                fileType = FileTypes.ftFile;
                                 break;
                             case "S_IFBLK":
-                                filetype = "BLK";
+                                fileType = FileTypes.ftBlockDevice;
                                 break;
                             case "S_IFCHR":
-                                filetype = "CHR";
+                                fileType = FileTypes.ftCharDevice;
                                 break;
                             case "S_IFIFO":
-                                filetype = "FFO";
+                                fileType = FileTypes.ftFIFO;
                                 break;
                             case "S_IFLNK":
-                                filetype = "LNK";
+                                fileType = FileTypes.ftLink;
                                 break;
                             case "S_IFMT":
-                                filetype = "MNT";
+                                fileType = FileTypes.ftMT;
                                 break;
                             case "S_IFSOCK":
-                                filetype = "SCK";
+                                fileType = FileTypes.ftSock;
                                 break;
                         }
                         break;
@@ -373,7 +407,7 @@ namespace Manzana
 		/// Returns the size of the specified file or directory.
 		/// </summary>
 		/// <param name="path">The file or directory for which to obtain the size.</param>
-		/// <returns></returns>
+		/// <returns>Returns int.</returns>
 		public int FileSize(string path) {
 			bool is_dir;
 			int size;
@@ -381,6 +415,19 @@ namespace Manzana
 			GetFileInfo(path, out size, out is_dir);
 			return size;
 		}
+
+        /// <summary>
+        /// Returns the file type (enum FileType) of the specified file or directory.
+        /// </summary>
+        /// <param name="path">The file or directory for which to obtain the file type.</param>
+        /// <returns>Returns fileType (enum FileTypes)</returns>
+        public FileTypes FileType(string path) {
+            int size;
+            FileTypes fileType;
+
+            GetFileInfoDetails(path, out size, out fileType);
+            return fileType;
+        }
 
 		/// <summary>
 		/// Creates the directory specified in path
