@@ -27,6 +27,14 @@ namespace iPhoneGUI
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iPhoneList));
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Folders", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Image Files", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Audio Files", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Documents", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Settings Files", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Devices", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("Links", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("Other files", System.Windows.Forms.HorizontalAlignment.Left);
             this.panelList = new System.Windows.Forms.SplitContainer();
             this.treeFolders = new System.Windows.Forms.TreeView();
             this.imageFolders = new System.Windows.Forms.ImageList(this.components);
@@ -35,9 +43,7 @@ namespace iPhoneGUI
             this.colFile = new System.Windows.Forms.ColumnHeader();
             this.colSize = new System.Windows.Forms.ColumnHeader();
             this.colType = new System.Windows.Forms.ColumnHeader();
-            this.colFileIcon = new System.Windows.Forms.ColumnHeader();
             this.imageFilesLarge = new System.Windows.Forms.ImageList(this.components);
-            this.imageFilesSmall = new System.Windows.Forms.ImageList(this.components);
             this.timerMain = new System.Windows.Forms.Timer(this.components);
             this.statusMain = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -71,6 +77,7 @@ namespace iPhoneGUI
             this.toolItemGetFiles = new System.Windows.Forms.ToolStripButton();
             this.toolItemDelete = new System.Windows.Forms.ToolStripButton();
             this.toolItemCancel = new System.Windows.Forms.ToolStripButton();
+            this.imageFilesSmall = new System.Windows.Forms.ImageList(this.components);
             this.panelList.Panel1.SuspendLayout();
             this.panelList.Panel2.SuspendLayout();
             this.panelList.SuspendLayout();
@@ -156,14 +163,48 @@ namespace iPhoneGUI
             // listFiles
             // 
             this.listFiles.AllowDrop = true;
+            this.listFiles.AutoArrange = false;
+            this.listFiles.BackColor = System.Drawing.SystemColors.Window;
             this.listFiles.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colFile,
             this.colSize,
-            this.colType,
-            this.colFileIcon});
+            this.colType});
             this.listFiles.ContextMenuStrip = this.popupFiles;
             this.listFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            listViewGroup1.Header = "Folders";
+            listViewGroup1.Name = "listFilesFolderGroup";
+            listViewGroup1.Tag = "Folder";
+            listViewGroup2.Header = "Image Files";
+            listViewGroup2.Name = "listFilesImageGroup";
+            listViewGroup2.Tag = "Image";
+            listViewGroup3.Header = "Audio Files";
+            listViewGroup3.Name = "listFilesAudioGroup";
+            listViewGroup3.Tag = "Audio";
+            listViewGroup4.Header = "Documents";
+            listViewGroup4.Name = "listFilesDocumentGroup";
+            listViewGroup4.Tag = "Document";
+            listViewGroup5.Header = "Settings Files";
+            listViewGroup5.Name = "listFilesSettingsGroup";
+            listViewGroup5.Tag = "Settings";
+            listViewGroup6.Header = "Devices";
+            listViewGroup6.Name = "listFilesDeviceGroup";
+            listViewGroup6.Tag = "Device";
+            listViewGroup7.Header = "Links";
+            listViewGroup7.Name = "listFilesLinkGroup";
+            listViewGroup7.Tag = "Link";
+            listViewGroup8.Header = "Other files";
+            listViewGroup8.Name = "listFilesOtherGroup";
+            listViewGroup8.Tag = "Other";
+            this.listFiles.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3,
+            listViewGroup4,
+            listViewGroup5,
+            listViewGroup6,
+            listViewGroup7,
+            listViewGroup8});
             this.listFiles.LargeImageList = this.imageFilesLarge;
             this.listFiles.Location = new System.Drawing.Point(0, 0);
             this.listFiles.Name = "listFiles";
@@ -192,57 +233,46 @@ namespace iPhoneGUI
             // colType
             // 
             this.colType.Text = "Type";
-            this.colType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.colType.Width = 115;
-            // 
-            // colFileIcon
-            // 
-            this.colFileIcon.Width = 18;
             // 
             // imageFilesLarge
             // 
             this.imageFilesLarge.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageFilesLarge.ImageStream")));
             this.imageFilesLarge.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageFilesLarge.Images.SetKeyName(0, "ASX.ico");
-            this.imageFilesLarge.Images.SetKeyName(1, "CDA.ico");
-            this.imageFilesLarge.Images.SetKeyName(2, "M3U.ico");
-            this.imageFilesLarge.Images.SetKeyName(3, "MP3.ico");
-            this.imageFilesLarge.Images.SetKeyName(4, "OGG.ico");
-            this.imageFilesLarge.Images.SetKeyName(5, "WAV.ico");
-            this.imageFilesLarge.Images.SetKeyName(6, "WMA.ico");
-            this.imageFilesLarge.Images.SetKeyName(7, "WMV.ico");
-            this.imageFilesLarge.Images.SetKeyName(8, "ACE.ico");
-            this.imageFilesLarge.Images.SetKeyName(9, "RAR.ico");
-            this.imageFilesLarge.Images.SetKeyName(10, "SIT.ico");
-            this.imageFilesLarge.Images.SetKeyName(11, "ZIP.ico");
-            this.imageFilesLarge.Images.SetKeyName(12, "PSD.ico");
-            this.imageFilesLarge.Images.SetKeyName(13, "BMP.ico");
-            this.imageFilesLarge.Images.SetKeyName(14, "GIF.ico");
-            this.imageFilesLarge.Images.SetKeyName(15, "JPG.ico");
-            this.imageFilesLarge.Images.SetKeyName(16, "PNG.ico");
-            this.imageFilesLarge.Images.SetKeyName(17, "Blank.ico");
-            this.imageFilesLarge.Images.SetKeyName(18, "Document.ico");
-            this.imageFilesLarge.Images.SetKeyName(19, "HTM.ico");
-            this.imageFilesLarge.Images.SetKeyName(20, "HTML.ico");
-            this.imageFilesLarge.Images.SetKeyName(21, "TXT.ico");
-            this.imageFilesLarge.Images.SetKeyName(22, "TXT2.ico");
-            this.imageFilesLarge.Images.SetKeyName(23, "AVI.ico");
-            this.imageFilesLarge.Images.SetKeyName(24, "DivX.ico");
-            this.imageFilesLarge.Images.SetKeyName(25, "MPG.ico");
-            this.imageFilesLarge.Images.SetKeyName(26, "MOV.ico");
-            this.imageFilesLarge.Images.SetKeyName(27, "Open Folder yellow.ico");
-            this.imageFilesLarge.Images.SetKeyName(28, "Closed Folder yellow.ico");
-            this.imageFilesLarge.Images.SetKeyName(29, "Program Files Folder.ico");
-            this.imageFilesLarge.Images.SetKeyName(30, "Control Panel2.ico");
-            this.imageFilesLarge.Images.SetKeyName(31, "My Documents.ico");
-            this.imageFilesLarge.Images.SetKeyName(32, "My Music2.ico");
-            this.imageFilesLarge.Images.SetKeyName(33, "My Pictures4.ico");
-            // 
-            // imageFilesSmall
-            // 
-            this.imageFilesSmall.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageFilesSmall.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageFilesSmall.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageFilesLarge.Images.SetKeyName(0, ".aac");
+            this.imageFilesLarge.Images.SetKeyName(1, ".cd");
+            this.imageFilesLarge.Images.SetKeyName(2, ".m3a");
+            this.imageFilesLarge.Images.SetKeyName(3, ".mp3");
+            this.imageFilesLarge.Images.SetKeyName(4, ".ogg");
+            this.imageFilesLarge.Images.SetKeyName(5, ".wav");
+            this.imageFilesLarge.Images.SetKeyName(6, ".wma");
+            this.imageFilesLarge.Images.SetKeyName(7, ".wmv");
+            this.imageFilesLarge.Images.SetKeyName(8, ".ace");
+            this.imageFilesLarge.Images.SetKeyName(9, ".tar");
+            this.imageFilesLarge.Images.SetKeyName(10, ".sit");
+            this.imageFilesLarge.Images.SetKeyName(11, ".zip");
+            this.imageFilesLarge.Images.SetKeyName(12, ".bmp");
+            this.imageFilesLarge.Images.SetKeyName(13, ".gif");
+            this.imageFilesLarge.Images.SetKeyName(14, ".jpg");
+            this.imageFilesLarge.Images.SetKeyName(15, ".png");
+            this.imageFilesLarge.Images.SetKeyName(16, ".psd");
+            this.imageFilesLarge.Images.SetKeyName(17, "blank");
+            this.imageFilesLarge.Images.SetKeyName(18, "document");
+            this.imageFilesLarge.Images.SetKeyName(19, ".htm");
+            this.imageFilesLarge.Images.SetKeyName(20, ".html");
+            this.imageFilesLarge.Images.SetKeyName(21, ".txt");
+            this.imageFilesLarge.Images.SetKeyName(22, ".plist");
+            this.imageFilesLarge.Images.SetKeyName(23, ".avi");
+            this.imageFilesLarge.Images.SetKeyName(24, ".mp4");
+            this.imageFilesLarge.Images.SetKeyName(25, ".mpg");
+            this.imageFilesLarge.Images.SetKeyName(26, ".mov");
+            this.imageFilesLarge.Images.SetKeyName(27, "FolderOpen");
+            this.imageFilesLarge.Images.SetKeyName(28, "FolderClosed");
+            this.imageFilesLarge.Images.SetKeyName(29, "Programs");
+            this.imageFilesLarge.Images.SetKeyName(30, "Settings");
+            this.imageFilesLarge.Images.SetKeyName(31, "Text");
+            this.imageFilesLarge.Images.SetKeyName(32, "Music");
+            this.imageFilesLarge.Images.SetKeyName(33, "Pictures");
             // 
             // timerMain
             // 
@@ -362,7 +392,7 @@ namespace iPhoneGUI
             // 
             // toolsMain
             // 
-            this.toolsMain.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolsMain.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolItemRefresh,
             this.toolItemGetFiles,
@@ -381,7 +411,7 @@ namespace iPhoneGUI
             // 
             // toolsFileView
             // 
-            this.toolsFileView.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolsFileView.Dock = System.Windows.Forms.DockStyle.Right;
             this.toolsFileView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolsFileViewSelect});
             this.toolsFileView.Location = new System.Drawing.Point(3, 0);
@@ -472,26 +502,30 @@ namespace iPhoneGUI
             // toolItemViewSmallIcons
             // 
             this.toolItemViewSmallIcons.Name = "toolItemViewSmallIcons";
-            this.toolItemViewSmallIcons.Size = new System.Drawing.Size(141, 22);
+            this.toolItemViewSmallIcons.Size = new System.Drawing.Size(152, 22);
             this.toolItemViewSmallIcons.Text = "Small Icons";
+            this.toolItemViewSmallIcons.Click += new System.EventHandler(this.toolItemViewSmallIcons_Click);
             // 
             // toolItemViewLargeIcons
             // 
             this.toolItemViewLargeIcons.Name = "toolItemViewLargeIcons";
-            this.toolItemViewLargeIcons.Size = new System.Drawing.Size(141, 22);
+            this.toolItemViewLargeIcons.Size = new System.Drawing.Size(152, 22);
             this.toolItemViewLargeIcons.Text = "Large Icons";
+            this.toolItemViewLargeIcons.Click += new System.EventHandler(this.toolItemViewSmallIcons_Click);
             // 
             // toolItemViewList
             // 
             this.toolItemViewList.Name = "toolItemViewList";
-            this.toolItemViewList.Size = new System.Drawing.Size(141, 22);
+            this.toolItemViewList.Size = new System.Drawing.Size(152, 22);
             this.toolItemViewList.Text = "List";
+            this.toolItemViewList.Click += new System.EventHandler(this.toolItemViewSmallIcons_Click);
             // 
             // toolItemViewDetails
             // 
             this.toolItemViewDetails.Name = "toolItemViewDetails";
-            this.toolItemViewDetails.Size = new System.Drawing.Size(141, 22);
+            this.toolItemViewDetails.Size = new System.Drawing.Size(152, 22);
             this.toolItemViewDetails.Text = "Details";
+            this.toolItemViewDetails.Click += new System.EventHandler(this.toolItemViewSmallIcons_Click);
             // 
             // toolItemRefresh
             // 
@@ -529,6 +563,45 @@ namespace iPhoneGUI
             this.toolItemCancel.Text = "Cancel Copy";
             this.toolItemCancel.Visible = false;
             this.toolItemCancel.Click += new System.EventHandler(this.toolItemCancel_Click);
+            // 
+            // imageFilesSmall
+            // 
+            this.imageFilesSmall.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageFilesSmall.ImageStream")));
+            this.imageFilesSmall.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageFilesSmall.Images.SetKeyName(0, ".aac");
+            this.imageFilesSmall.Images.SetKeyName(1, ".cd");
+            this.imageFilesSmall.Images.SetKeyName(2, ".m3a");
+            this.imageFilesSmall.Images.SetKeyName(3, ".mp3");
+            this.imageFilesSmall.Images.SetKeyName(4, ".ogg");
+            this.imageFilesSmall.Images.SetKeyName(5, ".wav");
+            this.imageFilesSmall.Images.SetKeyName(6, ".wma");
+            this.imageFilesSmall.Images.SetKeyName(7, ".wmv");
+            this.imageFilesSmall.Images.SetKeyName(8, ".ace");
+            this.imageFilesSmall.Images.SetKeyName(9, ".tar");
+            this.imageFilesSmall.Images.SetKeyName(10, ".sit");
+            this.imageFilesSmall.Images.SetKeyName(11, ".zip");
+            this.imageFilesSmall.Images.SetKeyName(12, ".bmp");
+            this.imageFilesSmall.Images.SetKeyName(13, ".gif");
+            this.imageFilesSmall.Images.SetKeyName(14, ".jpg");
+            this.imageFilesSmall.Images.SetKeyName(15, ".png");
+            this.imageFilesSmall.Images.SetKeyName(16, ".psd");
+            this.imageFilesSmall.Images.SetKeyName(17, "blank");
+            this.imageFilesSmall.Images.SetKeyName(18, "document");
+            this.imageFilesSmall.Images.SetKeyName(19, ".htm");
+            this.imageFilesSmall.Images.SetKeyName(20, ".html");
+            this.imageFilesSmall.Images.SetKeyName(21, ".txt");
+            this.imageFilesSmall.Images.SetKeyName(22, ".plist");
+            this.imageFilesSmall.Images.SetKeyName(23, ".avi");
+            this.imageFilesSmall.Images.SetKeyName(24, ".mp4");
+            this.imageFilesSmall.Images.SetKeyName(25, ".mpg");
+            this.imageFilesSmall.Images.SetKeyName(26, ".mov");
+            this.imageFilesSmall.Images.SetKeyName(27, "FolderOpen");
+            this.imageFilesSmall.Images.SetKeyName(28, "FolderClosed");
+            this.imageFilesSmall.Images.SetKeyName(29, "Programs");
+            this.imageFilesSmall.Images.SetKeyName(30, "Settings");
+            this.imageFilesSmall.Images.SetKeyName(31, "Text");
+            this.imageFilesSmall.Images.SetKeyName(32, "Music");
+            this.imageFilesSmall.Images.SetKeyName(33, "Pictures");
             // 
             // iPhoneList
             // 
@@ -579,11 +652,9 @@ namespace iPhoneGUI
         private System.Windows.Forms.ColumnHeader colFile;
         private System.Windows.Forms.ColumnHeader colSize;
         private System.Windows.Forms.ColumnHeader colType;
-        private System.Windows.Forms.ColumnHeader colFileIcon;
         private System.Windows.Forms.SplitContainer splitFilesViewer;
         private System.Windows.Forms.ImageList imageFolders;
         private System.Windows.Forms.ImageList imageFilesLarge;
-        private System.Windows.Forms.ImageList imageFilesSmall;
         private System.Windows.Forms.StatusStrip statusMain;
         private System.Windows.Forms.ToolStripStatusLabel labelStatus;
         private System.Windows.Forms.MenuStrip menuMain;
@@ -616,6 +687,7 @@ namespace iPhoneGUI
         private System.Windows.Forms.ToolStripMenuItem popupTreeRefresh;
         private System.Windows.Forms.ToolStripMenuItem popupTreeCreateFolder;
         private System.Windows.Forms.ToolStripButton toolItemCancel;
+        private System.Windows.Forms.ImageList imageFilesSmall;
     }
 }
 

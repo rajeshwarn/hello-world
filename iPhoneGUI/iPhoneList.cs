@@ -142,69 +142,95 @@ namespace iPhoneGUI
             iPhone.FileTypes fileType;
             foreach ( String file in files ) {
                 ListViewItem thisFile = new ListViewItem(file);
+                thisFile.ImageKey = "blank";
                 myPhone.GetFileInfoDetails(path + "/" + file, out fileSize, out fileType);
                 thisFile.SubItems.Add(fileSize.ToString());
                 if ( fileType == iPhone.FileTypes.ftFile)  {
                     String fileExt = GetFileExt(file);
                     switch ( fileExt ) {
                         case ".plist":
-                            thisFile.ImageIndex = 22;
-                            thisFile.SubItems.Add("Property List");
+                            thisFile.SubItems.Add("Property list");
+                            thisFile.Tag = "Settings";
+                            break;
+                        case ".strings":
+                            thisFile.SubItems.Add("Localization file");
+                            thisFile.Tag = "Settings";
                             break;
                         case ".m4a":
-                            thisFile.ImageIndex = 3;
-                            thisFile.SubItems.Add("Audio File (m4a)");
-                            break;
                         case ".mp3":
-                            thisFile.ImageIndex = 4;
-                            thisFile.SubItems.Add("Audio File (mp3)");
+                        case ".aac":
+                        case ".mid":
+                            thisFile.SubItems.Add("Audio File");
+                            thisFile.Tag = "Audio";
                             break;
                         case "txt":
-                            thisFile.ImageIndex = 17;
                             thisFile.SubItems.Add("Text File");
+                            thisFile.Tag = "Document";
+                            break;
+                        case ".png":
+                        case ".jpg":
+                        case ".gif":
+                        case ".bmp":
+                            thisFile.SubItems.Add("Image file");
+                            thisFile.Tag = "Image";
                             break;
                         default:
-                            thisFile.ImageIndex = 19;
                             thisFile.SubItems.Add("File");
+                            thisFile.Tag = "Other";
                             break;
                     }
+                    thisFile.ImageKey = fileExt;
                 } else {
                     switch ( fileType ) {
                         case iPhone.FileTypes.ftDir:
-                            thisFile.ImageIndex = 41;
-                            thisFile.SubItems.Add("Directory");
+                            thisFile.ImageKey = "FolderClosed";
+                            thisFile.SubItems.Add("Folder");
+                            thisFile.Tag = "Folder";
                             break;
                         case iPhone.FileTypes.ftLink:
-                            thisFile.ImageIndex = 41;
+                            thisFile.ImageKey = "blank";
                             thisFile.SubItems.Add("File Link");
+                            thisFile.Tag = "Link";
                             break;
                         case iPhone.FileTypes.ftBlockDevice:
-                            thisFile.ImageIndex = 41;
+                            thisFile.ImageKey = "blank";
                             thisFile.SubItems.Add("Block Device");
+                            thisFile.Tag = "Device";
                             break;
                         case iPhone.FileTypes.ftCharDevice:
-                            thisFile.ImageIndex = 41;
+                            thisFile.ImageKey = "blank";
                             thisFile.SubItems.Add("Character Device");
+                            thisFile.Tag = "Device";
                             break;
                         case iPhone.FileTypes.ftFIFO:
-                            thisFile.ImageIndex = 41;
+                            thisFile.ImageKey = "blank";
                             thisFile.SubItems.Add("FIFO");
+                            thisFile.Tag = "Device";
                             break;
                         case iPhone.FileTypes.ftMT:
-                            thisFile.ImageIndex = 41;
+                            thisFile.ImageKey = "blank";
                             thisFile.SubItems.Add("File type binary mask");
+                            thisFile.Tag = "Other";
                             break;
                         case iPhone.FileTypes.ftSock:
-                            thisFile.ImageIndex = 41;
+                            thisFile.ImageKey = "blank";
                             thisFile.SubItems.Add("Socket");
+                            thisFile.Tag = "Device";
                             break;
                         default:
-                            thisFile.ImageIndex = 43;
+                            thisFile.ImageKey = "blank";
                             thisFile.SubItems.Add("Unknown");
                             break;
                     }
                 }
-                listFiles.Items.Add(thisFile);
+                thisFile.Group = listFiles.Groups[listFiles.Groups.Count - 1]; // Other Group
+                for ( Int32 i = 0; i < listFiles.Groups.Count; i++ ) {
+                    if ( thisFile.Tag == listFiles.Groups[i].Tag ) {
+                        thisFile.Group = listFiles.Groups[i];
+                        break;
+                    }
+                }
+                listFiles.Items.Add(thisFile );
             }
         }
 
@@ -537,6 +563,17 @@ namespace iPhoneGUI
                 previewTextBox.Visible = true;
                 previewImageBox.Visible = false;
             }
+        }
+
+        private void toolItemViewSmallIcons_Click(object sender, EventArgs e) {
+            if (sender.Equals(toolItemViewSmallIcons))
+                    listFiles.View = View.SmallIcon;
+            else if (sender.Equals(toolItemViewLargeIcons))
+                    listFiles.View = View.LargeIcon;
+            else if (sender.Equals(toolItemViewDetails))
+                    listFiles.View = View.Details;
+            else
+                    listFiles.View = View.List;
         }
     }
 }
