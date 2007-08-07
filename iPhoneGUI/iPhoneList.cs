@@ -226,10 +226,12 @@ namespace iPhoneGUI
             Boolean deletedFolder = false;
             if (listFiles.SelectedItems.Count > 0) {
                 foreach (ListViewItem item in listFiles.SelectedItems) {
-                    Console.WriteLine(path + ", " + item.Name);
-                    if (myPhone.IsDirectory(path + "/" + item.Text))
-                        deletedFolder = true;
-                    myPhone.DeleteFromDevice(path + "/" + item.Text);
+                    if (!item.Name.Equals(".") && !item.Name.Equals("..")) {
+                        Console.WriteLine(path + ", " + item.Name);
+                        if (myPhone.IsDirectory(path + "/" + item.Text))
+                            deletedFolder = true;
+                        myPhone.DeleteFromDevice(path + "/" + item.Text);
+                    }
                 }
             }
             if (deletedFolder) 
@@ -334,6 +336,18 @@ namespace iPhoneGUI
 
         private void menuFilesDelete_Click(object sender, EventArgs e) {
             DeleteSelectedItems();
+        }
+
+        private void fileMenuViewDetails_Click(object sender, EventArgs e) {
+            listFiles.View = View.Details;
+        }
+
+        private void fileMenuViewList_Click(object sender, EventArgs e) {
+            listFiles.View = View.List;
+        }
+
+        private void fileMenuViewIcons_Click(object sender, EventArgs e) {
+            listFiles.View = View.LargeIcon;
         }
     }
 }
