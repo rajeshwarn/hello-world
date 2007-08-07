@@ -18,6 +18,8 @@ namespace iPhoneGUI
         internal String lastSaveFolder = "";
         internal Boolean cancelCopy = false;
 
+        internal enum PreviewTypes {Image, Text, Music, Video, Document, Binary};
+
         public iPhoneList() {
             InitializeComponent();
             SetObjectSizes();
@@ -318,7 +320,6 @@ namespace iPhoneGUI
             Boolean okToCopy = true;
             Boolean copyAll = false;
             String fromPath = "/";
-            ListViewItem[] itemsToCopy;
             if ( listFiles.SelectedItems.Count == 0 ) {
                 if ( treeFolders.SelectedNode == null ) {
                     MessageBox.Show("Nothing Selected to Copy", "iPhoneList Message:");
@@ -373,7 +374,7 @@ namespace iPhoneGUI
                         fileType == iPhone.FileTypes.ftFile ) {
                         labelStatus.Text = "Copying: " + sourcePath;
                         if ( item.Contains(".plist") ) {
-                            DecodePlist(sourcePath, destPath);
+                            DecodePListStream(sourcePath, destPath);
                         }
                         Byte[] fileBuffer = new Byte[1024];
                         Int32 length;
@@ -414,7 +415,7 @@ namespace iPhoneGUI
             return continueCopy;
         }
 
-        private void DecodePlist(String inFile, String outFile) {
+        private void DecodePListStream(String inFile, String outFile) {
             Byte[] fileBuffer = new Byte[1024];
             Int32 length;
             using ( Stream inStream = iPhoneFile.OpenRead(myPhone, inFile) ) {
@@ -423,6 +424,80 @@ namespace iPhoneGUI
                         outStream.Write(fileBuffer, 0, length);
                     }
                 }
+            }
+        }
+
+        private String DecodePListFile(String inFile){
+            return ReadFile(inFile, 1024);
+        }
+
+        private String ReadFile(String inFile, Int32 length) {
+            StringBuilder text = new StringBuilder();
+            Byte[] fileBuffer = new Byte[1024];
+            Int32 maxBytes, bytesRead = 0;
+            Int32 bufferSize;
+            if (length == -1){
+                maxBytes = myPhone.FileSize(inFile);
+            } else {
+                maxBytes = length;
+            }
+            using ( Stream inStream = iPhoneFile.OpenRead(myPhone, inFile) ) {
+                while ( (bufferSize = inStream.Read(fileBuffer, 0, fileBuffer.Length)) > 0 &&
+                    bytesRead <= maxBytes) {
+                    bytesRead += bufferSize;
+                    text.Append(System.Text.Encoding.ASCII.GetString(fileBuffer));
+                }
+            }
+            return String.Join(Environment.NewLine,  text.ToString().Split('\n'));
+        }
+
+        private void PreviewSelectedItem(TreeNode thisNode, ListViewItem item) {
+            String fullName = thisNode.FullPath.Replace("\\","/") + "/" + item.Text;
+            iPhone.FileTypes fileType = myPhone.FileType(fullName);
+            String previewText = null;
+            Image previewImage = null;
+            PreviewTypes previewType = PreviewTypes.Binary;
+            switch ( fileType ) {
+                case iPhone.FileTypes.ftFile:
+                    switch ( GetFileExt(item.Text) ) {
+                        case ".plist":
+                            previewText = DecodePListFile(fullName);
+                            previewType = PreviewTypes.Text;
+                            break;
+                        case ".mp3":
+                            previewImage = imageFilesLarge.Images["MP3.ico"];
+                            previewType = PreviewTypes.Music;
+                            break;
+                        case ".m4a":
+                            previewImage = imageFilesLarge.Images["M3U.ico"];
+                            previewType = PreviewTypes.Music;
+                            break;
+                        case ".aac":
+                            previewImage = imageFilesLarge.Images["ASX.ico"];
+                            previewType = PreviewTypes.Music;
+                            break;
+                        default:
+                            previewText = ReadFile(fullName, 1024);
+                            previewType = PreviewTypes.Text;
+                            break;
+                    }
+                    break;
+                default:
+                    previewImage = imageFilesLarge.Images["document.ico"];
+                    previewType = PreviewTypes.Binary;
+                    break;
+            }
+            switch ( previewType ) {
+                case PreviewTypes.Text:
+                    previewTextBox.Text = previewText;
+                    previewTextBox.Visible = true;
+                    previewImageBox.Visible = false;
+                    break;
+                default:
+                    previewTextBox.Visible = false;
+                    previewImageBox.Visible = true;
+                    previewImageBox.Image = previewImage;
+                    break;
             }
         }
 
@@ -454,5 +529,14 @@ namespace iPhoneGUI
             cancelCopy = true;
         }
 
+        private void listFiles_SelectedIndexChanged(object sender, EventArgs e) {
+            if ( listFiles.SelectedItems.Count == 1 ) {
+                PreviewSelectedItem(treeFolders.SelectedNode, listFiles.SelectedItems[0]);
+            } else {
+                previewTextBox.Text = "";
+                previewTextBox.Visible = true;
+                previewImageBox.Visible = false;
+            }
+        }
     }
 }

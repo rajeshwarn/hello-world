@@ -56,12 +56,12 @@ namespace iPhoneGUI
             this.toolsFileView = new System.Windows.Forms.ToolStrip();
             this.menuMainTools = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMainOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.previewText = new System.Windows.Forms.TextBox();
+            this.previewTextBox = new System.Windows.Forms.TextBox();
             this.popupTreeRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.popupTreeCreateFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.popupFilesGetFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.popupFilesDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.previewImage = new System.Windows.Forms.PictureBox();
+            this.previewImageBox = new System.Windows.Forms.PictureBox();
             this.toolsFileViewSelect = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolItemViewSmallIcons = new System.Windows.Forms.ToolStripMenuItem();
             this.toolItemViewLargeIcons = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,7 +86,7 @@ namespace iPhoneGUI
             this.toolStripContainer1.SuspendLayout();
             this.toolsMain.SuspendLayout();
             this.toolsFileView.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.previewImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
             this.SuspendLayout();
             // 
             // panelList
@@ -146,8 +146,8 @@ namespace iPhoneGUI
             // 
             // splitFilesViewer.Panel2
             // 
-            this.splitFilesViewer.Panel2.Controls.Add(this.previewImage);
-            this.splitFilesViewer.Panel2.Controls.Add(this.previewText);
+            this.splitFilesViewer.Panel2.Controls.Add(this.previewImageBox);
+            this.splitFilesViewer.Panel2.Controls.Add(this.previewTextBox);
             this.splitFilesViewer.Panel2.Padding = new System.Windows.Forms.Padding(2);
             this.splitFilesViewer.Size = new System.Drawing.Size(389, 434);
             this.splitFilesViewer.SplitterDistance = 283;
@@ -176,6 +176,7 @@ namespace iPhoneGUI
             this.listFiles.View = System.Windows.Forms.View.Details;
             this.listFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.listFiles_DragEnter);
             this.listFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.listFiles_DragDrop);
+            this.listFiles.SelectedIndexChanged += new System.EventHandler(this.listFiles_SelectedIndexChanged);
             // 
             // colFile
             // 
@@ -369,7 +370,7 @@ namespace iPhoneGUI
             this.toolItemCancel});
             this.toolsMain.Location = new System.Drawing.Point(57, 0);
             this.toolsMain.Name = "toolsMain";
-            this.toolsMain.Size = new System.Drawing.Size(318, 25);
+            this.toolsMain.Size = new System.Drawing.Size(200, 25);
             this.toolsMain.TabIndex = 0;
             // 
             // toolStripProgressBar1
@@ -402,14 +403,14 @@ namespace iPhoneGUI
             this.menuMainOptions.Size = new System.Drawing.Size(122, 22);
             this.menuMainOptions.Text = "&Options";
             // 
-            // previewText
+            // previewTextBox
             // 
-            this.previewText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.previewText.Location = new System.Drawing.Point(2, 2);
-            this.previewText.Multiline = true;
-            this.previewText.Name = "previewText";
-            this.previewText.Size = new System.Drawing.Size(385, 143);
-            this.previewText.TabIndex = 0;
+            this.previewTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.previewTextBox.Location = new System.Drawing.Point(2, 2);
+            this.previewTextBox.Multiline = true;
+            this.previewTextBox.Name = "previewTextBox";
+            this.previewTextBox.Size = new System.Drawing.Size(385, 143);
+            this.previewTextBox.TabIndex = 0;
             // 
             // popupTreeRefresh
             // 
@@ -444,15 +445,15 @@ namespace iPhoneGUI
             this.popupFilesDelete.ToolTipText = "Delete files from iPhone";
             this.popupFilesDelete.Click += new System.EventHandler(this.popupFilesDelete_Click);
             // 
-            // previewImage
+            // previewImageBox
             // 
-            this.previewImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.previewImage.Location = new System.Drawing.Point(2, 2);
-            this.previewImage.Name = "previewImage";
-            this.previewImage.Size = new System.Drawing.Size(385, 143);
-            this.previewImage.TabIndex = 1;
-            this.previewImage.TabStop = false;
-            this.previewImage.Visible = false;
+            this.previewImageBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.previewImageBox.Location = new System.Drawing.Point(2, 2);
+            this.previewImageBox.Name = "previewImageBox";
+            this.previewImageBox.Size = new System.Drawing.Size(385, 143);
+            this.previewImageBox.TabIndex = 1;
+            this.previewImageBox.TabStop = false;
+            this.previewImageBox.Visible = false;
             // 
             // toolsFileViewSelect
             // 
@@ -563,7 +564,7 @@ namespace iPhoneGUI
             this.toolsMain.PerformLayout();
             this.toolsFileView.ResumeLayout(false);
             this.toolsFileView.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.previewImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -610,8 +611,8 @@ namespace iPhoneGUI
         private System.Windows.Forms.ToolStripMenuItem popupFilesGetFiles;
         private System.Windows.Forms.ToolStripMenuItem popupFilesDelete;
         private System.Windows.Forms.ToolStripMenuItem menuMainOptions;
-        private System.Windows.Forms.TextBox previewText;
-        private System.Windows.Forms.PictureBox previewImage;
+        private System.Windows.Forms.TextBox previewTextBox;
+        private System.Windows.Forms.PictureBox previewImageBox;
         private System.Windows.Forms.ToolStripMenuItem popupTreeRefresh;
         private System.Windows.Forms.ToolStripMenuItem popupTreeCreateFolder;
         private System.Windows.Forms.ToolStripButton toolItemCancel;
