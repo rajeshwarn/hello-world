@@ -60,21 +60,21 @@ namespace iPhoneGUI
             this.colFile = new System.Windows.Forms.ColumnHeader();
             this.colSize = new System.Windows.Forms.ColumnHeader();
             this.colType = new System.Windows.Forms.ColumnHeader();
+            this.colFileIcon = new System.Windows.Forms.ColumnHeader();
             this.menuFiles = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuFilesCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuFilesDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.timerMain = new System.Windows.Forms.Timer(this.components);
-            this.btnRefresh = new System.Windows.Forms.ToolStripButton();
-            this.imageFilesSmall = new System.Windows.Forms.ImageList(this.components);
-            this.imageFilesLarge = new System.Windows.Forms.ImageList(this.components);
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileMenuViewIcons = new System.Windows.Forms.ToolStripMenuItem();
             this.fileMenuViewList = new System.Windows.Forms.ToolStripMenuItem();
             this.fileMenuViewDetails = new System.Windows.Forms.ToolStripMenuItem();
-            this.colFileIcon = new System.Windows.Forms.ColumnHeader();
+            this.imageFilesLarge = new System.Windows.Forms.ImageList(this.components);
+            this.imageFilesSmall = new System.Windows.Forms.ImageList(this.components);
+            this.timerMain = new System.Windows.Forms.Timer(this.components);
+            this.btnRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.panelAction.SuspendLayout();
             this.panelList.Panel1.SuspendLayout();
@@ -184,7 +184,7 @@ namespace iPhoneGUI
             // 
             // toolStripRefresh
             // 
-            this.toolStripRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
+            this.toolStripRefresh.Image = global::iPhoneGUI.Properties.Resources.CopyHS;
             this.toolStripRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripRefresh.Name = "toolStripRefresh";
             this.toolStripRefresh.Size = new System.Drawing.Size(65, 22);
@@ -398,6 +398,10 @@ namespace iPhoneGUI
             this.colType.Text = "Type";
             this.colType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // colFileIcon
+            // 
+            this.colFileIcon.Width = 18;
+            // 
             // menuFiles
             // 
             this.menuFiles.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -438,33 +442,6 @@ namespace iPhoneGUI
             this.menuFilesDelete.Text = "&Delete";
             this.menuFilesDelete.Click += new System.EventHandler(this.menuFilesDelete_Click);
             // 
-            // timerMain
-            // 
-            this.timerMain.Enabled = true;
-            this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
-            // 
-            // btnRefresh
-            // 
-            this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
-            this.btnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(23, 22);
-            this.btnRefresh.Text = "Refresh";
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
-            // 
-            // imageFilesSmall
-            // 
-            this.imageFilesSmall.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageFilesSmall.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageFilesSmall.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // imageFilesLarge
-            // 
-            this.imageFilesLarge.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageFilesLarge.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageFilesLarge.TransparentColor = System.Drawing.Color.Transparent;
-            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -483,28 +460,50 @@ namespace iPhoneGUI
             // fileMenuViewIcons
             // 
             this.fileMenuViewIcons.Name = "fileMenuViewIcons";
-            this.fileMenuViewIcons.Size = new System.Drawing.Size(152, 22);
+            this.fileMenuViewIcons.Size = new System.Drawing.Size(117, 22);
             this.fileMenuViewIcons.Text = "Icons";
             this.fileMenuViewIcons.Click += new System.EventHandler(this.fileMenuViewIcons_Click);
             // 
             // fileMenuViewList
             // 
             this.fileMenuViewList.Name = "fileMenuViewList";
-            this.fileMenuViewList.Size = new System.Drawing.Size(152, 22);
+            this.fileMenuViewList.Size = new System.Drawing.Size(117, 22);
             this.fileMenuViewList.Text = "List";
             this.fileMenuViewList.Click += new System.EventHandler(this.fileMenuViewList_Click);
             // 
             // fileMenuViewDetails
             // 
             this.fileMenuViewDetails.Name = "fileMenuViewDetails";
-            this.fileMenuViewDetails.Size = new System.Drawing.Size(152, 22);
+            this.fileMenuViewDetails.Size = new System.Drawing.Size(117, 22);
             this.fileMenuViewDetails.Text = "Details";
             this.fileMenuViewDetails.Click += new System.EventHandler(this.fileMenuViewDetails_Click);
             // 
-            // colFileIcon
+            // imageFilesLarge
             // 
-            this.colFileIcon.DisplayIndex = 0;
-            this.colFileIcon.Width = 18;
+            this.imageFilesLarge.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageFilesLarge.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageFilesLarge.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // imageFilesSmall
+            // 
+            this.imageFilesSmall.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageFilesSmall.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageFilesSmall.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // timerMain
+            // 
+            this.timerMain.Enabled = true;
+            this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
+            this.btnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(23, 22);
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // iPhoneList
             // 
