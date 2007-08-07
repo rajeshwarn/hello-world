@@ -125,12 +125,6 @@
     <None Include="Resources\OK.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\pda.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\folderopen.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\XPfolder_closed.bmp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +132,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\document.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CopyHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DeleteHS.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

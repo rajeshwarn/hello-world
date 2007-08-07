@@ -215,7 +215,12 @@ namespace iPhoneGUI
             }
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e) {
+         private void folderToolStripMenuItem_Click(object sender, EventArgs e) {
+            Console.WriteLine(e.ToString());
+
+        }
+
+        private void DeleteSelectedItems(){
             String path = treeFolders.SelectedNode.FullPath.Replace("\\","/");
             TreeNode thisNode = treeFolders.SelectedNode;
             Boolean deletedFolder = false;
@@ -230,15 +235,6 @@ namespace iPhoneGUI
             if (deletedFolder) 
                 FillTree(thisNode, path);
             ShowFiles(path);
-        }
-
-        private void deleteToolStripMenuItem2_Click(object sender, EventArgs e) {
-            deleteToolStripMenuItem_Click(sender, e);
-        }
-
-        private void folderToolStripMenuItem_Click(object sender, EventArgs e) {
-            Console.WriteLine(e.ToString());
-
         }
 
         private void CreateFolder() {
@@ -330,6 +326,14 @@ namespace iPhoneGUI
 
         private void treeFolders_MouseClick(object sender, MouseEventArgs e) {
 
+        }
+
+        private void toolStripDelete_Click(object sender, EventArgs e) {
+            DeleteSelectedItems();
+        }
+
+        private void menuFilesDelete_Click(object sender, EventArgs e) {
+            DeleteSelectedItems();
         }
     }
 }

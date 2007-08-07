@@ -26,6 +26,7 @@ namespace iPhoneGUI
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iPhoneList));
             this.menuMain = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,7 +39,9 @@ namespace iPhoneGUI
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btnRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripCopy = new System.Windows.Forms.ToolStripButton();
+            this.toolStripDelete = new System.Windows.Forms.ToolStripButton();
             this.panelAction = new System.Windows.Forms.Panel();
             this.buttonActionOK = new System.Windows.Forms.Button();
             this.textActionEntry = new System.Windows.Forms.TextBox();
@@ -57,19 +60,24 @@ namespace iPhoneGUI
             this.colType = new System.Windows.Forms.ColumnHeader();
             this.menuFiles = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuFilesCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuFilesDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
-            this.menuMain.SuspendLayout();
+            this.btnRefresh = new System.Windows.Forms.ToolStripButton();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.imageFolders = new System.Windows.Forms.ImageList(this.components);
+            this.imageFilesSmall = new System.Windows.Forms.ImageList(this.components);
+            this.imageFilesLarge = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1.SuspendLayout();
             this.panelAction.SuspendLayout();
-            this.statusBar.SuspendLayout();
             this.panelList.Panel1.SuspendLayout();
             this.panelList.Panel2.SuspendLayout();
             this.panelList.SuspendLayout();
             this.menuTree.SuspendLayout();
             this.menuFiles.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuMain
@@ -126,7 +134,6 @@ namespace iPhoneGUI
             this.deleteToolStripMenuItem2.ShortcutKeys = System.Windows.Forms.Keys.Delete;
             this.deleteToolStripMenuItem2.Size = new System.Drawing.Size(138, 22);
             this.deleteToolStripMenuItem2.Text = "Delete";
-            this.deleteToolStripMenuItem2.Click += new System.EventHandler(this.deleteToolStripMenuItem2_Click);
             // 
             // newToolStripMenuItem
             // 
@@ -159,21 +166,42 @@ namespace iPhoneGUI
             // 
             // toolStrip1
             // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripRefresh,
+            this.toolStripCopy,
+            this.toolStripDelete});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(619, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // btnRefresh
+            // toolStripRefresh
             // 
-            this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
-            this.btnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(23, 22);
-            this.btnRefresh.Text = "Refresh";
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            this.toolStripRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
+            this.toolStripRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripRefresh.Name = "toolStripRefresh";
+            this.toolStripRefresh.Size = new System.Drawing.Size(65, 22);
+            this.toolStripRefresh.Text = "Refresh";
+            this.toolStripRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // toolStripCopy
+            // 
+            this.toolStripCopy.Image = global::iPhoneGUI.Properties.Resources.CopyHS;
+            this.toolStripCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripCopy.Name = "toolStripCopy";
+            this.toolStripCopy.Size = new System.Drawing.Size(52, 22);
+            this.toolStripCopy.Text = "Copy";
+            this.toolStripCopy.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
+            // toolStripDelete
+            // 
+            this.toolStripDelete.Image = global::iPhoneGUI.Properties.Resources.DeleteHS;
+            this.toolStripDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDelete.Name = "toolStripDelete";
+            this.toolStripDelete.Size = new System.Drawing.Size(58, 22);
+            this.toolStripDelete.Text = "Delete";
+            this.toolStripDelete.Click += new System.EventHandler(this.toolStripDelete_Click);
             // 
             // panelAction
             // 
@@ -258,7 +286,7 @@ namespace iPhoneGUI
             // 
             // panelList.Panel2
             // 
-            this.panelList.Panel2.Controls.Add(this.listFiles);
+            this.panelList.Panel2.Controls.Add(this.splitContainer1);
             this.panelList.Size = new System.Drawing.Size(619, 384);
             this.panelList.SplitterDistance = 227;
             this.panelList.TabIndex = 5;
@@ -267,8 +295,11 @@ namespace iPhoneGUI
             // 
             this.treeFolders.ContextMenuStrip = this.menuTree;
             this.treeFolders.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeFolders.ImageIndex = 0;
+            this.treeFolders.ImageList = this.imageFolders;
             this.treeFolders.Location = new System.Drawing.Point(0, 0);
             this.treeFolders.Name = "treeFolders";
+            this.treeFolders.SelectedImageIndex = 0;
             this.treeFolders.Size = new System.Drawing.Size(223, 380);
             this.treeFolders.TabIndex = 0;
             this.treeFolders.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeFolders_MouseClick);
@@ -299,6 +330,7 @@ namespace iPhoneGUI
             // listFiles
             // 
             this.listFiles.AllowDrop = true;
+            this.listFiles.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colFile,
             this.colSize,
@@ -307,7 +339,7 @@ namespace iPhoneGUI
             this.listFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listFiles.Location = new System.Drawing.Point(0, 0);
             this.listFiles.Name = "listFiles";
-            this.listFiles.Size = new System.Drawing.Size(384, 380);
+            this.listFiles.Size = new System.Drawing.Size(384, 251);
             this.listFiles.TabIndex = 0;
             this.listFiles.UseCompatibleStateImageBehavior = false;
             this.listFiles.View = System.Windows.Forms.View.Details;
@@ -335,9 +367,9 @@ namespace iPhoneGUI
             // 
             this.menuFiles.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cutToolStripMenuItem,
-            this.copyToolStripMenuItem,
+            this.menuFilesCopy,
             this.pasteToolStripMenuItem,
-            this.deleteToolStripMenuItem});
+            this.menuFilesDelete});
             this.menuFiles.Name = "menuFiles";
             this.menuFiles.Size = new System.Drawing.Size(117, 92);
             // 
@@ -348,12 +380,12 @@ namespace iPhoneGUI
             this.cutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.cutToolStripMenuItem.Text = "C&ut";
             // 
-            // copyToolStripMenuItem
+            // menuFilesCopy
             // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.copyToolStripMenuItem.Text = "&Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            this.menuFilesCopy.Name = "menuFilesCopy";
+            this.menuFilesCopy.Size = new System.Drawing.Size(116, 22);
+            this.menuFilesCopy.Text = "&Copy";
+            this.menuFilesCopy.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // pasteToolStripMenuItem
             // 
@@ -362,17 +394,65 @@ namespace iPhoneGUI
             this.pasteToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.pasteToolStripMenuItem.Text = "&Paste";
             // 
-            // deleteToolStripMenuItem
+            // menuFilesDelete
             // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.deleteToolStripMenuItem.Text = "&Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            this.menuFilesDelete.Name = "menuFilesDelete";
+            this.menuFilesDelete.Size = new System.Drawing.Size(116, 22);
+            this.menuFilesDelete.Text = "&Delete";
+            this.menuFilesDelete.Click += new System.EventHandler(this.menuFilesDelete_Click);
             // 
             // timerMain
             // 
             this.timerMain.Enabled = true;
             this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
+            this.btnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(23, 22);
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.listFiles);
+            this.splitContainer1.Size = new System.Drawing.Size(384, 380);
+            this.splitContainer1.SplitterDistance = 251;
+            this.splitContainer1.TabIndex = 1;
+            // 
+            // imageFolders
+            // 
+            this.imageFolders.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageFolders.ImageStream")));
+            this.imageFolders.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageFolders.Images.SetKeyName(0, "Computer.ico");
+            this.imageFolders.Images.SetKeyName(1, "Folder.ico");
+            this.imageFolders.Images.SetKeyName(2, "Developer Folder.ico");
+            this.imageFolders.Images.SetKeyName(3, "Documents Folder.ico");
+            this.imageFolders.Images.SetKeyName(4, "Movies Folder.ico");
+            this.imageFolders.Images.SetKeyName(5, "Music Folder.ico");
+            this.imageFolders.Images.SetKeyName(6, "Pictures Folder.ico");
+            // 
+            // imageFilesSmall
+            // 
+            this.imageFilesSmall.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageFilesSmall.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageFilesSmall.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // imageFilesLarge
+            // 
+            this.imageFilesLarge.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageFilesLarge.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageFilesLarge.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // iPhoneList
             // 
@@ -387,19 +467,17 @@ namespace iPhoneGUI
             this.MainMenuStrip = this.menuMain;
             this.Name = "iPhoneList";
             this.Text = "iPhoneList";
-            this.menuMain.ResumeLayout(false);
-            this.menuMain.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.panelAction.ResumeLayout(false);
             this.panelAction.PerformLayout();
-            this.statusBar.ResumeLayout(false);
-            this.statusBar.PerformLayout();
             this.panelList.Panel1.ResumeLayout(false);
             this.panelList.Panel2.ResumeLayout(false);
             this.panelList.ResumeLayout(false);
             this.menuTree.ResumeLayout(false);
             this.menuFiles.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -423,9 +501,9 @@ namespace iPhoneGUI
         private System.Windows.Forms.ColumnHeader colType;
         private System.Windows.Forms.ContextMenuStrip menuFiles;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuFilesCopy;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuFilesDelete;
         private System.Windows.Forms.ContextMenuStrip menuTree;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem createFolderToolStripMenuItem;
@@ -442,6 +520,13 @@ namespace iPhoneGUI
         private System.Windows.Forms.TextBox textActionEntry;
         private System.Windows.Forms.Label labelAction;
         private System.Windows.Forms.Button buttonActionOK;
+        private System.Windows.Forms.ToolStripButton toolStripRefresh;
+        private System.Windows.Forms.ToolStripButton toolStripCopy;
+        private System.Windows.Forms.ToolStripButton toolStripDelete;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ImageList imageFolders;
+        private System.Windows.Forms.ImageList imageFilesSmall;
+        private System.Windows.Forms.ImageList imageFilesLarge;
     }
 }
 
