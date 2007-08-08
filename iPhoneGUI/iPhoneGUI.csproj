@@ -7,8 +7,8 @@
     <ProjectGuid>{20E67E9F-1F0A-40D9-9B47-A56DFBF88B57}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>iPhoneGUI</RootNamespace>
-    <AssemblyName>iPhoneGUI</AssemblyName>
+    <RootNamespace>iPhoneList</RootNamespace>
+    <AssemblyName>iPhoneList</AssemblyName>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <ManifestCertificateThumbprint>9282CECF78CAB94E1D4E2F9033A121323DE0CEC5</ManifestCertificateThumbprint>
     <ManifestKeyFile>iPhoneGUI_TemporaryKey.pfx</ManifestKeyFile>
