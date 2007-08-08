@@ -38,7 +38,7 @@ namespace iPhoneGUI
                 newItem.Tag = inTag;
                 newItem.Type = inType;
                 items.Add(newItem);
-                selectedItem = items.Count - 1;
+                selectedIndex = items.Count - 1;
             }
             public ItemProperty[] Items {
                 get {
@@ -53,7 +53,7 @@ namespace iPhoneGUI
                 for ( Int32 i = 0; i < items.Count; i++ ) {
                     if ( ((ItemProperty)items[i]).Name.Equals(inName) ) {
                         selectedIndex = i;
-                        return item;
+                        return (ItemProperty)items[i];
                     }
                 }
                 return null;
