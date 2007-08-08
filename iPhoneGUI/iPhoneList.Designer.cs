@@ -139,7 +139,7 @@ namespace iPhoneGUI
             // 
             // popupTreeRefresh
             // 
-            this.popupTreeRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
+            this.popupTreeRefresh.Image = global::iPhoneList.Properties.Resources.Retry;
             this.popupTreeRefresh.Name = "popupTreeRefresh";
             this.popupTreeRefresh.Size = new System.Drawing.Size(151, 22);
             this.popupTreeRefresh.Text = "&Refresh";
@@ -147,7 +147,7 @@ namespace iPhoneGUI
             // 
             // popupTreeCreateFolder
             // 
-            this.popupTreeCreateFolder.Image = global::iPhoneGUI.Properties.Resources.NewFolderHS;
+            this.popupTreeCreateFolder.Image = global::iPhoneList.Properties.Resources.NewFolderHS;
             this.popupTreeCreateFolder.Name = "popupTreeCreateFolder";
             this.popupTreeCreateFolder.Size = new System.Drawing.Size(151, 22);
             this.popupTreeCreateFolder.Text = "Create &Folder";
@@ -273,7 +273,7 @@ namespace iPhoneGUI
             // 
             // popupFilesGetFiles
             // 
-            this.popupFilesGetFiles.Image = global::iPhoneGUI.Properties.Resources.CopyHS;
+            this.popupFilesGetFiles.Image = global::iPhoneList.Properties.Resources.CopyHS;
             this.popupFilesGetFiles.Name = "popupFilesGetFiles";
             this.popupFilesGetFiles.Size = new System.Drawing.Size(123, 22);
             this.popupFilesGetFiles.Text = "GetFiles";
@@ -281,7 +281,7 @@ namespace iPhoneGUI
             // 
             // popupFilesDelete
             // 
-            this.popupFilesDelete.Image = global::iPhoneGUI.Properties.Resources.DeleteHS;
+            this.popupFilesDelete.Image = global::iPhoneList.Properties.Resources.DeleteHS;
             this.popupFilesDelete.Name = "popupFilesDelete";
             this.popupFilesDelete.Size = new System.Drawing.Size(123, 22);
             this.popupFilesDelete.Text = "Delete";
@@ -534,7 +534,7 @@ namespace iPhoneGUI
             // 
             // toolItemRefresh
             // 
-            this.toolItemRefresh.Image = global::iPhoneGUI.Properties.Resources.Retry;
+            this.toolItemRefresh.Image = global::iPhoneList.Properties.Resources.Retry;
             this.toolItemRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolItemRefresh.Name = "toolItemRefresh";
             this.toolItemRefresh.Size = new System.Drawing.Size(65, 22);
@@ -543,7 +543,7 @@ namespace iPhoneGUI
             // 
             // toolItemGetFiles
             // 
-            this.toolItemGetFiles.Image = global::iPhoneGUI.Properties.Resources.CopyHS;
+            this.toolItemGetFiles.Image = global::iPhoneList.Properties.Resources.CopyHS;
             this.toolItemGetFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolItemGetFiles.Name = "toolItemGetFiles";
             this.toolItemGetFiles.Size = new System.Drawing.Size(65, 22);
@@ -552,7 +552,7 @@ namespace iPhoneGUI
             // 
             // toolItemDelete
             // 
-            this.toolItemDelete.Image = global::iPhoneGUI.Properties.Resources.DeleteHS;
+            this.toolItemDelete.Image = global::iPhoneList.Properties.Resources.DeleteHS;
             this.toolItemDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolItemDelete.Name = "toolItemDelete";
             this.toolItemDelete.Size = new System.Drawing.Size(58, 22);
@@ -561,7 +561,7 @@ namespace iPhoneGUI
             // 
             // toolItemCancel
             // 
-            this.toolItemCancel.Image = global::iPhoneGUI.Properties.Resources.StopHS;
+            this.toolItemCancel.Image = global::iPhoneList.Properties.Resources.StopHS;
             this.toolItemCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolItemCancel.Name = "toolItemCancel";
             this.toolItemCancel.Size = new System.Drawing.Size(87, 22);
