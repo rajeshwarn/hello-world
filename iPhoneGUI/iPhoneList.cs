@@ -7,11 +7,80 @@ using System.Text;
 using System.Windows.Forms;
 using Manzana;
 using System.IO;
+using System.Collections;
 
 namespace iPhoneGUI
 {
     public partial class iPhoneList: Form
     {
+        private class ItemProperty {
+            public String Name;
+            public String Extension;
+            public String ImageKey;
+            public String Tag;
+            public iPhone.FileTypes Type;
+
+            public ItemProperty(String inName){
+                Name = inName;
+            }
+            public String ToString(){
+                return Name;
+            }
+        }
+        private class ItemProperties {
+            private ArrayList items = new ArrayList();
+            private Int32 selectedIndex;
+            public ItemProperties(){}
+            public void Add(String inName, String inExt, String inKey, String inTag, iPhone.FileTypes inType) {
+                ItemProperty newItem = new ItemProperty(inName);
+                newItem.Extension = inExt;
+                newItem.ImageKey = inKey;
+                newItem.Tag = inTag;
+                newItem.Type = inType;
+                items.Add(newItem);
+                selectedItem = items.Count - 1;
+            }
+            public ItemProperty[] Items {
+                get {
+                    ItemProperty[] outItems = new ItemProperty[items.Count];
+                    for ( Int32 i = 0; i < items.Count; i++ ) {
+                        outItems[i] = (ItemProperty)items[i];
+                    }
+                    return outItems;
+                }
+            }
+            public ItemProperty Item(String inName) {
+                for ( Int32 i = 0; i < items.Count; i++ ) {
+                    if ( ((ItemProperty)items[i]).Name.Equals(inName) ) {
+                        selectedIndex = i;
+                        return item;
+                    }
+                }
+                return null;
+            }
+            public Int32 ItemIndex(String inName) {
+                for ( Int32 i = 0; i < items.Count; i++ ) {
+                    if ( ((ItemProperty)items[i]).Name.Equals(inName) ) {
+                        selectedIndex = i;
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            public ItemProperty SelectedItem {
+                get { return (ItemProperty)items[selectedIndex]; }
+            }
+            public Int32 SelectedIndex {
+                get { return selectedIndex; }
+                set { 
+                    if (value >= 0 && value < items.Count)
+                        selectedIndex = value; 
+                }
+            }
+        }
+
+
+
         internal iPhone myPhone = new iPhone();
         internal Boolean connected = false;
         internal Boolean connecting = false;
@@ -101,7 +170,27 @@ namespace iPhoneGUI
                 if ( getLevels != 0 ) {
                     for ( int i = 0; i < dirNames.Length; i++ ) {
                         TreeNode childNode = new TreeNode(dirNames[i]);
+                        childNode.ImageKey = "Folder";
                         childNode.Name = path + "/" + dirNames[i];
+                        if ( GetFileExt(dirNames[i]) == ".app" ) {
+                            childNode.ImageKey = "Folder-App";
+                        } else {
+                            switch ( dirNames[i] ) {
+                                case "Photos":
+                                case "DCIM":
+                                case "100APPLE":
+                                case "Artwork":
+                                case "Thumbs":
+                                    childNode.ImageKey = "Folder-Image";
+                                    break;
+                                case "Music":
+                                    childNode.ImageKey = "Folder-Audio";
+                                    break;
+                                default:
+                                    childNode.ImageKey = "Folder";
+                                    break;
+                            }
+                        }
                         AddNodes(childNode, path + "/" + dirNames[i], (getLevels - 1));
                         thisNode.Nodes.Add(childNode);
                         thisNode.Tag = "loaded";
@@ -111,6 +200,8 @@ namespace iPhoneGUI
                     TreeNode childNode = new TreeNode(".");
                     childNode.Name = path + "/.";
                     thisNode.Nodes.Add(childNode);
+                    if ( thisNode.ImageKey == "Folder" )
+                        thisNode.ImageKey = "Folder-Files";
                     thisNode.Tag = "notloaded";
                     Application.DoEvents();
                 }
@@ -142,7 +233,7 @@ namespace iPhoneGUI
             iPhone.FileTypes fileType;
             foreach ( String file in files ) {
                 ListViewItem thisFile = new ListViewItem(file);
-                thisFile.ImageKey = "blank";
+                thisFile.ImageKey = "Other";
                 myPhone.GetFileInfoDetails(path + "/" + file, out fileSize, out fileType);
                 thisFile.SubItems.Add(fileSize.ToString());
                 if ( fileType == iPhone.FileTypes.ftFile)  {
@@ -179,47 +270,48 @@ namespace iPhoneGUI
                             thisFile.Tag = "Other";
                             break;
                     }
-                    thisFile.ImageKey = fileExt;
+                    thisFile.ImageKey = thisFile.Tag.ToString();
                 } else {
                     switch ( fileType ) {
                         case iPhone.FileTypes.ftDir:
-                            thisFile.ImageKey = "FolderClosed";
+                            thisFile.ImageKey = "Folder";
                             thisFile.SubItems.Add("Folder");
                             thisFile.Tag = "Folder";
                             break;
                         case iPhone.FileTypes.ftLink:
-                            thisFile.ImageKey = "blank";
+                            thisFile.ImageKey = "Device";
                             thisFile.SubItems.Add("File Link");
                             thisFile.Tag = "Link";
                             break;
                         case iPhone.FileTypes.ftBlockDevice:
-                            thisFile.ImageKey = "blank";
+                            thisFile.ImageKey = "Device";
                             thisFile.SubItems.Add("Block Device");
                             thisFile.Tag = "Device";
                             break;
                         case iPhone.FileTypes.ftCharDevice:
-                            thisFile.ImageKey = "blank";
+                            thisFile.ImageKey = "Device";
                             thisFile.SubItems.Add("Character Device");
                             thisFile.Tag = "Device";
                             break;
                         case iPhone.FileTypes.ftFIFO:
-                            thisFile.ImageKey = "blank";
+                            thisFile.ImageKey = "Other";
                             thisFile.SubItems.Add("FIFO");
                             thisFile.Tag = "Device";
                             break;
                         case iPhone.FileTypes.ftMT:
-                            thisFile.ImageKey = "blank";
+                            thisFile.ImageKey = "Other";
                             thisFile.SubItems.Add("File type binary mask");
                             thisFile.Tag = "Other";
                             break;
                         case iPhone.FileTypes.ftSock:
-                            thisFile.ImageKey = "blank";
+                            thisFile.ImageKey = "Device";
                             thisFile.SubItems.Add("Socket");
                             thisFile.Tag = "Device";
                             break;
                         default:
-                            thisFile.ImageKey = "blank";
+                            thisFile.ImageKey = "Other";
                             thisFile.SubItems.Add("Unknown");
+                            thisFile.Tag = "Other";
                             break;
                     }
                 }
@@ -478,7 +570,11 @@ namespace iPhoneGUI
         }
 
         private void PreviewSelectedItem(TreeNode thisNode, ListViewItem item) {
-            String fullName = thisNode.FullPath.Replace("\\","/") + "/" + item.Text;
+                if (thisNode == null){
+                    thisNode = treeFolders.TopNode;
+                }
+                String fullName = thisNode.FullPath.Replace("\\", "/") + "/" + item.Text;
+
             iPhone.FileTypes fileType = myPhone.FileType(fullName);
             String previewText = null;
             Image previewImage = null;
