@@ -61,7 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HexEncoding.cs" />
+    <Compile Include="Tools.cs" />
     <Compile Include="iPhoneList.cs">
       <SubType>Form</SubType>
     </Compile>
