@@ -8,37 +8,78 @@ using System.Windows.Forms;
 using Manzana;
 using System.IO;
 using System.Collections;
+using Tools;
 
 namespace iPhoneGUI
 {
     public partial class iPhoneList: Form
     {
-        private class ItemProperty {
+        public enum TypeIdentifier {
+            Name,
+            Extension,
+            FileType,
+            HeaderBytes,
+            HeaderString, 
+            ExtHead // Extension First, then Header
+        }
+        internal enum PreviewTypes { Image, Text, Music, Video, Document, Binary };
+        private class ItemProperty
+        {
             public String Name;
+            public iPhone.FileTypes Type;
+            public TypeIdentifier Identifier;
             public String Extension;
             public String ImageKey;
             public String Tag;
-            public iPhone.FileTypes Type;
+            public Byte[] Header;
+            public Int32 ByteOffset;
 
             public ItemProperty(String inName){
                 Name = inName;
             }
-            public String ToString(){
+            public override String ToString() {
                 return Name;
             }
         }
         private class ItemProperties {
-            private ArrayList items = new ArrayList();
+            private ArrayList items;
             private Int32 selectedIndex;
-            public ItemProperties(){}
-            public void Add(String inName, String inExt, String inKey, String inTag, iPhone.FileTypes inType) {
+            public ItemProperties(){
+                items = new ArrayList();
+            }
+            public Boolean Add(
+                String inName,
+                iPhone.FileTypes inType,
+                TypeIdentifier inTypeID,
+                String inExt,
+                String inKey,
+                String inTag
+                ) {
+                if ( inTypeID == TypeIdentifier.HeaderString ) {
+                }
+                return Add(inName, inType, inTypeID, inExt, inKey, inTag, dummyBytes, 0);
+            }
+            public Boolean Add(
+                String inName,
+                iPhone.FileTypes inType,
+                TypeIdentifier inTypeID,
+                String inExt,
+                String inKey,
+                String inTag,
+                Byte[] inBytes,
+                Int32 inByteOffset
+                ) {
                 ItemProperty newItem = new ItemProperty(inName);
+                newItem.Type = inType;
                 newItem.Extension = inExt;
+                newItem.Identifier = inTypeID;
                 newItem.ImageKey = inKey;
                 newItem.Tag = inTag;
-                newItem.Type = inType;
+                newItem.ByteOffset = inByteOffset;
+                newItem.Header = inBytes;
                 items.Add(newItem);
                 selectedIndex = items.Count - 1;
+                return true;
             }
             public ItemProperty[] Items {
                 get {
@@ -79,15 +120,11 @@ namespace iPhoneGUI
             }
         }
 
-
-
         internal iPhone myPhone = new iPhone();
         internal Boolean connected = false;
         internal Boolean connecting = false;
         internal String lastSaveFolder = "";
         internal Boolean cancelCopy = false;
-
-        internal enum PreviewTypes {Image, Text, Music, Video, Document, Binary};
 
         public iPhoneList() {
             InitializeComponent();
@@ -95,6 +132,34 @@ namespace iPhoneGUI
             SetStatus();
             //myPhone.Connect += new ConnectEventHandler(Connecting);
             //myPhone.Disconnect += new ConnectEventHandler(Connecting);
+            // TEMPORARY FileType load until I add a FileType config window
+            ItemProperties ipItems = new ItemProperties();
+            ipItems.Add("Program", iPhone.FileTypes.File, TypeIdentifier.HeaderBytes, "", "Program", "Program", Hex.ToBytes("CEFAEDFE0C00"), 0);
+            ipItems.Add("App", iPhone.FileTypes.File, TypeIdentifier.Extension, ".app", "App", "Application");
+            ipItems.Add("BinPList", iPhone.FileTypes.File, TypeIdentifier.ExtHead, ".plist", "Settings", "Settings", Hex.ToBytes("62706C6973743030"), 0);
+            ipItems.Add("PList", iPhone.FileTypes.File, TypeIdentifier.Extension, ".plist", "Settings", "Settings");
+            ipItems.Add("BinStrings", iPhone.FileTypes.File, TypeIdentifier.ExtHead, ".strings", "Settings", "Settings", Hex.ToBytes("62706C6973743030"), 0);
+            ipItems.Add("Strings", iPhone.FileTypes.File, TypeIdentifier.Extension, ".strings", "Settings", "Settings");
+            ipItems.Add("Thumnail", iPhone.FileTypes.File, TypeIdentifier.Extension, ".thm", "Image", "Image");
+            ipItems.Add("Thumb", iPhone.FileTypes.File, TypeIdentifier.Extension, ".ithmb", "Image", "Image");
+            ipItems.Add("PNG", iPhone.FileTypes.File, TypeIdentifier.Extension, ".png", "Image", "Image");
+            ipItems.Add("JPG", iPhone.FileTypes.File, TypeIdentifier.Extension, ".jpg", "Image", "Image");
+            ipItems.Add("GIF", iPhone.FileTypes.File, TypeIdentifier.Extension, ".gif", "Image", "Image");
+            ipItems.Add("BMP", iPhone.FileTypes.File, TypeIdentifier.Extension, ".bmp", "Image", "Image");
+            ipItems.Add("AAC", iPhone.FileTypes.File, TypeIdentifier.Extension, ".aac", "Audio", "Audio");
+            ipItems.Add("MP3", iPhone.FileTypes.File, TypeIdentifier.Extension, ".mp3", "Audio", "Audio");
+            ipItems.Add("M4A", iPhone.FileTypes.File, TypeIdentifier.Extension, ".m4a", "Audio", "Audio");
+            ipItems.Add("Photo DataBase", iPhone.FileTypes.File, TypeIdentifier.Name, "", "Database", "Database");
+            ipItems.Add("ArtworkDB", iPhone.FileTypes.File, TypeIdentifier.Name, "", "Database", "Database");
+            ipItems.Add("Text", iPhone.FileTypes.File, TypeIdentifier.Extension, ".txt", "Document", "Document");
+            ipItems.Add("Script", iPhone.FileTypes.File, TypeIdentifier.Extension, ".script", "Script", "Script");
+            ipItems.Add("ShellScript", iPhone.FileTypes.File, TypeIdentifier.Extension, ".sh", "Script", "Script");
+
+
+
+
+
+
         }
 
         private void SetObjectSizes() {
@@ -236,7 +301,7 @@ namespace iPhoneGUI
                 thisFile.ImageKey = "Other";
                 myPhone.GetFileInfoDetails(path + "/" + file, out fileSize, out fileType);
                 thisFile.SubItems.Add(fileSize.ToString());
-                if ( fileType == iPhone.FileTypes.ftFile)  {
+                if ( fileType == iPhone.FileTypes.File)  {
                     String fileExt = GetFileExt(file);
                     switch ( fileExt ) {
                         case ".plist":
@@ -273,37 +338,37 @@ namespace iPhoneGUI
                     thisFile.ImageKey = thisFile.Tag.ToString();
                 } else {
                     switch ( fileType ) {
-                        case iPhone.FileTypes.ftDir:
+                        case iPhone.FileTypes.Folder:
                             thisFile.ImageKey = "Folder";
                             thisFile.SubItems.Add("Folder");
                             thisFile.Tag = "Folder";
                             break;
-                        case iPhone.FileTypes.ftLink:
+                        case iPhone.FileTypes.Link:
                             thisFile.ImageKey = "Device";
                             thisFile.SubItems.Add("File Link");
                             thisFile.Tag = "Link";
                             break;
-                        case iPhone.FileTypes.ftBlockDevice:
+                        case iPhone.FileTypes.BlockDevice:
                             thisFile.ImageKey = "Device";
                             thisFile.SubItems.Add("Block Device");
                             thisFile.Tag = "Device";
                             break;
-                        case iPhone.FileTypes.ftCharDevice:
+                        case iPhone.FileTypes.CharDevice:
                             thisFile.ImageKey = "Device";
                             thisFile.SubItems.Add("Character Device");
                             thisFile.Tag = "Device";
                             break;
-                        case iPhone.FileTypes.ftFIFO:
+                        case iPhone.FileTypes.FIFO:
                             thisFile.ImageKey = "Other";
                             thisFile.SubItems.Add("FIFO");
                             thisFile.Tag = "Device";
                             break;
-                        case iPhone.FileTypes.ftMT:
+                        case iPhone.FileTypes.FileMask:
                             thisFile.ImageKey = "Other";
                             thisFile.SubItems.Add("File type binary mask");
                             thisFile.Tag = "Other";
                             break;
-                        case iPhone.FileTypes.ftSock:
+                        case iPhone.FileTypes.Socket:
                             thisFile.ImageKey = "Device";
                             thisFile.SubItems.Add("Socket");
                             thisFile.Tag = "Device";
@@ -488,8 +553,8 @@ namespace iPhoneGUI
                     String sourcePath = fromPath + "/" + item;
                     String destPath = savePath + "\\" + item;
                     iPhone.FileTypes fileType = myPhone.FileType(sourcePath);
-                    if ( fileType == iPhone.FileTypes.ftDir ||
-                        fileType == iPhone.FileTypes.ftFile ) {
+                    if ( fileType == iPhone.FileTypes.Folder ||
+                        fileType == iPhone.FileTypes.File ) {
                         labelStatus.Text = "Copying: " + sourcePath;
                         if ( item.Contains(".plist") ) {
                             DecodePListStream(sourcePath, destPath);
@@ -580,7 +645,7 @@ namespace iPhoneGUI
             Image previewImage = null;
             PreviewTypes previewType = PreviewTypes.Binary;
             switch ( fileType ) {
-                case iPhone.FileTypes.ftFile:
+                case iPhone.FileTypes.File:
                     switch ( GetFileExt(item.Text) ) {
                         case ".plist":
                             previewText = DecodePListFile(fullName);

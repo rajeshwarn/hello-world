@@ -107,15 +107,15 @@ namespace Manzana
         /// </summary>
         public enum FileTypes
         {
-            ftFile = 1, 
-            ftDir = 2,
-            ftBlockDevice = 3, 
-            ftCharDevice = 4, 
-            ftFIFO = 5, 
-            ftLink = 6, 
-            ftMT = 7, 
-            ftSock = 8, 
-            ftUnknown = 9
+            File = 1, 
+            Folder = 2,
+            BlockDevice = 3, 
+            CharDevice = 4, 
+            FIFO = 5, 
+            Link = 6, 
+            FileMask = 7, 
+            Socket = 8, 
+            Unknown = 9
         }
         #endregion Enumerators
 
@@ -320,7 +320,7 @@ namespace Manzana
         public void GetFileInfo(string path, out int size, out Boolean directory){
             FileTypes fileType;
             GetFileInfoDetails(path, out size, out fileType);
-            if (fileType == FileTypes.ftDir)
+            if (fileType == FileTypes.Folder)
                 directory = true;
             else
                 directory = false;
@@ -344,7 +344,7 @@ namespace Manzana
 			data = IntPtr.Zero;
 
 			size = 0;
-            fileType = FileTypes.ftUnknown;
+            fileType = FileTypes.Unknown;
 			ret = MobileDevice.AFCGetFileInfo(hAFC, path, ref data, out data_size);
 			if (ret != 0) {
 				return;
@@ -373,28 +373,28 @@ namespace Manzana
                         //S_IFSOCK File (#rtl.baseunix.stat record) mode: Socket
                         switch (value) {
                             case "S_IFDIR":
-                                fileType = FileTypes.ftDir;
+                                fileType = FileTypes.Folder;
                                 break;
                             case "S_IFREG":
-                                fileType = FileTypes.ftFile;
+                                fileType = FileTypes.File;
                                 break;
                             case "S_IFBLK":
-                                fileType = FileTypes.ftBlockDevice;
+                                fileType = FileTypes.BlockDevice;
                                 break;
                             case "S_IFCHR":
-                                fileType = FileTypes.ftCharDevice;
+                                fileType = FileTypes.CharDevice;
                                 break;
                             case "S_IFIFO":
-                                fileType = FileTypes.ftFIFO;
+                                fileType = FileTypes.FIFO;
                                 break;
                             case "S_IFLNK":
-                                fileType = FileTypes.ftLink;
+                                fileType = FileTypes.Link;
                                 break;
                             case "S_IFMT":
-                                fileType = FileTypes.ftMT;
+                                fileType = FileTypes.FileMask;
                                 break;
                             case "S_IFSOCK":
-                                fileType = FileTypes.ftSock;
+                                fileType = FileTypes.Socket;
                                 break;
                         }
                         break;
