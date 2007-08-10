@@ -18,6 +18,7 @@ namespace iPhoneGUI
         {
             FileName,
             Extension,
+            FullPath,
             FileType,
             HeaderBytes,
             HeaderString,
@@ -30,8 +31,7 @@ namespace iPhoneGUI
             public String Name;
             public iPhone.FileTypes Type;
             public TypeIdentifier Identifier;
-            public String FileName;
-            public String Extension;
+            public String FileInfoText;
             public String ImageKey;
             public String Tag;
             public Byte[] Header;
@@ -60,20 +60,16 @@ namespace iPhoneGUI
                 String imageKey,
                 String tag
                 ) {
-                return Add(name, type, TypeIdentifier.FileType, "", "", nullBytes, 0, imageKey, tag);
+                return Add(name, type, TypeIdentifier.FileType, null, nullBytes, 0, imageKey, tag);
             }
-            public Boolean AddFile( // for FileName and Extension
+            public Boolean AddFile( // for FileName, Extension, and FullPath
                 String name,
                 TypeIdentifier typeID,
-                String fileNameOrExt,
+                String fileInfoText,
                 String imageKey,
                 String tag
                 ) {
-                if ( typeID == TypeIdentifier.FileName ) {
-                    return Add(name, iPhone.FileTypes.File, typeID, fileNameOrExt, "", nullBytes, 0, imageKey, tag);
-                } else {
-                    return Add(name, iPhone.FileTypes.File, typeID, "", fileNameOrExt, nullBytes, 0, imageKey, tag);
-                }
+                return Add(name, iPhone.FileTypes.File, typeID, fileInfoText, nullBytes, 0, imageKey, tag);
             }
             public Boolean AddFile( // for HeaderString and HeaderBytes
                 String name,
@@ -89,7 +85,7 @@ namespace iPhoneGUI
                 } else {
                     headerBytes = Hex.ToBytes(headerString);
                 }
-                return Add(name, iPhone.FileTypes.File, typeID, "", "", headerBytes, byteOffset, imageKey, tag);
+                return Add(name, iPhone.FileTypes.File, typeID, null, headerBytes, byteOffset, imageKey, tag);
             }
             public Boolean AddFile( // for ExtHeadString and ExtHeadBytes
                 String name,
@@ -106,20 +102,25 @@ namespace iPhoneGUI
                 } else {
                     headerBytes = Hex.ToBytes(headerString);
                 }
-                return Add(name, iPhone.FileTypes.File, typeID, "", extension, headerBytes, byteOffset, imageKey, tag);
+                return Add(name, iPhone.FileTypes.File, typeID, extension, headerBytes, byteOffset, imageKey, tag);
             }
             public Boolean AddFolder( // for FileName and Extension
                 String name,
                 TypeIdentifier typeID,
-                String folderNameOrExt,
+                String folderInfoText,
                 String imageKey,
                 String tag
                 ) {
-                if ( typeID == TypeIdentifier.FileName ) {
-                    return Add(name, iPhone.FileTypes.Folder, typeID, folderNameOrExt, "", nullBytes, 0, imageKey, tag);
-                } else {
-                    return Add(name, iPhone.FileTypes.Folder, typeID, "", folderNameOrExt, nullBytes, 0, imageKey, tag);
-                }
+                return Add(name, iPhone.FileTypes.Folder, typeID, folderInfoText, nullBytes, 0, imageKey, tag);
+            }
+            public Boolean AddPath( // for fixed pathname - can be file or folder
+                String name,
+                iPhone.FileTypes type,
+                String folderInfoText,
+                String imageKey,
+                String tag
+                ) {
+                return Add(name, type, TypeIdentifier.FullPath, folderInfoText, nullBytes, 0, imageKey, tag);
             }
             public Boolean AddDevice( // for Devices
                 String name,
@@ -127,15 +128,14 @@ namespace iPhoneGUI
                 String imageKey,
                 String tag
                 ) {
-                return Add(name, type, TypeIdentifier.FileType, "", "", nullBytes, 0, imageKey, tag);
+                return Add(name, type, TypeIdentifier.FileType, null, nullBytes, 0, imageKey, tag);
             }
 
             public Boolean Add( // The Generic ADD
             String name,
             iPhone.FileTypes type,
             TypeIdentifier typeID,
-            String fileName,
-            String extension,
+            String fileInfoText,
             Byte[] headerBytes,
             Int32 byteOffset,
             String imageKey,
@@ -144,8 +144,7 @@ namespace iPhoneGUI
                 ItemProperty newItem = new ItemProperty(name);
                 newItem.Type = type;
                 newItem.Identifier = typeID;
-                newItem.FileName = fileName;
-                newItem.Extension = extension;
+                newItem.FileInfoText = fileInfoText;
                 newItem.Header = headerBytes;
                 newItem.ByteOffset = byteOffset;
                 newItem.ImageKey = imageKey;
@@ -163,23 +162,33 @@ namespace iPhoneGUI
                     return outItems;
                 }
             }
-            public ItemProperty Item(String inName) {
+            public Int32 ItemIndex(String PropertyName) {
                 for ( Int32 i = 0; i < items.Count; i++ ) {
-                    if ( ((ItemProperty)items[i]).Name.Equals(inName) ) {
+                    if ( ((ItemProperty)items[i]).Name.Equals(PropertyName) ) {
+                        selectedIndex = i;
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            public ItemProperty Item(String PropertyName) {
+                for ( Int32 i = 0; i < items.Count; i++ ) {
+                    if ( ((ItemProperty)items[i]).Name.Equals(PropertyName) ) {
                         selectedIndex = i;
                         return (ItemProperty)items[i];
                     }
                 }
                 return null;
             }
-            public Int32 ItemIndex(String inName) {
-                for ( Int32 i = 0; i < items.Count; i++ ) {
-                    if ( ((ItemProperty)items[i]).Name.Equals(inName) ) {
-                        selectedIndex = i;
-                        return i;
-                    }
-                }
-                return -1;
+            public ItemProperty Find(String fileName, String filePath) {
+                /*Have to account for these: 
+                 * FileName,    Extension,
+                 * FullPath,    FileType,
+                 * HeaderBytes, HeaderString,
+                 * ExtHeadBytes, // Extension First, then Header
+                 * ExtHeadString
+                 */
+                return null;
             }
             public ItemProperty SelectedItem {
                 get { return (ItemProperty)items[selectedIndex]; }
@@ -229,7 +238,7 @@ namespace iPhoneGUI
             ipItems.AddFile("Script", TypeIdentifier.Extension, ".script", "Script", "Script");
             ipItems.AddFile("ShellScript", TypeIdentifier.Extension, ".sh", "Script", "Script");
             // Folder types
-            ipItems.AddFolder("App", TypeIdentifier.Extension, ".app", "Folder-App", "Application");
+            ipItems.AddFolder("App", TypeIdentifier.Extension, ".app", "Folder-App", "App Folder");
             ipItems.AddFolder("Photos", TypeIdentifier.FileName, "photos", "Folder-Image", "Image Folder");
             ipItems.AddFolder("DCIM", TypeIdentifier.FileName, "dcim", "Folder-Image", "Image Folder");
             ipItems.AddFolder("100APPLE", TypeIdentifier.FileName, "100apple", "Folder-Image", "Image Folder");
@@ -351,6 +360,7 @@ namespace iPhoneGUI
                     Application.DoEvents();
                 }
             }
+
         }
 
         private void btnRefresh_Click(object sender, EventArgs e) {
