@@ -14,7 +14,14 @@ namespace iPhoneGUI
 {
     public partial class iPhoneList: Form
     {
-        public enum TypeIdentifier
+
+        internal iPhone myPhone = new iPhone();
+        internal Boolean connected = false;
+        internal Boolean connecting = false;
+        internal String lastSaveFolder = "";
+        internal Boolean cancelCopy = false;
+
+        internal enum TypeIdentifier
         {
             FileName,
             Extension,
@@ -25,8 +32,10 @@ namespace iPhoneGUI
             ExtHeadBytes, // Extension First, then Header
             ExtHeadString
         }
+
         internal enum PreviewTypes { Image, Text, Music, Video, Document, Binary };
-        private class ItemProperty
+
+        internal class ItemProperty
         {
             public String Name;
             public iPhone.FileTypes Type;
@@ -45,14 +54,15 @@ namespace iPhoneGUI
             }
         }
 
-        private class ItemProperties
+        internal class ItemProperties
         {
             private ArrayList items;
             private Int32 selectedIndex;
             private Byte[] nullBytes = Hex.ToBytes("");
-
-            public ItemProperties() {
+            private iPhone phone;
+            public ItemProperties(iPhone iphone) {
                 items = new ArrayList();
+                phone = iphone;
             }
             public Boolean AddFileType( // for FileType Adds
                 String name,
@@ -180,15 +190,94 @@ namespace iPhoneGUI
                 }
                 return null;
             }
-            public ItemProperty Find(String fileName, String filePath) {
+            public ItemProperty FindItem(String fullPath) {
                 /*Have to account for these: 
-                 * FileName,    Extension,
-                 * FullPath,    FileType,
-                 * HeaderBytes, HeaderString,
+                 * FileName,    
+                 * Extension,
+                 * FullPath,    
+                 * FileType,
+                 * HeaderBytes, 
+                 * HeaderString,
                  * ExtHeadBytes, // Extension First, then Header
                  * ExtHeadString
                  */
-                return null;
+                /* I need to lay out the approach here...
+                 * When we read a folder, we get back a list of all the folder entries,
+                 * including the current / parent folder pointers.
+                 * 
+                 * I could break them up into FindFile / Folder / Device, but
+                 * I may use the same criteria to locate them
+                 * What's interesting with this particular approach is that the FIND
+                 * function doesn't specify what to look for. We literally scan the rules
+                 * and stop with the first MATCH.
+                 * 
+                 * Now since we store the FileType of each ItemProperty entry, we need to
+                 * perform the first match on that attribute of the passed file.
+                 * So FileType is the first piece of information we need.
+                 */
+                // Set variables to store whether we've already gathered a particular piece of info 
+                String fileName = null;
+                Boolean _fileName = false;
+                String extension = null;
+                Boolean _extension = false;
+                
+                ItemProperty returnItem = null;
+                iPhone.FileTypes fileType = phone.FileType(fullPath);
+                foreach ( ItemProperty item in items ) {
+                    if ( fileType == item.Type ) {
+                        switch (item.Identifier){
+                            case TypeIdentifier.FileType:
+                                returnItem = item;
+                                break;
+                            case TypeIdentifier.FullPath:
+                                if (item.FileInfoText.Equals(fullPath.ToLower())){
+                                    returnItem = item;
+                                }
+                                break;
+                            case TypeIdentifier.FileName:
+                                if (!_fileName){
+                                    fileName = fullPath.Substring(fullPath.LastIndexOf("/")+1).ToLower();
+                                    _fileName = true;
+                                }
+                                if (item.FileInfoText.Equals(fileName)){
+                                    returnItem = item;
+                                }
+                                break;
+                            case TypeIdentifier.Extension:
+                                if (!_extension){
+                                    extension = TextString.GetFileExtension(fullPath);
+                                    _extension = true;
+                                }
+                                if (extension == item.FileInfoText){
+                                    returnItem = item;
+                                }
+                                break;
+                            case TypeIdentifier.ExtHeadString:
+                            case TypeIdentifier.ExtHeadBytes:
+                                if (!_extension){
+                                    extension = TextString.GetFileExtension(fullPath);
+                                    _extension = true;
+                                }
+                                if (extension == item.FileInfoText){
+                                    Int32 fileSize = phone.FileSize(fullPath);
+                                    Int32 headerLength = item.Header.Length;
+                                    Int32 maxLocation = item.ByteOffset + headerLength;
+                                    if (maxLocation <= fileSize){
+                                        Int32 bytesRead; 
+                                        Byte[] fileBuffer = new Byte[headerLength];
+                                        using (Stream fileStream = iPhoneFile.OpenRead(phone, fullPath)){
+                                            bytesRead = fileStream.Read(fileBuffer, item.ByteOffset, headerLength);
+                                        }
+                                        if (fileBuffer == item.Header){
+                                            returnItem = item;
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+                return returnItem;
             }
             public ItemProperty SelectedItem {
                 get { return (ItemProperty)items[selectedIndex]; }
@@ -202,11 +291,6 @@ namespace iPhoneGUI
             }
         }
 
-        internal iPhone myPhone = new iPhone();
-        internal Boolean connected = false;
-        internal Boolean connecting = false;
-        internal String lastSaveFolder = "";
-        internal Boolean cancelCopy = false;
 
         public iPhoneList() {
             InitializeComponent();
@@ -216,7 +300,7 @@ namespace iPhoneGUI
             //myPhone.Disconnect += new ConnectEventHandler(Connecting);
             // TEMPORARY FileType load until I add a FileType config window
             // Files
-            ItemProperties ipItems = new ItemProperties();
+            ItemProperties ipItems = new ItemProperties(myPhone);
             ipItems.AddFile("Program", TypeIdentifier.HeaderBytes, "CEFAEDFE0C00", 0, "Program", "Program");
             ipItems.AddFile("App", TypeIdentifier.Extension, ".app", "App", "Application");
             ipItems.AddFile("BinPList", TypeIdentifier.ExtHeadBytes, ".plist", "62706C6973743030", 0, "Settings", "Settings");

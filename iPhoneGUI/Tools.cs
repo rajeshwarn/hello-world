@@ -159,5 +159,16 @@ namespace Tools
             }
             return retVal;
         }
+
+        public static String GetFileExtension(String fileName) {
+            String extension;
+            Int32 startLocation = fileName.LastIndexOf(".");
+            if ( startLocation > 0 ) {
+                extension = fileName.Substring(startLocation + 1).ToLower();
+            } else {
+                extension = "";
+            }
+            return extension;
+        }
     }
 }
