@@ -15,12 +15,13 @@ namespace iPhoneGUI
     public partial class iPhoneList: Form
     {
         public enum TypeIdentifier {
-            Name,
+            FileName,
             Extension,
             FileType,
             HeaderBytes,
             HeaderString, 
-            ExtHead // Extension First, then Header
+            ExtHeadBytes, // Extension First, then Header
+            ExtHeadString
         }
         internal enum PreviewTypes { Image, Text, Music, Video, Document, Binary };
         private class ItemProperty
@@ -28,6 +29,7 @@ namespace iPhoneGUI
             public String Name;
             public iPhone.FileTypes Type;
             public TypeIdentifier Identifier;
+            public String FileName;
             public String Extension;
             public String ImageKey;
             public String Tag;
@@ -41,42 +43,65 @@ namespace iPhoneGUI
                 return Name;
             }
         }
+
         private class ItemProperties {
             private ArrayList items;
             private Int32 selectedIndex;
+
             public ItemProperties(){
                 items = new ArrayList();
             }
-            public Boolean Add(
-                String inName,
-                iPhone.FileTypes inType,
-                TypeIdentifier inTypeID,
-                String inExt,
-                String inKey,
-                String inTag
+            public Boolean Add( // for FileName and Extension
+                String name,
+                iPhone.FileTypes type,
+                TypeIdentifier typeID,
+                String fileNameOrExt,
+                String imageKey,
+                String tag
                 ) {
-                if ( inTypeID == TypeIdentifier.HeaderString ) {
+                if ( typeID == TypeIdentifier.FileName ) {
+                    return Add(name, type, typeID, fileNameOrExt, "", Hex.ToBytes(""), 0, imageKey, tag);
+                } else {
+                    return Add(name, type, typeID, "", fileNameOrExt, Hex.ToBytes(""), 0, imageKey, tag);
                 }
-                return Add(inName, inType, inTypeID, inExt, inKey, inTag, dummyBytes, 0);
             }
-            public Boolean Add(
-                String inName,
-                iPhone.FileTypes inType,
-                TypeIdentifier inTypeID,
-                String inExt,
-                String inKey,
-                String inTag,
-                Byte[] inBytes,
-                Int32 inByteOffset
+            public Boolean Add( // for HeaderString and HeaderBytes
+                String name,
+                iPhone.FileTypes type,
+                TypeIdentifier typeID,
+                String headerString,
+                Int32 byteOffset,
+                String key,
+                String tag
                 ) {
-                ItemProperty newItem = new ItemProperty(inName);
-                newItem.Type = inType;
-                newItem.Extension = inExt;
-                newItem.Identifier = inTypeID;
-                newItem.ImageKey = inKey;
-                newItem.Tag = inTag;
-                newItem.ByteOffset = inByteOffset;
-                newItem.Header = inBytes;
+                if (typeID == TypeIdentifier.HeaderString) {
+                    Byte[] dummyBytes = TextString.ToByte(headerString);
+                } else {
+                    Byte[] dummyBytes = Hex.ToBytes(headerString);
+                }
+                return Add(name, type, typeID, "", "", dummyBytes, byteOffset, imageKey, tag);
+            }
+
+            public Boolean Add(
+                String name,
+                iPhone.FileTypes type,
+                TypeIdentifier typeID,
+                String fileName,
+                String extension,
+                Byte[] headerBytes,
+                Int32 byteOffset,
+                String imageKey,
+                String tag
+                ) {
+                ItemProperty newItem = new ItemProperty(name);
+                newItem.Type = type;
+                newItem.Identifier = typeID;
+                newItem.FileName = fileName;
+                newItem.Extension = extension;
+                newItem.Header = headerBytes;
+                newItem.ByteOffset = byteOffset;
+                newItem.ImageKey = imageKey;
+                newItem.Tag = tag;
                 items.Add(newItem);
                 selectedIndex = items.Count - 1;
                 return true;
@@ -133,6 +158,7 @@ namespace iPhoneGUI
             //myPhone.Connect += new ConnectEventHandler(Connecting);
             //myPhone.Disconnect += new ConnectEventHandler(Connecting);
             // TEMPORARY FileType load until I add a FileType config window
+            // Files
             ItemProperties ipItems = new ItemProperties();
             ipItems.Add("Program", iPhone.FileTypes.File, TypeIdentifier.HeaderBytes, "", "Program", "Program", Hex.ToBytes("CEFAEDFE0C00"), 0);
             ipItems.Add("App", iPhone.FileTypes.File, TypeIdentifier.Extension, ".app", "App", "Application");
@@ -149,17 +175,23 @@ namespace iPhoneGUI
             ipItems.Add("AAC", iPhone.FileTypes.File, TypeIdentifier.Extension, ".aac", "Audio", "Audio");
             ipItems.Add("MP3", iPhone.FileTypes.File, TypeIdentifier.Extension, ".mp3", "Audio", "Audio");
             ipItems.Add("M4A", iPhone.FileTypes.File, TypeIdentifier.Extension, ".m4a", "Audio", "Audio");
-            ipItems.Add("Photo DataBase", iPhone.FileTypes.File, TypeIdentifier.Name, "", "Database", "Database");
-            ipItems.Add("ArtworkDB", iPhone.FileTypes.File, TypeIdentifier.Name, "", "Database", "Database");
+            ipItems.Add("Photo DataBase", iPhone.FileTypes.File, TypeIdentifier.FileName, "", "Database", "Database");
+            ipItems.Add("ArtworkDB", iPhone.FileTypes.File, TypeIdentifier.FileName, "", "Database", "Database");
             ipItems.Add("Text", iPhone.FileTypes.File, TypeIdentifier.Extension, ".txt", "Document", "Document");
             ipItems.Add("Script", iPhone.FileTypes.File, TypeIdentifier.Extension, ".script", "Script", "Script");
             ipItems.Add("ShellScript", iPhone.FileTypes.File, TypeIdentifier.Extension, ".sh", "Script", "Script");
-
-
-
-
-
-
+            // Folder types
+            ipItems.Add("App", iPhone.FileTypes.Folder, TypeIdentifier.Extension, ".app", "Folder-App", "Application");
+            ipItems.Add("Photos", iPhone.FileTypes.Folder, TypeIdentifier.FileName, "", "Folder-Image", "Image Folder");
+            ipItems.Add("DCIM", iPhone.FileTypes.Folder, TypeIdentifier.FileName, "", "Folder-Image", "Image Folder");
+            ipItems.Add("100APPLE", iPhone.FileTypes.Folder, TypeIdentifier.FileName, "", "Folder-Image", "Image Folder");
+            ipItems.Add("Artwork", iPhone.FileTypes.Folder, TypeIdentifier.FileName, "", "Folder-Image", "Image Folder");
+            ipItems.Add("Thumbs", iPhone.FileTypes.Folder, TypeIdentifier.FileName, "", "Folder-Image", "Image Folder");
+            ipItems.Add("Music", iPhone.FileTypes.Folder, TypeIdentifier.FileName, "", "Folder-Audio", "Audio Folder");
+            // Other types
+            ipItems.Add("CharDevice", iPhone.FileTypes.CharDevice, TypeIdentifier.FileType, "", "Device", "Character Device");
+            ipItems.Add("BlockDevice", iPhone.FileTypes.BlockDevice, TypeIdentifier.FileType, "", "Device", "Block Device");
+            ipItems.Add("FIFO", iPhone.FileTypes.FIFO, TypeIdentifier.FileType, "", "Device", "FIFO");
         }
 
         private void SetObjectSizes() {

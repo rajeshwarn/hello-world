@@ -4,7 +4,7 @@ using System.Text;
 namespace Tools
 {
 	/// <summary>
-	/// Summary description for HexEncoding.
+	/// Creates.
 	/// </summary>
 	public class Hex
 	{
@@ -144,7 +144,20 @@ namespace Tools
 			byte newByte = byte.Parse(hex, System.Globalization.NumberStyles.HexNumber);
 			return newByte;
 		}
-
-
 	}
+
+    public class TextString
+    {
+        public TextString() {
+        }
+
+        public static Byte[] ToByte(String text) {
+            Char[] charArray = text.ToCharArray();
+            Byte[] retVal = new Byte[charArray.Length];
+            for (Int32 i = 0; i < charArray.Length; i++) {
+                retVal[i] = Convert.ToByte(charArray[i]);
+            }
+            return retVal;
+        }
+    }
 }
