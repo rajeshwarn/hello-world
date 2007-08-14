@@ -37,6 +37,7 @@ namespace iPhoneGUI
         internal Boolean connecting = false;
         internal String lastSaveFolder = "";
         internal Boolean cancelCopy = false;
+        internal Boolean showDotFolders = false;
         ItemProperties ipItems;
 
         internal enum TypeIdentifier
@@ -386,7 +387,7 @@ namespace iPhoneGUI
                     //Connecting(myPhone, null);
                     this.treeFolders.Nodes.Clear();
                     FillTree();
-                    ShowFiles("/");
+                    ShowFiles(treeFolders.TopNode, "/");
                     this.Show();
                     connecting = false;
                     connected = true;
@@ -404,7 +405,7 @@ namespace iPhoneGUI
 
         private void RefreshView() {
             FillTree();
-            ShowFiles("/");
+            ShowFiles();
             SetStatus();
         }
 
@@ -449,26 +450,6 @@ namespace iPhoneGUI
                         } else {
                             childNode.ImageKey = "Other";
                             childNode.Tag = "Unknown";
-                        /*
-                         * if ( GetFileExt(dirNames[i]) == ".app" ) {
-                            childNode.ImageKey = "Folder-App";
-                        } else {
-                            switch ( dirNames[i] ) {
-                                case "Photos":
-                                case "DCIM":
-                                case "100APPLE":
-                                case "Artwork":
-                                case "Thumbs":
-                                    childNode.ImageKey = "Folder-Image";
-                                    break;
-                                case "Music":
-                                    childNode.ImageKey = "Folder-Audio";
-                                    break;
-                                default:
-                                    childNode.ImageKey = "Folder";
-                                    break;
-                            }
-                         */
                         }
                         AddNodes(childNode, path + "/" + dirNames[i], (getLevels - 1));
                         thisNode.Nodes.Add(childNode);
@@ -502,119 +483,59 @@ namespace iPhoneGUI
 
         private void treeFolders_AfterSelect(object sender, TreeViewEventArgs e) {
             String currentPath = e.Node.FullPath.Replace("\\", "/");
-            ShowFiles(currentPath);
+            ShowFiles(e.Node, currentPath); // showFiles should get the dirlist, too (unless it's already gotten)
             SetStatus();
         }
 
-        private void ShowFiles(String path) {
+        private void ShowFiles() {
+            ShowFiles(treeFolders.TopNode, "/");
+        }
+
+        private void ShowFiles(TreeNode thisNode, String path) {
+            Boolean addNodes = false;
+            if ( thisNode.Tag == null || thisNode.Tag.ToString() == "notloaded" ) {
+                addNodes = true;
+                thisNode.Nodes.Clear();
+            }
             String[] files = myPhone.GetFiles(path);
             this.listFiles.Items.Clear();
             Int32 fileSize;
             iPhone.FileTypes fileType;
             foreach ( String file in files ) {
-                ListViewItem thisFile = new ListViewItem(file);
-                thisFile.ImageKey = "Other";
-                myPhone.GetFileInfoDetails(path + "/" + file, out fileSize, out fileType);
-                thisFile.SubItems.Add(fileSize.ToString());
-                ItemProperty thisItem;
-                if ((thisItem = ipItems.FindItem(path + "/" + file)) != null) {
-                    thisFile.ImageKey = thisItem.ImageKey;
-                    thisFile.Tag = thisItem.Tag;
-                    thisFile.SubItems.Add(thisItem.Name);
-                } else {
+                if ( !(file.Equals(".") || file.Equals("..")) || showDotFolders ) {
+                    String fullPath = path + "/" + file;
+                    ListViewItem thisFile = new ListViewItem(file);
                     thisFile.ImageKey = "Other";
-                    thisFile.Tag = "Unknown";
-                    thisFile.SubItems.Add("File");
-                }
-                /*
-                if ( fileType == iPhone.FileTypes.File ) {
-                    String fileExt = GetFileExt(file);
-                    switch ( fileExt ) {
-                        case ".plist":
-                            thisFile.SubItems.Add("Property list");
-                            thisFile.Tag = "Settings";
-                            break;
-                        case ".strings":
-                            thisFile.SubItems.Add("Localization file");
-                            thisFile.Tag = "Settings";
-                            break;
-                        case ".m4a":
-                        case ".mp3":
-                        case ".aac":
-                        case ".mid":
-                            thisFile.SubItems.Add("Audio File");
-                            thisFile.Tag = "Audio";
-                            break;
-                        case "txt":
-                            thisFile.SubItems.Add("Text File");
-                            thisFile.Tag = "Document";
-                            break;
-                        case ".png":
-                        case ".jpg":
-                        case ".gif":
-                        case ".bmp":
-                            thisFile.SubItems.Add("Image file");
-                            thisFile.Tag = "Image";
-                            break;
-                        default:
-                            thisFile.SubItems.Add("File");
-                            thisFile.Tag = "Other";
-                            break;
+                    myPhone.GetFileInfoDetails(fullPath, out fileSize, out fileType);
+                    thisFile.SubItems.Add(fileSize.ToString());
+                    ItemProperty thisItem;
+                    if ( (thisItem = ipItems.FindItem(fullPath)) != null ) {
+                        thisFile.ImageKey = thisItem.ImageKey;
+                        thisFile.Tag = thisItem.Tag;
+                        thisFile.SubItems.Add(thisItem.Name);
+                    } else {
+                        thisFile.ImageKey = "Other";
+                        thisFile.Tag = "Unknown";
+                        thisFile.SubItems.Add("File");
                     }
-                    thisFile.ImageKey = thisFile.Tag.ToString();
-                } else {
-                    switch ( fileType ) {
-                        case iPhone.FileTypes.Folder:
-                            thisFile.ImageKey = "Folder";
-                            thisFile.SubItems.Add("Folder");
-                            thisFile.Tag = "Folder";
-                            break;
-                        case iPhone.FileTypes.Link:
-                            thisFile.ImageKey = "Device";
-                            thisFile.SubItems.Add("File Link");
-                            thisFile.Tag = "Link";
-                            break;
-                        case iPhone.FileTypes.BlockDevice:
-                            thisFile.ImageKey = "Device";
-                            thisFile.SubItems.Add("Block Device");
-                            thisFile.Tag = "Device";
-                            break;
-                        case iPhone.FileTypes.CharDevice:
-                            thisFile.ImageKey = "Device";
-                            thisFile.SubItems.Add("Character Device");
-                            thisFile.Tag = "Device";
-                            break;
-                        case iPhone.FileTypes.FIFO:
-                            thisFile.ImageKey = "Other";
-                            thisFile.SubItems.Add("FIFO");
-                            thisFile.Tag = "Device";
-                            break;
-                        case iPhone.FileTypes.FileMask:
-                            thisFile.ImageKey = "Other";
-                            thisFile.SubItems.Add("File type binary mask");
-                            thisFile.Tag = "Other";
-                            break;
-                        case iPhone.FileTypes.Socket:
-                            thisFile.ImageKey = "Device";
-                            thisFile.SubItems.Add("Socket");
-                            thisFile.Tag = "Device";
-                            break;
-                        default:
-                            thisFile.ImageKey = "Other";
-                            thisFile.SubItems.Add("Unknown");
-                            thisFile.Tag = "Other";
-                            break;
+                    if ( (fileType == iPhone.FileTypes.Folder) && addNodes ) {
+                        TreeNode childNode = new TreeNode(file);
+                        childNode.ImageKey = "Folder";
+                        childNode.Name = fullPath;
+                        AddNodes(childNode, fullPath, 0);
+                        thisNode.Nodes.Add(childNode);
+                        thisNode.Tag = "loaded";
+                        Application.DoEvents();
                     }
-                }
-                 */
-                thisFile.Group = listFiles.Groups[listFiles.Groups.Count - 1]; // Other Group
-                for ( Int32 i = 0; i < listFiles.Groups.Count; i++ ) {
-                    if ( thisFile.Tag == listFiles.Groups[i].Tag ) {
-                        thisFile.Group = listFiles.Groups[i];
-                        break;
+                    thisFile.Group = listFiles.Groups[listFiles.Groups.Count - 1]; // Other Group
+                    for ( Int32 i = 0; i < listFiles.Groups.Count; i++ ) {
+                        if ( thisFile.Tag == listFiles.Groups[i].Tag ) {
+                            thisFile.Group = listFiles.Groups[i];
+                            break;
+                        }
                     }
+                    listFiles.Items.Add(thisFile);
                 }
-                listFiles.Items.Add(thisFile);
             }
         }
 
@@ -645,7 +566,7 @@ namespace iPhoneGUI
             }
             // Force a refresh
             FillTree(thisNode, destPath);
-            ShowFiles(destPath);
+            ShowFiles(thisNode, destPath);
         }
 
         internal void CopyToDevice(String srcFile, String destPath) {
@@ -700,9 +621,10 @@ namespace iPhoneGUI
                     }
                 }
             }
-            if ( deletedFolder )
+            if ( deletedFolder ) {
                 FillTree(thisNode, path);
-            ShowFiles(path);
+            }
+            ShowFiles(thisNode, path);
         }
 
         private void CreateFolder() {
@@ -716,7 +638,7 @@ namespace iPhoneGUI
                     try {
                         myPhone.CreateDirectory(inPath + "/" + frmNew.FolderName);
                         FillTree(selectedNode, inPath);
-                        ShowFiles(inPath);
+                        ShowFiles(selectedNode, inPath);
                     }
                     catch ( Exception err ) {
                         MessageBox.Show(err.Message);
