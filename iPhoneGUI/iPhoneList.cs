@@ -421,6 +421,7 @@ namespace iPhoneGUI
 
             //treeFolders.Nodes.Add(AddNodes(path, name, levels));
             treeFolders.Nodes[0].Expand();
+            treeFolders.SelectedNode = thisNode;
             SetStatus();
         }
 
@@ -645,6 +646,7 @@ namespace iPhoneGUI
                     }
                 }
             }
+            timerMain.Enabled = true;
         }
 
         private void CopyItemsFromDevice() {
@@ -884,6 +886,20 @@ namespace iPhoneGUI
                 listFiles.View = View.Details;
             else
                 listFiles.View = View.List;
+        }
+
+        private void listFiles_DoubleClick(object sender, EventArgs e) {
+            if ( listFiles.SelectedItems.Count == 1 ) {
+                String thisFile = listFiles.SelectedItems[0].Text;
+                String path = treeFolders.SelectedNode.FullPath.Replace("\\", "/");
+                String fullPath = path + "/" + thisFile;
+
+                iPhone.FileTypes fileType;
+                if ( (fileType = myPhone.FileType(fullPath)) == iPhone.FileTypes.Folder ) {
+                    TreeNode[] nodes = treeFolders.SelectedNode.Nodes.Find(fullPath, true);
+                    treeFolders.SelectedNode = nodes[0];
+                }
+            }
         }
     }
 }

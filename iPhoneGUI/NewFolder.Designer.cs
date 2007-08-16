@@ -50,7 +50,7 @@ namespace iPhoneGUI
             this.buttonOK.Location = new System.Drawing.Point(330, 5);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(32, 22);
-            this.buttonOK.TabIndex = 1;
+            this.buttonOK.TabIndex = 99;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
@@ -60,7 +60,7 @@ namespace iPhoneGUI
             this.textActionEntry.Location = new System.Drawing.Point(103, 5);
             this.textActionEntry.Name = "textActionEntry";
             this.textActionEntry.Size = new System.Drawing.Size(227, 20);
-            this.textActionEntry.TabIndex = 2;
+            this.textActionEntry.TabIndex = 0;
             // 
             // NewFolderForm
             // 
