@@ -38,6 +38,7 @@ namespace iPhoneGUI
         internal String lastSaveFolder = "";
         internal Boolean cancelCopy = false;
         internal Boolean showDotFolders = false;
+        internal Int32 previewHeight = 200;
         ItemProperties ipItems;
 
         internal enum TypeIdentifier
@@ -366,6 +367,8 @@ namespace iPhoneGUI
             ipItems.AddDevice("CharDevice", iPhone.FileTypes.CharDevice, "Device", "Character Device");
             ipItems.AddDevice("BlockDevice", iPhone.FileTypes.BlockDevice, "Device", "Block Device");
             ipItems.AddDevice("FIFO", iPhone.FileTypes.FIFO, "Device", "FIFO");
+
+            splitFilesViewer.Panel2Collapsed = true;
         }
 
         private void SetObjectSizes() {
@@ -900,6 +903,14 @@ namespace iPhoneGUI
                     treeFolders.SelectedNode = nodes[0];
                 }
             }
+        }
+
+        private void toolsFileViewPreview_Click(object sender, EventArgs e) {
+            splitFilesViewer.Panel2Collapsed = !splitFilesViewer.Panel2Collapsed;
+        }
+
+        private void menuMainBackup_Click(object sender, EventArgs e) {
+
         }
     }
 }

@@ -123,6 +123,13 @@ namespace iPhoneList.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap ThumbnailLoadingHS {
+            get {
+                object obj = ResourceManager.GetObject("ThumbnailLoadingHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap XPfolder_closed {
             get {
                 object obj = ResourceManager.GetObject("XPfolder_closed", resourceCulture);
