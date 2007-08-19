@@ -39,6 +39,8 @@ namespace iPhoneGUI
         internal Boolean cancelCopy = false;
         internal Boolean showDotFolders = false;
         internal Int32 previewHeight = 200;
+        internal Boolean overWriteExistingFile = false;
+        internal Boolean dontAskAboutOverWrite = false;
         ItemProperties ipItems;
 
         internal enum TypeIdentifier
@@ -421,7 +423,6 @@ namespace iPhoneGUI
         public void FillTree(TreeNode thisNode, String path) {
             thisNode.Nodes.Clear();
             AddNodes(thisNode, path);
-
             //treeFolders.Nodes.Add(AddNodes(path, name, levels));
             treeFolders.Nodes[0].Expand();
             treeFolders.SelectedNode = thisNode;
@@ -470,7 +471,6 @@ namespace iPhoneGUI
                     Application.DoEvents();
                 }
             }
-
         }
 
         private void btnRefresh_Click(object sender, EventArgs e) {
@@ -568,6 +568,9 @@ namespace iPhoneGUI
             for ( int i = 0; i < files.Length; i++ ) {
                 CopyToDevice(files[i], destPath);
             }
+            if (!dontAskAboutOverWrite) {
+                overWriteExistingFile = false;
+            }
             // Force a refresh
             FillTree(thisNode, destPath);
             ShowFiles(thisNode, destPath);
@@ -576,8 +579,8 @@ namespace iPhoneGUI
         internal void CopyToDevice(String srcFile, String destPath) {
             FileInfo thisFile = new FileInfo(srcFile);
             Console.WriteLine(thisFile.Attributes.ToString());
-            if ( thisFile.Attributes == FileAttributes.Directory ) {
-                String[] files = Directory.GetFiles(thisFile.FullName);
+            if ( (thisFile.Attributes & FileAttributes.Directory) == FileAttributes.Directory) {
+                String[] files = Directory.GetFileSystemEntries(thisFile.FullName);
                 for ( Int32 i = 0; i < files.Length; i++ ) {
                     String newDirectory = destPath + "/" + thisFile.Name;
                     myPhone.CreateDirectory(newDirectory);
@@ -587,6 +590,7 @@ namespace iPhoneGUI
                 Byte[] fileBuffer = new Byte[1024];
                 Int32 length;
                 labelStatus.Text = "Copying " + thisFile.FullName;
+
                 using ( Stream inStream = File.OpenRead(thisFile.FullName) ) {
                     using ( Stream outStream =
                         iPhoneFile.OpenWrite(myPhone, destPath + "/" + Path.GetFileName(thisFile.FullName)) ) {
@@ -599,7 +603,6 @@ namespace iPhoneGUI
             }
         }
 
-
         private void treeFolders_BeforeExpand(object sender, TreeViewCancelEventArgs e) {
             if ( e.Node.Tag.ToString() == "notloaded" ) {
                 FillTree(e.Node, e.Node.FullPath.Replace("\\", "/"));
@@ -608,7 +611,6 @@ namespace iPhoneGUI
 
         private void folderToolStripMenuItem_Click(object sender, EventArgs e) {
             Console.WriteLine(e.ToString());
-
         }
 
         private void DeleteSelectedItems() {
