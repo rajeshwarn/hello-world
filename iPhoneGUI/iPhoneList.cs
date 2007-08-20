@@ -767,27 +767,43 @@ namespace iPhoneGUI
         }
 
         private String DecodePListFile(String inFile) {
-            return ReadFile(inFile, 1024);
+            return ReadTextFile(inFile, 1024);
         }
 
-        private String ReadFile(String inFile, Int32 length) {
-            StringBuilder text = new StringBuilder();
-            Byte[] fileBuffer = new Byte[1024];
-            Int32 maxBytes, bytesRead = 0;
+        private String DecodePListData(Byte[] inData) {
+            return System.Text.Encoding.ASCII.GetString(inData);
+        }
+
+        private String ReadTextFile(String inFile, Int32 length) {
+            Byte[] fileData = ReadFile(inFile, 1024);
+            String text = null;
+            // is the a Binary Plist?
+            // if (BSubString(fileData,0,6)
+            if (System.Text.Encoding.ASCII.GetString(Hex.BSubString(fileData, 0, 6)).Equals("bplist")) {
+                text = DecodePListData(fileData);
+            } else {
+                text = System.Text.Encoding.ASCII.GetString(fileData);
+            }
+            return String.Join(Environment.NewLine, text.Split('\n'));
+        }
+
+        private Byte[] ReadFile(String inFile) {
+            return ReadFile(inFile, -1);
+        }
+
+        private Byte[] ReadFile(String inFile, Int32 length) {
+            Int32 maxBytes = 0;
             Int32 bufferSize;
-            if ( length == -1 ) {
+            if (length == -1) {
                 maxBytes = myPhone.FileSize(inFile);
             } else {
                 maxBytes = length;
             }
-            using ( Stream inStream = iPhoneFile.OpenRead(myPhone, inFile) ) {
-                while ( (bufferSize = inStream.Read(fileBuffer, 0, fileBuffer.Length)) > 0 &&
-                    bytesRead <= maxBytes ) {
-                    bytesRead += bufferSize;
-                    text.Append(System.Text.Encoding.ASCII.GetString(fileBuffer));
-                }
+            Byte[] fileBuffer = new Byte[maxBytes];
+            using (Stream inStream = iPhoneFile.OpenRead(myPhone, inFile)) {
+                bufferSize = inStream.Read(fileBuffer, 0, fileBuffer.Length);
             }
-            return String.Join(Environment.NewLine, text.ToString().Split('\n'));
+            return fileBuffer;
         }
 
         private void PreviewSelectedItem(TreeNode thisNode, ListViewItem item) {
@@ -795,52 +811,39 @@ namespace iPhoneGUI
                 thisNode = treeFolders.TopNode;
             }
             String fullName = thisNode.FullPath.Replace("\\", "/") + "/" + item.Text;
-
-            iPhone.FileTypes fileType = myPhone.FileType(fullName);
-            String previewText = null;
-            Image previewImage = null;
-            PreviewTypes previewType = PreviewTypes.Binary;
-            switch ( fileType ) {
-                case iPhone.FileTypes.File:
-                    switch ( GetFileExt(item.Text) ) {
-                        case ".plist":
-                            previewText = DecodePListFile(fullName);
-                            previewType = PreviewTypes.Text;
-                            break;
-                        case ".mp3":
-                            previewImage = imageFilesLarge.Images["MP3.ico"];
-                            previewType = PreviewTypes.Music;
-                            break;
-                        case ".m4a":
-                            previewImage = imageFilesLarge.Images["M3U.ico"];
-                            previewType = PreviewTypes.Music;
-                            break;
-                        case ".aac":
-                            previewImage = imageFilesLarge.Images["ASX.ico"];
-                            previewType = PreviewTypes.Music;
-                            break;
-                        default:
-                            previewText = ReadFile(fullName, 1024);
-                            previewType = PreviewTypes.Text;
-                            break;
-                    }
-                    break;
-                default:
-                    previewImage = imageFilesLarge.Images["document.ico"];
-                    previewType = PreviewTypes.Binary;
-                    break;
-            }
-            switch ( previewType ) {
-                case PreviewTypes.Text:
-                    previewTextBox.Text = previewText;
-                    previewTextBox.Visible = true;
-                    previewImageBox.Visible = false;
-                    break;
-                default:
-                    previewTextBox.Visible = false;
-                    previewImageBox.Visible = true;
-                    previewImageBox.Image = previewImage;
-                    break;
+            if (myPhone.FileType(fullName) == iPhone.FileTypes.File) {
+                String previewText = null;
+                Image previewImage = null;
+                PreviewTypes previewType = PreviewTypes.Binary;
+                switch (item.Tag.ToString()) {
+                    case "Audio":
+                        previewType = PreviewTypes.Music;
+                        break;
+                    case "Image":
+                        previewType = PreviewTypes.Image;
+                        break;
+                    case "Settings":
+                    case "Document":
+                    case "File":
+                        previewType = PreviewTypes.Text;
+                        break;
+                    default:
+                        previewType = PreviewTypes.Text;
+                        break;
+                }
+                switch (previewType) {
+                    case PreviewTypes.Text:
+                        previewText = ReadTextFile(fullName, 1024);
+                        previewTextBox.Text = previewText;
+                        previewTextBox.Visible = true;
+                        previewImageBox.Visible = false;
+                        break;
+                    default:
+                        previewTextBox.Visible = false;
+                        previewImageBox.Visible = true;
+                        previewImageBox.Image = previewImage;
+                        break;
+                }
             }
         }
 
@@ -873,7 +876,7 @@ namespace iPhoneGUI
         }
 
         private void listFiles_SelectedIndexChanged(object sender, EventArgs e) {
-            if ( listFiles.SelectedItems.Count == 1 ) {
+            if ( listFiles.SelectedItems.Count == 1 && !splitFilesViewer.Panel2Collapsed) {
                 PreviewSelectedItem(treeFolders.SelectedNode, listFiles.SelectedItems[0]);
             } else {
                 previewTextBox.Text = "";

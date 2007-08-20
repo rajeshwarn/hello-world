@@ -31,6 +31,16 @@ namespace Tools
             //
         }
 
+        public static Byte[] BSubString(Byte[] inArray, Int32 offset, Int32 length) {
+            Int32 maxBytes = offset + length;
+            Byte[] retData = new Byte[maxBytes];
+            if (maxBytes <= inArray.Length) {
+                for (Int32 i = offset; i <= maxBytes; i++) {
+                    retData[i] = inArray[i];
+                }
+            }
+            return retData;
+        }
         public static int GetByteCount(string hexString) {
             int numHexChars = 0;
             char c;
