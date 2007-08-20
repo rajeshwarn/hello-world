@@ -106,9 +106,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VS-NET\CustomPreferences\Nap\Nap.csproj">
-      <Project>{E6535084-A0A9-49BD-B5FA-68D9FF448812}</Project>
-      <Name>Nap</Name>
+    <ProjectReference Include="..\..\..\VS-NET\ToolBarRender\ToolBarRender.csproj">
+      <Project>{35EB9444-8D71-4C30-AE20-BE1BB41B4DD2}</Project>
+      <Name>ToolBarRender</Name>
     </ProjectReference>
     <ProjectReference Include="..\Manzana\Manzana.csproj">
       <Project>{8C260F85-65AC-40A6-85BF-D89C49052F64}</Project>
