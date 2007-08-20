@@ -242,47 +242,47 @@ namespace iPhoneGUI
                 Boolean _fileName = false;
                 String extension = null;
                 Boolean _extension = false;
-                
+
                 ItemProperty returnItem = null;
                 iPhone.FileTypes fileType = phone.FileType(fullPath);
                 foreach ( ItemProperty item in items ) {
                     if ( fileType == item.Type ) {
-                        switch (item.Identifier){
+                        switch ( item.Identifier ) {
                             case TypeIdentifier.FileType:
                                 returnItem = item;
                                 break;
                             case TypeIdentifier.FullPath:
-                                if (item.FileInfoText.Equals(fullPath.ToLower())){
+                                if ( item.FileInfoText.Equals(fullPath.ToLower()) ) {
                                     returnItem = item;
                                 }
                                 break;
                             case TypeIdentifier.FileName:
-                                if (!_fileName){
-                                    fileName = fullPath.Substring(fullPath.LastIndexOf("/")+1).ToLower();
+                                if ( !_fileName ) {
+                                    fileName = fullPath.Substring(fullPath.LastIndexOf("/") + 1).ToLower();
                                     _fileName = true;
                                 }
-                                if (item.FileInfoText.Equals(fileName)){
+                                if ( item.FileInfoText.Equals(fileName) ) {
                                     returnItem = item;
                                 }
                                 break;
                             case TypeIdentifier.Extension:
-                                if (!_extension){
+                                if ( !_extension ) {
                                     extension = TextString.GetFileExtension(fullPath);
                                     _extension = true;
                                 }
-                                if (extension == item.FileInfoText){
+                                if ( extension == item.FileInfoText ) {
                                     returnItem = item;
                                 }
                                 break;
                             case TypeIdentifier.ExtHeadString:
                             case TypeIdentifier.ExtHeadBytes:
-                                if (!_extension){
+                                if ( !_extension ) {
                                     extension = TextString.GetFileExtension(fullPath);
                                     _extension = true;
                                 }
-                                if (extension == item.FileInfoText){
+                                if ( extension == item.FileInfoText ) {
                                     Byte[] buffer = GetHeaderBytes(fullPath, item.ByteOffset, item.Header.Length);
-                                    if (buffer == item.Header) {
+                                    if ( buffer == item.Header ) {
                                         returnItem = item;
                                     }
                                 }
@@ -290,13 +290,13 @@ namespace iPhoneGUI
                             case TypeIdentifier.HeaderBytes:
                             case TypeIdentifier.HeaderString:
                                 Byte[] fileBuffer = GetHeaderBytes(fullPath, item.ByteOffset, item.Header.Length);
-                                if (fileBuffer == item.Header) {
+                                if ( fileBuffer == item.Header ) {
                                     returnItem = item;
                                 }
                                 break;
                         }
                     }
-                    if (returnItem != null) {
+                    if ( returnItem != null ) {
                         break;
                     }
                 }
@@ -312,12 +312,12 @@ namespace iPhoneGUI
                         selectedIndex = value;
                 }
             }
-            private Byte[] GetHeaderBytes(String fileName, Int32 offset, Int32 length){
+            private Byte[] GetHeaderBytes(String fileName, Int32 offset, Int32 length) {
                 Byte[] retval = null;
-                using (Stream fileStream = iPhoneFile.OpenRead(phone, fileName)){
+                using ( Stream fileStream = iPhoneFile.OpenRead(phone, fileName) ) {
                     Byte[] buffer = new Byte[length];
                     Int32 bytesRead;
-                    if ((offset + length) <= phone.FileSize(fileName)) {
+                    if ( (offset + length) <= phone.FileSize(fileName) ) {
                         bytesRead = fileStream.Read(buffer, offset, length);
                         retval = buffer;
                     }
@@ -449,7 +449,7 @@ namespace iPhoneGUI
                         childNode.ImageKey = "Folder";
                         childNode.Name = path + "/" + dirNames[i];
                         ItemProperty thisItem = ipItems.FindItem(childNode.Name);
-                        if (thisItem != null){
+                        if ( thisItem != null ) {
                             childNode.ImageKey = thisItem.ImageKey;
                             childNode.Tag = thisItem.Tag;
                         } else {
@@ -485,10 +485,36 @@ namespace iPhoneGUI
             connected = true;
         }
 
+        private TreeNode FindNodePath(TreeNode startingNode, String fullPath) {
+            String separator = startingNode.TreeView.PathSeparator;
+            String searchPath = fullPath + separator;
+            TreeNode currentNode = startingNode;
+            TreeNode[] nodes;
+            Int32 location = 2;
+            Int32 oldLocation = 0;
+            Boolean foundNode = true;
+            while ( (location = searchPath.IndexOf(separator, location)) > 0 ) {
+                nodes = currentNode.Nodes.Find(searchPath.Substring(0,location), true);
+                if ( nodes.Length == 0 ) {
+                    foundNode = false;
+                    currentNode = null;
+                    break;
+                }
+                location++;
+                oldLocation = location;
+                currentNode = nodes[0];
+                if ( currentNode.Tag.ToString() == "notloaded" ) {
+                    AddNodes(currentNode, currentNode.FullPath);
+                }
+            }
+            return currentNode;
+        }
+
         private void treeFolders_AfterSelect(object sender, TreeViewEventArgs e) {
-            String currentPath = e.Node.FullPath.Replace("\\", "/");
+            String currentPath = e.Node.FullPath;
             ShowFiles(e.Node, currentPath); // showFiles should get the dirlist, too (unless it's already gotten)
             SetStatus();
+            this.Text = Application.ProductName + " - " + treeFolders.SelectedNode.FullPath;
         }
 
         private void ShowFiles() {
@@ -562,13 +588,13 @@ namespace iPhoneGUI
 
         private void listFiles_DragDrop(object sender, DragEventArgs e) {
             TreeNode thisNode = treeFolders.SelectedNode;
-            String destPath = thisNode.FullPath.Replace("\\", "/");
+            String destPath = thisNode.FullPath;
             String[] files = (String[])e.Data.GetData(DataFormats.FileDrop);
 
             for ( int i = 0; i < files.Length; i++ ) {
                 CopyToDevice(files[i], destPath);
             }
-            if (!dontAskAboutOverWrite) {
+            if ( !dontAskAboutOverWrite ) {
                 overWriteExistingFile = false;
             }
             // Force a refresh
@@ -579,7 +605,7 @@ namespace iPhoneGUI
         internal void CopyToDevice(String srcFile, String destPath) {
             FileInfo thisFile = new FileInfo(srcFile);
             Console.WriteLine(thisFile.Attributes.ToString());
-            if ( (thisFile.Attributes & FileAttributes.Directory) == FileAttributes.Directory) {
+            if ( (thisFile.Attributes & FileAttributes.Directory) == FileAttributes.Directory ) {
                 String[] files = Directory.GetFileSystemEntries(thisFile.FullName);
                 for ( Int32 i = 0; i < files.Length; i++ ) {
                     String newDirectory = destPath + "/" + thisFile.Name;
@@ -605,7 +631,7 @@ namespace iPhoneGUI
 
         private void treeFolders_BeforeExpand(object sender, TreeViewCancelEventArgs e) {
             if ( e.Node.Tag.ToString() == "notloaded" ) {
-                FillTree(e.Node, e.Node.FullPath.Replace("\\", "/"));
+                FillTree(e.Node, e.Node.FullPath);
             }
         }
 
@@ -614,7 +640,7 @@ namespace iPhoneGUI
         }
 
         private void DeleteSelectedItems() {
-            String path = treeFolders.SelectedNode.FullPath.Replace("\\", "/");
+            String path = treeFolders.SelectedNode.FullPath;
             TreeNode thisNode = treeFolders.SelectedNode;
             Boolean deletedFolder = false;
             if ( listFiles.SelectedItems.Count > 0 ) {
@@ -636,7 +662,7 @@ namespace iPhoneGUI
         private void CreateFolder() {
             timerMain.Enabled = false;
             TreeNode selectedNode = treeFolders.SelectedNode;
-            String inPath = selectedNode.FullPath.Replace("\\", "/");
+            String inPath = selectedNode.FullPath;
             using ( NewFolderForm frmNew = new NewFolderForm() ) {
                 frmNew.ActionText = "Folder Name: " + inPath + "/";
                 frmNew.ShowDialog();
@@ -668,7 +694,7 @@ namespace iPhoneGUI
                 }
             } else {
                 if ( treeFolders.SelectedNode != null ) {
-                    fromPath = treeFolders.SelectedNode.FullPath.Replace("\\", "/");
+                    fromPath = treeFolders.SelectedNode.FullPath;
                 }
             }
             if ( okToCopy ) {
@@ -779,7 +805,7 @@ namespace iPhoneGUI
             String text = null;
             // is the a Binary Plist?
             // if (BSubString(fileData,0,6)
-            if (System.Text.Encoding.ASCII.GetString(Hex.BSubString(fileData, 0, 6)).Equals("bplist")) {
+            if ( System.Text.Encoding.ASCII.GetString(Hex.BSubString(fileData, 0, 6)).Equals("bplist") ) {
                 text = DecodePListData(fileData);
             } else {
                 text = System.Text.Encoding.ASCII.GetString(fileData);
@@ -794,13 +820,13 @@ namespace iPhoneGUI
         private Byte[] ReadFile(String inFile, Int32 length) {
             Int32 maxBytes = 0;
             Int32 bufferSize;
-            if (length == -1) {
+            if ( length == -1 ) {
                 maxBytes = myPhone.FileSize(inFile);
             } else {
                 maxBytes = length;
             }
             Byte[] fileBuffer = new Byte[maxBytes];
-            using (Stream inStream = iPhoneFile.OpenRead(myPhone, inFile)) {
+            using ( Stream inStream = iPhoneFile.OpenRead(myPhone, inFile) ) {
                 bufferSize = inStream.Read(fileBuffer, 0, fileBuffer.Length);
             }
             return fileBuffer;
@@ -810,12 +836,12 @@ namespace iPhoneGUI
             if ( thisNode == null ) {
                 thisNode = treeFolders.TopNode;
             }
-            String fullName = thisNode.FullPath.Replace("\\", "/") + "/" + item.Text;
-            if (myPhone.FileType(fullName) == iPhone.FileTypes.File) {
+            String fullName = thisNode.FullPath + "/" + item.Text;
+            if ( myPhone.FileType(fullName) == iPhone.FileTypes.File ) {
                 String previewText = null;
                 Image previewImage = null;
                 PreviewTypes previewType = PreviewTypes.Binary;
-                switch (item.Tag.ToString()) {
+                switch ( item.Tag.ToString() ) {
                     case "Audio":
                         previewType = PreviewTypes.Music;
                         break;
@@ -831,7 +857,7 @@ namespace iPhoneGUI
                         previewType = PreviewTypes.Text;
                         break;
                 }
-                switch (previewType) {
+                switch ( previewType ) {
                     case PreviewTypes.Text:
                         previewText = ReadTextFile(fullName, 1024);
                         previewTextBox.Text = previewText;
@@ -876,7 +902,7 @@ namespace iPhoneGUI
         }
 
         private void listFiles_SelectedIndexChanged(object sender, EventArgs e) {
-            if ( listFiles.SelectedItems.Count == 1 && !splitFilesViewer.Panel2Collapsed) {
+            if ( listFiles.SelectedItems.Count == 1 && !splitFilesViewer.Panel2Collapsed ) {
                 PreviewSelectedItem(treeFolders.SelectedNode, listFiles.SelectedItems[0]);
             } else {
                 previewTextBox.Text = "";
@@ -899,7 +925,7 @@ namespace iPhoneGUI
         private void listFiles_DoubleClick(object sender, EventArgs e) {
             if ( listFiles.SelectedItems.Count == 1 ) {
                 String thisFile = listFiles.SelectedItems[0].Text;
-                String path = treeFolders.SelectedNode.FullPath.Replace("\\", "/");
+                String path = treeFolders.SelectedNode.FullPath;
                 String fullPath = path + "/" + thisFile;
 
                 iPhone.FileTypes fileType;
@@ -916,6 +942,14 @@ namespace iPhoneGUI
 
         private void menuMainBackup_Click(object sender, EventArgs e) {
 
+        }
+
+        private void toolsLinksSelect(object sender, EventArgs e) {
+            String fullPath = ((ToolStripMenuItem)sender).Tag.ToString();
+            TreeNode node = FindNodePath(treeFolders.TopNode, fullPath);
+            if ( node != null ) {
+                treeFolders.SelectedNode = node;
+            }
         }
     }
 }
