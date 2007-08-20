@@ -26,12 +26,16 @@ using Manzana;
 using System.IO;
 using System.Collections;
 using Tools;
+using Nap;
+using Nap.Store;
+using Office2007Render;
 
 namespace iPhoneGUI
 {
     public partial class iPhoneList: Form
     {
 
+        IPreferencesNode config = PreferencesFactory.GetUserRootNode(WindowsFileSystemStore.Instance);
         internal iPhone myPhone = new iPhone();
         internal Boolean connected = false;
         internal Boolean connecting = false;
@@ -330,9 +334,11 @@ namespace iPhoneGUI
             InitializeComponent();
             SetObjectSizes();
             SetStatus();
+            ToolStripManager.Renderer = new Office2007Renderer();
             //myPhone.Connect += new ConnectEventHandler(Connecting);
             //myPhone.Disconnect += new ConnectEventHandler(Connecting);
             // TEMPORARY FileType load until I add a FileType config window
+
             // Files
             ipItems = new ItemProperties(myPhone);
             ipItems.AddFile("Program", TypeIdentifier.HeaderBytes, "CEFAEDFE0C00", 0, "Program", "Program");
@@ -442,6 +448,10 @@ namespace iPhoneGUI
             String[] dirNames;
             labelStatus.Text = "Adding folder " + thisNode.Text;
             dirNames = myPhone.GetDirectories(path);
+            if ( thisNode.TreeView != null ) {
+                thisNode.TreeView.BeginUpdate();
+            }
+
             if ( dirNames.Length > 0 ) {
                 if ( getLevels != 0 ) {
                     for ( int i = 0; i < dirNames.Length; i++ ) {
@@ -470,6 +480,9 @@ namespace iPhoneGUI
                     thisNode.Tag = "notloaded";
                     Application.DoEvents();
                 }
+            }
+            if ( thisNode.TreeView != null ) {
+                thisNode.TreeView.EndUpdate();
             }
         }
 
