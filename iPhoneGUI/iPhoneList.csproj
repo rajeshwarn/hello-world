@@ -110,13 +110,13 @@
       <Project>{E6535084-A0A9-49BD-B5FA-68D9FF448812}</Project>
       <Name>Nap</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\VS-NET\Office2007Renderer\Office2007Renderer\Office2007Renderer.csproj">
-      <Project>{A3E7CEE0-EA2C-443F-9E8F-2A40FDB4AF86}</Project>
-      <Name>Office2007Renderer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Manzana\Manzana.csproj">
       <Project>{8C260F85-65AC-40A6-85BF-D89C49052F64}</Project>
       <Name>Manzana</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolBarRender\ToolBarRender.csproj">
+      <Project>{35EB9444-8D71-4C30-AE20-BE1BB41B4DD2}</Project>
+      <Name>ToolBarRender</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
