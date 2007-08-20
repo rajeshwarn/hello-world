@@ -114,10 +114,6 @@
       <Project>{8C260F85-65AC-40A6-85BF-D89C49052F64}</Project>
       <Name>Manzana</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ToolBarRender\ToolBarRender.csproj">
-      <Project>{35EB9444-8D71-4C30-AE20-BE1BB41B4DD2}</Project>
-      <Name>ToolBarRender</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="iPhoneGUI_TemporaryKey.pfx" />

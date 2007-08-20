@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manzana", "Manzana\Manzana.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap", "..\..\VS-NET\CustomPreferences\Nap\Nap.csproj", "{E6535084-A0A9-49BD-B5FA-68D9FF448812}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolBarRender", "ToolBarRender\ToolBarRender.csproj", "{35EB9444-8D71-4C30-AE20-BE1BB41B4DD2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,10 +25,6 @@ Global
 		{E6535084-A0A9-49BD-B5FA-68D9FF448812}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6535084-A0A9-49BD-B5FA-68D9FF448812}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6535084-A0A9-49BD-B5FA-68D9FF448812}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35EB9444-8D71-4C30-AE20-BE1BB41B4DD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35EB9444-8D71-4C30-AE20-BE1BB41B4DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35EB9444-8D71-4C30-AE20-BE1BB41B4DD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35EB9444-8D71-4C30-AE20-BE1BB41B4DD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
