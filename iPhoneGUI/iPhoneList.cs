@@ -79,11 +79,11 @@ namespace iPhoneGUI
                 using (TextReader prefsFile = new StreamReader(fullPath)) {
                     prefs = (UserPrefs)xmlConfig.Deserialize(prefsFile);
                 }
-                splitFilesViewer.Panel2Collapsed = !prefs.window.previewOn;
-                this.Top = prefs.window.main.Top;
-                this.Left = prefs.window.main.Left;
-                this.Width = prefs.window.main.Width;
-                this.Height = prefs.window.main.Height;
+                splitFilesViewer.Panel2Collapsed = !prefs.Window.previewOn;
+                this.Top = prefs.Window.Main.Top;
+                this.Left = prefs.Window.Main.Left;
+                this.Width = prefs.Window.Main.Width;
+                this.Height = prefs.Window.Main.Height;
             }
         }
 
@@ -134,10 +134,10 @@ namespace iPhoneGUI
         }
 
         private void SaveUserPreferences() {
-            prefs.window.previewOn = !splitFilesViewer.Panel2Collapsed;
-            prefs.window.main = GetLocationParms(this);
-            prefs.window.mainToolBar = GetLocationParms(toolsMain);
-            prefs.window.fileToolBar = GetLocationParms(toolsFileView);
+            prefs.Window.previewOn = !splitFilesViewer.Panel2Collapsed;
+            prefs.Window.Main = GetLocationParms(this);
+            prefs.Window.MainToolBar = GetLocationParms(toolsMain);
+            prefs.Window.FileToolBar = GetLocationParms(toolsFileView);
             XmlSerializer xmlConfig = new XmlSerializer(typeof(UserPrefs));
             String fullPath = Application.UserAppDataPath + "iPhoneList.config";
             using ( TextWriter prefsFile = new StreamWriter(fullPath) ) {

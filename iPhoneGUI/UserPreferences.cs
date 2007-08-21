@@ -26,18 +26,26 @@ namespace iPhoneList
     [XmlRoot("UserPrefs")]
     public class UserPrefs
     {
+        [XmlElement("Application")]
+        public ApplicationPrefs Application = new ApplicationPrefs();
         [XmlElement("File")]
-        public FilePrefs file = new FilePrefs();
+        public FilePrefs File = new FilePrefs();
         [XmlElement("Window")]
-        public WindowPrefs window = new WindowPrefs();
+        public WindowPrefs Window = new WindowPrefs();
         public UserPrefs() { }
     }
 
+    public class ApplicationPrefs
+    {
+        [XmlElement("BackupFolder")]
+        public String BackupFolder;
+        public ApplicationPrefs() { }
+    }
     public class FilePrefs
     {
-        [XmlAttribute("OverWriteExistingFiles")]
+        [XmlElement("OverWriteExistingFiles")]
         public Boolean OverWriteExistingFiles;
-        [XmlAttribute("DontAskAboutOverwrite")]
+        [XmlElement("DontAskAboutOverwrite")]
         public Boolean DontAskAboutOverWrite;
         public FilePrefs() { }
     }
@@ -47,11 +55,11 @@ namespace iPhoneList
         [XmlElement("PreviewOn")]
         public Boolean previewOn = false;
         [XmlElement("Main")]
-        public ItemLocation main = new ItemLocation();
-        [XmlElement("FileToolBar")]
-        public ItemLocation fileToolBar = new ItemLocation();
+        public ItemLocation Main = new ItemLocation();
         [XmlElement("MainToolBar")]
-        public ItemLocation mainToolBar = new ItemLocation();
+        public ItemLocation MainToolBar = new ItemLocation();
+        [XmlElement("FileToolBar")]
+        public ItemLocation FileToolBar = new ItemLocation();
         public WindowPrefs() { }
     }
 
