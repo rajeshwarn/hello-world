@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Computer Aces")]
 [assembly: AssemblyProduct("iPhoneList")]
-[assembly: AssemblyCopyright("Copyright © Computer Aces 2007")]
+[assembly: AssemblyCopyright("Copyright © 2007, Computer Aces")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("0.9.1.35")]
-[assembly: AssemblyFileVersion("0.9.1.35")]
+[assembly: AssemblyVersion("0.9.7.68")]
+[assembly: AssemblyFileVersion("0.9.7.68")]
