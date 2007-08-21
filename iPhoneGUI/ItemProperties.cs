@@ -1,3 +1,21 @@
+// ItemProperties.cs - Configurable Item Properties - a class for:
+// iPhoneList - an iPhone File Explorer for Windows
+//
+// Copyright (C) 2007  James C. Baker
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// using System;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,21 +44,21 @@ namespace iPhoneList
 
     public class ItemProperty
     {
-        [XmlAttribute("Name")]
+        [XmlElement("Name")]
         public String Name;
-        [XmlAttribute("Type")]
+        [XmlElement("Type")]
         public iPhone.FileTypes Type;
-        [XmlAttribute("Identifier")]
+        [XmlElement("Identifier")]
         public TypeIdentifier Identifier;
-        [XmlAttribute("FileInfoText")]
+        [XmlElement("FileInfoText")]
         public String FileInfoText;
-        [XmlAttribute("ImageKey")]
+        [XmlElement("ImageKey")]
         public String ImageKey;
-        [XmlAttribute("Tag")]
+        [XmlElement("Tag")]
         public String Tag;
-        [XmlAttribute("Header")]
+        [XmlElement("Header")]
         public Byte[] Header;
-        [XmlAttribute("ByteOffset")]
+        [XmlElement("ByteOffset")]
         public Int32 ByteOffset;
 
         public ItemProperty() {

@@ -35,7 +35,7 @@ namespace Tools
             Int32 maxBytes = offset + length;
             Byte[] retData = new Byte[maxBytes];
             if (maxBytes <= inArray.Length) {
-                for (Int32 i = offset; i <= maxBytes; i++) {
+                for (Int32 i = offset; i < maxBytes; i++) {
                     retData[i] = inArray[i];
                 }
             }
