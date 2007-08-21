@@ -79,8 +79,7 @@ namespace iPhoneGUI
             [XmlAttribute("ByteOffset")]
             public Int32 ByteOffset;
 
-            public ItemProperty(String inName) {
-                Name = inName;
+            public ItemProperty() {
             }
             public override String ToString() {
                 return Name;
@@ -188,7 +187,8 @@ namespace iPhoneGUI
             String imageKey,
             String tag
             ) {
-                ItemProperty newItem = new ItemProperty(name);
+                ItemProperty newItem = new ItemProperty();
+                newItem.Name = name;
                 newItem.Type = type;
                 newItem.Identifier = typeID;
                 newItem.FileInfoText = fileInfoText;
@@ -406,25 +406,33 @@ namespace iPhoneGUI
             ipItems = new ItemProperties();
             ipItems.Phone = myPhone;
             prefs = new UserPrefs();
-            LoadUserPreferences();
-            LoadConfig();
+            try {
+                LoadUserPreferences();
+                LoadConfig();
+                SaveUserPreferences();
+                SaveConfig();
+            }
+            catch (Exception err) {
+                Console.WriteLine(err.Message);
+                Console.WriteLine(err.InnerException.Message);
+            }
 
             splitFilesViewer.Panel2Collapsed = true;
         }
 
         private void LoadUserPreferences() {
-            XmlSerializer xmlConfig = new XmlSerializer(typeof(UserPrefs));
             String fullPath = Application.UserAppDataPath + "iPhoneList.config";
-            if ( File.Exists(fullPath) ) {
-                using ( TextReader prefsFile = new StreamReader(fullPath) ) {
+            if (File.Exists(fullPath)) {
+                XmlSerializer xmlConfig = new XmlSerializer(typeof(UserPrefs));
+                using (TextReader prefsFile = new StreamReader(fullPath)) {
                     prefs = (UserPrefs)xmlConfig.Deserialize(prefsFile);
                 }
+                splitFilesViewer.Panel2Collapsed = !prefs.window.previewOn;
+                this.Top = prefs.window.main.Top;
+                this.Left = prefs.window.main.Left;
+                this.Width = prefs.window.main.Width;
+                this.Height = prefs.window.main.Height;
             }
-            splitFilesViewer.Panel2Collapsed = !prefs.window.previewOn;
-            this.Top = prefs.window.main.Top;
-            this.Left = prefs.window.main.Left;
-            this.Width = prefs.window.main.Width;
-            this.Height = prefs.window.main.Height;
         }
 
         private void LoadConfig() {
