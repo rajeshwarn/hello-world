@@ -60,6 +60,10 @@ namespace iPhoneList
         public ItemLocation MainToolBar = new ItemLocation();
         [XmlElement("FileToolBar")]
         public ItemLocation FileToolBar = new ItemLocation();
+        [XmlElement("SplitterDistance")]
+        public Int32 SplitterDistance;
+        [XmlElement("PreviewShowing")]
+        public Int32 PreviewShowing;
         public WindowPrefs() { }
     }
 

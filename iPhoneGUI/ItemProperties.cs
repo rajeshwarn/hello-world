@@ -78,8 +78,9 @@ namespace iPhoneList
         public ItemProperties() {
             items = new ArrayList();
         }
-        [XmlIgnore]
+        [XmlIgnore] //Element("Phone")]
         public iPhone Phone {
+            get { return phone; }
             set { phone = value; }
         }
         public Boolean AddFileType( // for FileType Adds
@@ -331,5 +332,70 @@ namespace iPhoneList
             }
             return retval;
         }
+
+        public ItemProperties LoadConfig() {
+            ItemProperties ipItems = new ItemProperties();
+            Boolean prefsLoaded = false;
+            String fullPath = AppDomain.CurrentDomain.BaseDirectory + "iPhoneList.config";
+            if ( File.Exists(fullPath) ) {
+                try {
+                    XmlSerializer xmlConfig = new XmlSerializer(typeof(ItemProperties));
+                    using ( TextReader prefsFile = new StreamReader(fullPath) ) {
+                        ipItems = (ItemProperties)xmlConfig.Deserialize(prefsFile);
+                    }
+                    prefsLoaded = true;
+                }
+                catch ( Exception err ) {
+                    Console.WriteLine(err.Message);
+                }
+            }
+            if (!prefsLoaded || (ipItems.Items.Length == 0)){
+                // Files
+                ipItems.AddFile("Program", TypeIdentifier.HeaderBytes, "CEFAEDFE0C00", 0, "Program", "Program");
+                ipItems.AddFile("Application", TypeIdentifier.Extension, ".app", "App", "Application");
+                ipItems.AddFile("BinPList", TypeIdentifier.ExtHeadBytes, ".plist", "62706C6973743030", 0, "Settings", "Settings");
+                ipItems.AddFile("PList", TypeIdentifier.Extension, ".plist", "Settings", "Settings");
+                ipItems.AddFile("BinStrings", TypeIdentifier.ExtHeadBytes, ".strings", "62706C6973743030", 0, "Settings", "Settings");
+                ipItems.AddFile("Strings", TypeIdentifier.Extension, ".strings", "Settings", "Settings");
+                ipItems.AddFile("Thumnail", TypeIdentifier.Extension, ".thm", "Image", "Image");
+                ipItems.AddFile("Thumb", TypeIdentifier.Extension, ".ithmb", "Image", "Image");
+                ipItems.AddFile("PNG", TypeIdentifier.Extension, ".png", "Image", "Image");
+                ipItems.AddFile("JPG", TypeIdentifier.Extension, ".jpg", "Image", "Image");
+                ipItems.AddFile("GIF", TypeIdentifier.Extension, ".gif", "Image", "Image");
+                ipItems.AddFile("BMP", TypeIdentifier.Extension, ".bmp", "Image", "Image");
+                ipItems.AddFile("AAC", TypeIdentifier.Extension, ".aac", "Audio", "Audio");
+                ipItems.AddFile("MP3", TypeIdentifier.Extension, ".mp3", "Audio", "Audio");
+                ipItems.AddFile("M4A", TypeIdentifier.Extension, ".m4a", "Audio", "Audio");
+                ipItems.AddFile("Photo DataBase", TypeIdentifier.FileName, "", "Database", "Database");
+                ipItems.AddFile("ArtworkDB", TypeIdentifier.FileName, "", "Database", "Database");
+                ipItems.AddFile("Text", TypeIdentifier.Extension, ".txt", "Document", "Document");
+                ipItems.AddFile("Script", TypeIdentifier.Extension, ".script", "Script", "Script");
+                ipItems.AddFile("ShellScript", TypeIdentifier.Extension, ".sh", "Script", "Script");
+                ipItems.AddFile("File", TypeIdentifier.FileType, "", "Other", "Unknown");
+                // Folder types
+                ipItems.AddFolder("App Folder", TypeIdentifier.Extension, ".app", "Folder-App", "App Folder");
+                ipItems.AddFolder("Photos", TypeIdentifier.FileName, "photos", "Folder-Image", "Image Folder");
+                ipItems.AddFolder("DCIM", TypeIdentifier.FileName, "dcim", "Folder-Image", "Image Folder");
+                ipItems.AddFolder("100APPLE", TypeIdentifier.FileName, "100apple", "Folder-Image", "Image Folder");
+                ipItems.AddFolder("Artwork", TypeIdentifier.FileName, "artwork", "Folder-Image", "Image Folder");
+                ipItems.AddFolder("Thumbs", TypeIdentifier.FileName, "thumbs", "Folder-Image", "Image Folder");
+                ipItems.AddFolder("Music", TypeIdentifier.FileName, "music", "Folder-Audio", "Audio Folder");
+                ipItems.AddFolder("Folder", TypeIdentifier.FileType, "", "Folder", "Folder");
+                // Other types
+                ipItems.AddDevice("CharDevice", iPhone.FileTypes.CharDevice, "Device", "Character Device");
+                ipItems.AddDevice("BlockDevice", iPhone.FileTypes.BlockDevice, "Device", "Block Device");
+                ipItems.AddDevice("FIFO", iPhone.FileTypes.FIFO, "Device", "FIFO");
+            }
+            return ipItems;
+        }
+
+        public void SaveConfig() {
+            XmlSerializer xmlConfig = new XmlSerializer(typeof(ItemProperties));
+            String fullPath = AppDomain.CurrentDomain.BaseDirectory + "iPhoneList.config";
+            using ( TextWriter prefsFile = new StreamWriter(fullPath) ) {
+                xmlConfig.Serialize(prefsFile, this);
+            }
+        }
+
     }
 }
