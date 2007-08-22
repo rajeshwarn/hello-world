@@ -50,6 +50,7 @@ namespace iPhoneGUI
         public LinkNodes links;
 
         public iPhoneList() {
+            /// TODO: Add ability to Edit and Delete Links
             InitializeComponent();
             SetObjectSizes();
             SetStatus();
@@ -92,8 +93,8 @@ namespace iPhoneGUI
                 }
                 splitFilesViewer.Panel2Collapsed = !prefs.Window.previewOn;
                 SetItemLocation(this, prefs.Window.Main);
-                SetItemLocation(toolMain, prefs.Window.MainToolBar);
-                SetItemLocation(toolFil
+                SetItemLocation(toolsMain, prefs.Window.MainToolBar);
+                SetItemLocation(toolsFileView, prefs.Window.FileToolBar);
             }
         }
 

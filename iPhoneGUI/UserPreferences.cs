@@ -73,7 +73,7 @@ namespace iPhoneList
         public Int32 Top;
         [XmlAttribute("Left")]
         public Int32 Left;
-        [XmlAttribute("Right")]
+        [XmlAttribute("Height")]
         public Int32 Height;
         [XmlAttribute("Width")]
         public Int32 Width;
