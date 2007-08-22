@@ -44,8 +44,10 @@ namespace iPhoneGUI
         internal Int32 previewHeight = 200;
         internal Boolean overWriteExistingFile = false;
         internal Boolean dontAskAboutOverWrite = false;
+
         public ItemProperties ipItems;
         public UserPrefs prefs;
+        public LinkNodes links;
 
         public iPhoneList() {
             InitializeComponent();
@@ -54,29 +56,31 @@ namespace iPhoneGUI
             ToolStripManager.Renderer = new Office2007Renderer();
             //myPhone.Connect += new ConnectEventHandler(Connecting);
             //myPhone.Disconnect += new ConnectEventHandler(Connecting);
-            // TEMPORARY FileType load until I add a FileType config window
+            prefs = new UserPrefs();
+            links = new LinkNodes();
             ipItems = new ItemProperties();
             ipItems.Phone = myPhone;
-            prefs = new UserPrefs();
             try {
                 LoadUserPreferences();
                 LoadConfig();
-                ipItems.Phone = myPhone;
             }
             catch ( Exception err ) {
                 Console.WriteLine(err.Message);
-                Console.WriteLine(err.InnerException.Message);
+                //Console.WriteLine(err.InnerException.Message);
             }
-            //ipItems.Phone = myPhone;
+            ipItems.Phone = myPhone;
             splitFilesViewer.Panel2Collapsed = true;
+            timerMain.Enabled = true;
         }
 
         private void LoadConfig() {
             ipItems = ipItems.LoadConfig();
+            links = links.LoadConfig();
         }
 
         private void SaveConfig(){
             ipItems.SaveConfig();
+            links.SaveConfig();
         }
 
         private void LoadUserPreferences() {
@@ -87,10 +91,9 @@ namespace iPhoneGUI
                     prefs = (UserPrefs)xmlConfig.Deserialize(prefsFile);
                 }
                 splitFilesViewer.Panel2Collapsed = !prefs.Window.previewOn;
-                this.Top = prefs.Window.Main.Top;
-                this.Left = prefs.Window.Main.Left;
-                this.Width = prefs.Window.Main.Width;
-                this.Height = prefs.Window.Main.Height;
+                SetItemLocation(this, prefs.Window.Main);
+                SetItemLocation(toolMain, prefs.Window.MainToolBar);
+                SetItemLocation(toolFil
             }
         }
 
@@ -249,11 +252,9 @@ namespace iPhoneGUI
             TreeNode[] nodes;
             Int32 location = 2;
             Int32 oldLocation = 0;
-            Boolean foundNode = true;
             while ( (location = searchPath.IndexOf(separator, location)) > 0 ) {
                 nodes = currentNode.Nodes.Find(searchPath.Substring(0, location), true);
                 if ( nodes.Length == 0 ) {
-                    foundNode = false;
                     currentNode = null;
                     break;
                 }
@@ -720,6 +721,31 @@ namespace iPhoneGUI
             if ( e.SplitX > 0 ) {
                 prefs.Window.SplitterDistance = e.SplitX;
             }
+        }
+
+        private void toolsFileNewLocation_Click(object sender, EventArgs e) {
+            String location = treeFolders.SelectedNode.FullPath;
+            if ( location != null ) {
+                using ( LinkProperties form = new LinkProperties() ) {
+                    form.LinkLocation = location;
+                    DialogResult result = form.ShowDialog();
+                    if ( result == DialogResult.OK ) {
+                        links.Add(treeFolders.SelectedNode.FullPath);
+                        links.SelectedNode.Location = treeFolders.SelectedNode.FullPath;
+                        ToolStripMenuItem newMenu = new ToolStripMenuItem();
+                        newMenu.Name = location;
+                        newMenu.Text = form.LinkName;
+                        newMenu.Tag = form.LinkLocation;
+                        newMenu.ToolTipText = form.LinkDescription;
+                        toolsFileFavorites.DropDownItems.Add(newMenu);
+                        links.Add(form.LinkName, form.LinkLocation, form.LinkDescription);
+                    }
+                }
+            }
+        }
+
+        private void menuMainFileExit_Click(object sender, EventArgs e) {
+            this.Close();
         }
     }
 }

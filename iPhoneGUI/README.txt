@@ -1,7 +1,13 @@
 iPhoneList README.
 
-Remember, you will need to have the iTunesMobileDevice.dll in the same folder as iPhoneList OR
-in the system PATH. It can normally be found at:
-C:\Program Files\Common Files\Apple\Mobile Device Support\bin
+Version 0.9.7.68:
+8 iPhoneList now looks for iTunesMobileDevice.dll - you don't need to copy it.
+* Office 2003-like toolbars
+* Copy to deivce fixed
+* Configurable file / folder recognition
+* Performance improvements
+* Added the foundations for "Favorites"
+* User Preferences saved and reloaded
+* REALLY CLOSE to decoding binary plists
 
 CmputrAce
