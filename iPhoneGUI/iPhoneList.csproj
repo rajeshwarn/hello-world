@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="ItemProperties.cs" />
     <Compile Include="LinkProperties.cs">
       <SubType>Form</SubType>

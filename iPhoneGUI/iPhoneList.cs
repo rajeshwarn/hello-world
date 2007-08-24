@@ -277,11 +277,41 @@ namespace iPhoneGUI
         }
 
         private void treeFolders_AfterSelect(object sender, TreeViewEventArgs e) {
-            String currentPath = e.Node.FullPath;
-            ShowFiles(e.Node, currentPath); // showFiles should get the dirlist, too (unless it's already gotten)
-            SetStatus();
-            this.Text = Application.ProductName + " - " + treeFolders.SelectedNode.FullPath;
+            switch ( e.Node.Name ) {
+                case "/":
+                    String currentPath = e.Node.FullPath;
+                    ShowFiles(e.Node, currentPath); // showFiles should get the dirlist, too (unless it's already gotten)
+                    SetStatus();
+                    this.Text = Application.ProductName + " - " + treeFolders.SelectedNode.FullPath;
+                    break;
+                case "Applications":
+                    ShowApplications();
+                    break;
+                case "Ringtones":
+                    ShowRingtones();
+                    break;
+                case "Themes":
+                    ShowThemes();
+                    break;
+                case "SystemSounds":
+                    ShowSystemSounds();
+                    break;
+            }
         }
+
+        private void ShowApplications() {
+
+        }
+
+        private void ShowRingtones() {
+        }
+
+        private void ShowThemes() {
+        }
+
+        private void ShowSystemSounds() {
+        }
+
 
         private void ShowFiles() {
             ShowFiles(treeFolders.TopNode, "/");
@@ -736,6 +766,9 @@ namespace iPhoneGUI
             splitFilesViewer.Panel2Collapsed = !splitFilesViewer.Panel2Collapsed;
             if ( !splitFilesViewer.Panel2Collapsed && listFiles.SelectedItems.Count > 0) {
                 if ( previewTextBox.Tag.ToString() != listFiles.SelectedItems[0].SubItems["Path"].Text.ToString() ) {
+                    PreviewText(listFiles.SelectedItems[0].SubItems["Path"].Text.ToString());
+                } else if ( previewTextBox.Tag.ToString() == "empty" ) {
+                    PreviewText(previewTextBox.Tag.ToString());
                 }
             }
         }
@@ -795,7 +828,9 @@ namespace iPhoneGUI
         }
 
         private void checkShowAll_CheckedChanged(object sender, EventArgs e) {
-
+            if ( listFiles.SelectedItems.Count > 0 ) {
+                PreviewText(listFiles.SelectedItems[0].SubItems["Path"].Text.ToString());
+            }
         }
     }
 }
