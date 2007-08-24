@@ -71,7 +71,7 @@ namespace iPhoneList
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textLinkName.Location = new System.Drawing.Point(81, 10);
             this.textLinkName.Name = "textLinkName";
-            this.textLinkName.Size = new System.Drawing.Size(204, 20);
+            this.textLinkName.Size = new System.Drawing.Size(198, 20);
             this.textLinkName.TabIndex = 3;
             // 
             // textLinkLocation
@@ -80,7 +80,7 @@ namespace iPhoneList
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textLinkLocation.Location = new System.Drawing.Point(81, 38);
             this.textLinkLocation.Name = "textLinkLocation";
-            this.textLinkLocation.Size = new System.Drawing.Size(204, 20);
+            this.textLinkLocation.Size = new System.Drawing.Size(198, 20);
             this.textLinkLocation.TabIndex = 4;
             // 
             // textLinkDescription
@@ -91,14 +91,14 @@ namespace iPhoneList
             this.textLinkDescription.Location = new System.Drawing.Point(81, 68);
             this.textLinkDescription.Multiline = true;
             this.textLinkDescription.Name = "textLinkDescription";
-            this.textLinkDescription.Size = new System.Drawing.Size(204, 52);
+            this.textLinkDescription.Size = new System.Drawing.Size(198, 52);
             this.textLinkDescription.TabIndex = 5;
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(150, 126);
+            this.buttonOK.Location = new System.Drawing.Point(144, 126);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(49, 23);
             this.buttonOK.TabIndex = 6;
@@ -109,7 +109,7 @@ namespace iPhoneList
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(236, 126);
+            this.buttonCancel.Location = new System.Drawing.Point(230, 126);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(49, 23);
             this.buttonCancel.TabIndex = 7;
@@ -122,7 +122,7 @@ namespace iPhoneList
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(297, 157);
+            this.ClientSize = new System.Drawing.Size(291, 157);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.textLinkDescription);

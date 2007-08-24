@@ -28,6 +28,8 @@ namespace iPhoneList
     {
         [XmlElement("Application")]
         public ApplicationPrefs Application = new ApplicationPrefs();
+        [XmlElement("Preview")]
+        public PreviewPrefs Preview = new PreviewPrefs();
         [XmlElement("File")]
         public FilePrefs File = new FilePrefs();
         [XmlElement("Window")]
@@ -40,6 +42,12 @@ namespace iPhoneList
         [XmlElement("BackupFolder")]
         public String BackupFolder;
         public ApplicationPrefs() { }
+    }
+    public class PreviewPrefs
+    {
+        [XmlElement("TabSpaces")]
+        public Int32 TabSpaces;
+        public PreviewPrefs() { }
     }
     public class FilePrefs
     {

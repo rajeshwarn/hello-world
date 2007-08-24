@@ -69,6 +69,12 @@
       <DependentUpon>LinkProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Links.cs" />
+    <Compile Include="Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="iPhoneList.cs">
@@ -97,6 +103,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>NewFolder.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Options.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Options.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -114,10 +124,6 @@
     <Compile Include="UserPreferences.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VS-NET\ToolBarRender\ToolBarRender.csproj">
-      <Project>{35EB9444-8D71-4C30-AE20-BE1BB41B4DD2}</Project>
-      <Name>ToolBarRender</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Manzana\Manzana.csproj">
       <Project>{8C260F85-65AC-40A6-85BF-D89C49052F64}</Project>
       <Name>Manzana</Name>
