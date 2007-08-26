@@ -67,8 +67,16 @@ namespace iPhoneGUI
             this.popupTree = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.popupTreeRefresh = new System.Windows.Forms.ToolStripMenuItem();
             this.popupTreeCreateFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.popupTreeCopy = new System.Windows.Forms.ToolStripMenuItem();
+            this.popupTreeCopyFolderName = new System.Windows.Forms.ToolStripMenuItem();
+            this.popupTreeCopyFullPath = new System.Windows.Forms.ToolStripMenuItem();
             this.imageFolders = new System.Windows.Forms.ImageList(this.components);
             this.splitFilesViewer = new System.Windows.Forms.SplitContainer();
+            this.listApps = new System.Windows.Forms.ListView();
+            this.colAppTitle = new System.Windows.Forms.ColumnHeader();
+            this.colAppVersion = new System.Windows.Forms.ColumnHeader();
+            this.colAppDescription = new System.Windows.Forms.ColumnHeader();
+            this.colAppPublisher = new System.Windows.Forms.ColumnHeader();
             this.listFiles = new System.Windows.Forms.ListView();
             this.colFile = new System.Windows.Forms.ColumnHeader();
             this.colSize = new System.Windows.Forms.ColumnHeader();
@@ -81,6 +89,8 @@ namespace iPhoneGUI
             this.imageFilesSmall = new System.Windows.Forms.ImageList(this.components);
             this.previewImageBox = new System.Windows.Forms.PictureBox();
             this.previewTextBox = new System.Windows.Forms.TextBox();
+            this.panelPreviewOptions = new System.Windows.Forms.Panel();
+            this.checkShowAll = new System.Windows.Forms.CheckBox();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
             this.statusMain = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -112,8 +122,7 @@ namespace iPhoneGUI
             this.toolsFileNewLocation = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolsLocationMedia = new System.Windows.Forms.ToolStripMenuItem();
-            this.panelPreviewOptions = new System.Windows.Forms.Panel();
-            this.checkShowAll = new System.Windows.Forms.CheckBox();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.panelList.Panel1.SuspendLayout();
             this.panelList.Panel2.SuspendLayout();
             this.panelList.SuspendLayout();
@@ -123,6 +132,7 @@ namespace iPhoneGUI
             this.splitFilesViewer.SuspendLayout();
             this.popupFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).BeginInit();
+            this.panelPreviewOptions.SuspendLayout();
             this.statusMain.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -130,7 +140,6 @@ namespace iPhoneGUI
             this.toolStripContainer1.SuspendLayout();
             this.toolsMain.SuspendLayout();
             this.toolsFileView.SuspendLayout();
-            this.panelPreviewOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelList
@@ -198,16 +207,17 @@ namespace iPhoneGUI
             // 
             this.popupTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.popupTreeRefresh,
-            this.popupTreeCreateFolder});
+            this.popupTreeCreateFolder,
+            this.popupTreeCopy});
             this.popupTree.Name = "popupTree";
-            this.popupTree.Size = new System.Drawing.Size(152, 48);
+            this.popupTree.Size = new System.Drawing.Size(152, 70);
             this.popupTree.Text = "Folder Operations";
             // 
             // popupTreeRefresh
             // 
             this.popupTreeRefresh.Image = global::iPhoneList.Properties.Resources.Retry;
             this.popupTreeRefresh.Name = "popupTreeRefresh";
-            this.popupTreeRefresh.Size = new System.Drawing.Size(151, 22);
+            this.popupTreeRefresh.Size = new System.Drawing.Size(152, 22);
             this.popupTreeRefresh.Text = "&Refresh";
             this.popupTreeRefresh.Click += new System.EventHandler(this.popupTreeRefresh_Click);
             // 
@@ -215,9 +225,34 @@ namespace iPhoneGUI
             // 
             this.popupTreeCreateFolder.Image = global::iPhoneList.Properties.Resources.NewFolderHS;
             this.popupTreeCreateFolder.Name = "popupTreeCreateFolder";
-            this.popupTreeCreateFolder.Size = new System.Drawing.Size(151, 22);
+            this.popupTreeCreateFolder.Size = new System.Drawing.Size(152, 22);
             this.popupTreeCreateFolder.Text = "Create &Folder";
             this.popupTreeCreateFolder.Click += new System.EventHandler(this.popupTreeCreateFolder_Click);
+            // 
+            // popupTreeCopy
+            // 
+            this.popupTreeCopy.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.popupTreeCopyFolderName,
+            this.popupTreeCopyFullPath});
+            this.popupTreeCopy.Name = "popupTreeCopy";
+            this.popupTreeCopy.Size = new System.Drawing.Size(152, 22);
+            this.popupTreeCopy.Text = "&Copy";
+            // 
+            // popupTreeCopyFolderName
+            // 
+            this.popupTreeCopyFolderName.Name = "popupTreeCopyFolderName";
+            this.popupTreeCopyFolderName.Size = new System.Drawing.Size(152, 22);
+            this.popupTreeCopyFolderName.Tag = "FolderName";
+            this.popupTreeCopyFolderName.Text = "&Folder Name";
+            this.popupTreeCopyFolderName.Click += new System.EventHandler(this.popupTreeCopyMenu_Click);
+            // 
+            // popupTreeCopyFullPath
+            // 
+            this.popupTreeCopyFullPath.Name = "popupTreeCopyFullPath";
+            this.popupTreeCopyFullPath.Size = new System.Drawing.Size(152, 22);
+            this.popupTreeCopyFullPath.Tag = "FullPath";
+            this.popupTreeCopyFullPath.Text = "Full &Path";
+            this.popupTreeCopyFullPath.Click += new System.EventHandler(this.popupTreeCopyMenu_Click);
             // 
             // imageFolders
             // 
@@ -244,6 +279,7 @@ namespace iPhoneGUI
             // 
             // splitFilesViewer.Panel1
             // 
+            this.splitFilesViewer.Panel1.Controls.Add(this.listApps);
             this.splitFilesViewer.Panel1.Controls.Add(this.listFiles);
             // 
             // splitFilesViewer.Panel2
@@ -253,9 +289,45 @@ namespace iPhoneGUI
             this.splitFilesViewer.Panel2.Controls.Add(this.panelPreviewOptions);
             this.splitFilesViewer.Panel2.Padding = new System.Windows.Forms.Padding(2);
             this.splitFilesViewer.Size = new System.Drawing.Size(414, 386);
-            this.splitFilesViewer.SplitterDistance = 200;
+            this.splitFilesViewer.SplitterDistance = 199;
             this.splitFilesViewer.TabIndex = 1;
             this.splitFilesViewer.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitFilesViewer_SplitterMoved);
+            // 
+            // listApps
+            // 
+            this.listApps.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colAppTitle,
+            this.colAppVersion,
+            this.colAppDescription,
+            this.colAppPublisher});
+            this.listApps.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listApps.Location = new System.Drawing.Point(0, 0);
+            this.listApps.Name = "listApps";
+            this.listApps.Size = new System.Drawing.Size(410, 195);
+            this.listApps.TabIndex = 1;
+            this.listApps.UseCompatibleStateImageBehavior = false;
+            this.listApps.Visible = false;
+            // 
+            // colAppTitle
+            // 
+            this.colAppTitle.Tag = "AppTitle";
+            this.colAppTitle.Text = "Title";
+            // 
+            // colAppVersion
+            // 
+            this.colAppVersion.Tag = "AppVersion";
+            this.colAppVersion.Text = "Version";
+            this.colAppVersion.Width = 32;
+            // 
+            // colAppDescription
+            // 
+            this.colAppDescription.Tag = "AppDescription";
+            this.colAppDescription.Text = "Description";
+            // 
+            // colAppPublisher
+            // 
+            this.colAppPublisher.Tag = "AppPublisher";
+            this.colAppPublisher.Text = "Publisher";
             // 
             // listFiles
             // 
@@ -326,7 +398,7 @@ namespace iPhoneGUI
             this.listFiles.Location = new System.Drawing.Point(0, 0);
             this.listFiles.Name = "listFiles";
             this.listFiles.ShowItemToolTips = true;
-            this.listFiles.Size = new System.Drawing.Size(410, 196);
+            this.listFiles.Size = new System.Drawing.Size(410, 195);
             this.listFiles.SmallImageList = this.imageFilesSmall;
             this.listFiles.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listFiles.TabIndex = 0;
@@ -438,7 +510,7 @@ namespace iPhoneGUI
             this.previewImageBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.previewImageBox.Location = new System.Drawing.Point(2, 25);
             this.previewImageBox.Name = "previewImageBox";
-            this.previewImageBox.Size = new System.Drawing.Size(406, 151);
+            this.previewImageBox.Size = new System.Drawing.Size(406, 152);
             this.previewImageBox.TabIndex = 1;
             this.previewImageBox.TabStop = false;
             this.previewImageBox.Visible = false;
@@ -451,10 +523,30 @@ namespace iPhoneGUI
             this.previewTextBox.Name = "previewTextBox";
             this.previewTextBox.ReadOnly = true;
             this.previewTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.previewTextBox.Size = new System.Drawing.Size(406, 151);
+            this.previewTextBox.Size = new System.Drawing.Size(406, 152);
             this.previewTextBox.TabIndex = 0;
             this.previewTextBox.Tag = "-";
             this.previewTextBox.WordWrap = false;
+            // 
+            // panelPreviewOptions
+            // 
+            this.panelPreviewOptions.Controls.Add(this.checkShowAll);
+            this.panelPreviewOptions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelPreviewOptions.Location = new System.Drawing.Point(2, 2);
+            this.panelPreviewOptions.Name = "panelPreviewOptions";
+            this.panelPreviewOptions.Size = new System.Drawing.Size(406, 23);
+            this.panelPreviewOptions.TabIndex = 2;
+            // 
+            // checkShowAll
+            // 
+            this.checkShowAll.AutoSize = true;
+            this.checkShowAll.Location = new System.Drawing.Point(8, 4);
+            this.checkShowAll.Name = "checkShowAll";
+            this.checkShowAll.Size = new System.Drawing.Size(67, 17);
+            this.checkShowAll.TabIndex = 0;
+            this.checkShowAll.Text = "Show All";
+            this.checkShowAll.UseVisualStyleBackColor = true;
+            this.checkShowAll.CheckedChanged += new System.EventHandler(this.checkShowAll_CheckedChanged);
             // 
             // timerMain
             // 
@@ -533,8 +625,9 @@ namespace iPhoneGUI
             // menuMainTools
             // 
             this.menuMainTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuMainOptions,
-            this.menuMainBackup});
+            this.menuMainBackup,
+            this.toolStripSeparator2,
+            this.menuMainOptions});
             this.menuMainTools.Name = "menuMainTools";
             this.menuMainTools.Size = new System.Drawing.Size(44, 20);
             this.menuMainTools.Text = "&Tools";
@@ -583,8 +676,8 @@ namespace iPhoneGUI
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolsFileView);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolsMain);
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolsFileView);
             // 
             // toolsMain
             // 
@@ -738,25 +831,10 @@ namespace iPhoneGUI
             this.toolsLocationMedia.ToolTipText = "/private/var/root/Media";
             this.toolsLocationMedia.Click += new System.EventHandler(this.toolsLinksSelect);
             // 
-            // panelPreviewOptions
+            // toolStripSeparator2
             // 
-            this.panelPreviewOptions.Controls.Add(this.checkShowAll);
-            this.panelPreviewOptions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelPreviewOptions.Location = new System.Drawing.Point(2, 2);
-            this.panelPreviewOptions.Name = "panelPreviewOptions";
-            this.panelPreviewOptions.Size = new System.Drawing.Size(406, 23);
-            this.panelPreviewOptions.TabIndex = 2;
-            // 
-            // checkShowAll
-            // 
-            this.checkShowAll.AutoSize = true;
-            this.checkShowAll.Location = new System.Drawing.Point(8, 4);
-            this.checkShowAll.Name = "checkShowAll";
-            this.checkShowAll.Size = new System.Drawing.Size(67, 17);
-            this.checkShowAll.TabIndex = 0;
-            this.checkShowAll.Text = "Show All";
-            this.checkShowAll.UseVisualStyleBackColor = true;
-            this.checkShowAll.CheckedChanged += new System.EventHandler(this.checkShowAll_CheckedChanged);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(151, 6);
             // 
             // iPhoneList
             // 
@@ -782,6 +860,8 @@ namespace iPhoneGUI
             this.splitFilesViewer.ResumeLayout(false);
             this.popupFiles.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.previewImageBox)).EndInit();
+            this.panelPreviewOptions.ResumeLayout(false);
+            this.panelPreviewOptions.PerformLayout();
             this.statusMain.ResumeLayout(false);
             this.statusMain.PerformLayout();
             this.menuMain.ResumeLayout(false);
@@ -795,8 +875,6 @@ namespace iPhoneGUI
             this.toolsMain.PerformLayout();
             this.toolsFileView.ResumeLayout(false);
             this.toolsFileView.PerformLayout();
-            this.panelPreviewOptions.ResumeLayout(false);
-            this.panelPreviewOptions.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -856,6 +934,15 @@ namespace iPhoneGUI
         private System.Windows.Forms.ToolStripMenuItem toolsLocationMedia;
         private System.Windows.Forms.Panel panelPreviewOptions;
         private System.Windows.Forms.CheckBox checkShowAll;
+        private System.Windows.Forms.ListView listApps;
+        private System.Windows.Forms.ColumnHeader colAppTitle;
+        private System.Windows.Forms.ColumnHeader colAppVersion;
+        private System.Windows.Forms.ColumnHeader colAppDescription;
+        private System.Windows.Forms.ColumnHeader colAppPublisher;
+        private System.Windows.Forms.ToolStripMenuItem popupTreeCopy;
+        private System.Windows.Forms.ToolStripMenuItem popupTreeCopyFolderName;
+        private System.Windows.Forms.ToolStripMenuItem popupTreeCopyFullPath;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 
