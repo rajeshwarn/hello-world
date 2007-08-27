@@ -22,41 +22,5 @@ namespace iPhoneList.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowGroups {
-            get {
-                return ((bool)(this["ShowGroups"]));
-            }
-            set {
-                this["ShowGroups"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Details")]
-        public global::System.Windows.Forms.View DefaultView {
-            get {
-                return ((global::System.Windows.Forms.View)(this["DefaultView"]));
-            }
-            set {
-                this["DefaultView"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\\\phonedmg\\\\iPhoneBackup")]
-        public string BackupFolder {
-            get {
-                return ((string)(this["BackupFolder"]));
-            }
-            set {
-                this["BackupFolder"] = value;
-            }
-        }
     }
 }

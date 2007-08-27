@@ -297,13 +297,17 @@ namespace iPhoneGUI
         }
 
         private void treeFolders_AfterSelect(object sender, TreeViewEventArgs e) {
+            timerMain.Enabled = false;
             switch (e.Node.Name) {
                 case "/":
                     String currentPath = e.Node.FullPath;
                     ShowFiles(e.Node, currentPath); // showFiles should get the dirlist, too (unless it's already gotten)
                     break;
-                case "Applications":
-                    ShowApplications();
+                case "_ApplicationsPXL":
+                    ShowApplicationsPXL();
+                    break;
+                case "_ApplicationsNull":
+                    ShowApplicationsNull();
                     break;
                 case "Ringtones":
                     ShowRingtones();
@@ -321,6 +325,7 @@ namespace iPhoneGUI
             }
             SetStatus();
             this.Text = Application.ProductName + " - " + treeFolders.SelectedNode.FullPath;
+            timerMain.Enabled = true;
         }
 
         private void treeFolders_BeforeExpand(object sender, TreeViewCancelEventArgs e) {
@@ -330,8 +335,102 @@ namespace iPhoneGUI
         }
 
         private void ShowApplicationsNull() {
+            int declaration = 0;
+            int attribute = 0;
+            int comment = 0;
+            int document = 0;
+            int element = 0;
+            int endelement = 0;
+            int entity = 0;
+            int endentity = 0;
+            int none = 0;
+            int notation = 0;
+            int text = 0;
+            int whitespace = 0;
+            int other = 0;
             String installedAppPath = "//private/var/root/Library/Installer/LocalPackages.plist";
-
+            XmlTextReader textReader = null;
+            if ( myPhone.Exists(installedAppPath) ) {
+                using ( Stream inStream = iPhoneFile.OpenRead(myPhone, installedAppPath) ) {
+                    textReader = new XmlTextReader(inStream);
+                    textReader.Normalization = true;
+                    textReader.MoveToContent();
+                    while ( textReader.Read() ) {
+                        XmlNodeType nType = textReader.NodeType;
+                        switch ( nType ) {
+                            case XmlNodeType.XmlDeclaration:
+                                Console.WriteLine("Declaration:" + textReader.Name.ToString());
+                                declaration++;
+                                break;
+                            case XmlNodeType.Attribute:
+                                Console.WriteLine("Attribute: " + textReader.Name.ToString());
+                                attribute++;
+                                break;
+                            case XmlNodeType.CDATA:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                break;
+                            case XmlNodeType.Comment:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                comment++;
+                                break;
+                            case XmlNodeType.Document:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                document++;
+                                break;
+                            case XmlNodeType.DocumentType:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                break;
+                            case XmlNodeType.Element:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                //textReader.MoveToElement();
+                                element++;
+                                break;
+                            case XmlNodeType.EndElement:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                endelement++;
+                                break;
+                            case XmlNodeType.Entity:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                entity++;
+                                break;
+                            case XmlNodeType.EndEntity:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                endentity++;
+                                break;
+                            case XmlNodeType.None:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                none++;
+                                break;
+                            case XmlNodeType.Notation:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                notation++;
+                                break;
+                            case XmlNodeType.Text:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Value.ToString());
+                                text++;
+                                break;
+                            case XmlNodeType.Whitespace:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                whitespace++;
+                                break;
+                            default:
+                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                                other++;
+                                break;
+                        }
+                        //Console.WriteLine(textReader.XmlSpace.ToString());
+                    }
+                }
+                // Write the summary
+                Console.WriteLine("Total Comments:" + comment.ToString());
+                Console.WriteLine("Total Attributes:" + attribute.ToString());
+                Console.WriteLine("Total Elements:" + element.ToString());
+                Console.WriteLine("Total Entity:" + entity.ToString());
+                //Console.WriteLine("Total Process Instructions:" + pi.ToString());
+                Console.WriteLine("Total Declaration:" + declaration.ToString());
+                //Console.WriteLine("Total DocumentType:" + .ToString());
+                Console.WriteLine("Total WhiteSpaces:" + whitespace.ToString());
+            }
         }
 
         private void ShowApplicationsPXL() {

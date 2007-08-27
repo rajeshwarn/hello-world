@@ -10,6 +10,7 @@ namespace CoreFoundation
     using CFDataRef = IntPtr;
     using CFStringRef = IntPtr;
     using CFAllocatorRef = IntPtr;
+    using System.Collections;
 
     enum CFPropertyListMutabilityOptions : uint
     {
@@ -54,6 +55,106 @@ namespace CoreFoundation
                 Console.WriteLine(err.Message);
             }
             return xmlData;
+        }
+    }
+    public enum PListNodeType
+    {
+        PLDict = 0,
+        PLArray = 1,
+        PLBoolean = 2,
+        PLString = 3,
+        PLValue = 4,
+        PLDate = 5,
+        PLCDATA = 6
+    }
+
+    public class PListNodes
+    {
+        public ArrayList nodes;
+        public PListNodes() {
+            nodes = new ArrayList();
+        }
+        public PListNode[] Nodes {
+            get { return (PListNode[])nodes.ToArray(typeof(PListNode)); }
+            set {
+                nodes.Clear();
+                foreach ( PListNode node in value ) {
+                    nodes.Add(nodes);
+                }
+            }
+        }
+
+        public void AddDict(String keyName) {
+            PListNode dict = new PListNode();
+            dict.Name = "dict";
+            nodes.Add(dict);
+        }
+    }
+
+    public class PListNode
+    {
+        public String Name;
+        public PListNode() {
+        }
+    }
+
+    public class PListKeyNode: PListNode
+    {
+        public PListNodeType NodeType;
+        public PListNode Node;
+        public PListKeyNode() {
+        }
+    }
+
+    public class PListStringNode: PListNode
+    {
+        public PListStringNode() {
+        }
+        public String Text;
+        public override string ToString() {
+            return Text.ToString();
+        }
+    }
+
+    public class PListIntNode: PListNode
+    {
+        public PListIntNode() {
+        }
+        public Int32 Value;
+    }
+
+    public class PListBooleanNode: PListNode
+    {
+        public PListBooleanNode() {
+        }
+        public Boolean Value;
+    }
+
+    public class PListDictNode: PListNode
+    {
+        public PListNodes Nodes;
+        public PListDictNode() {
+        }
+    }
+
+    public class PListArrayNode: PListNode
+    {
+        public ArrayList Value;
+        public PListArrayNode() {
+            Value = new ArrayList();
+        }
+    }
+
+    public class PList
+    {
+        public PList() { }
+
+        public static PListNodes PListXMLtoXML(String inData) {
+            return null;
+        }
+
+        public static PListNodes PlistXMLtoXML(String[] inData) {
+            return null;
         }
     }
 }
