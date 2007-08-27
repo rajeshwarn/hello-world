@@ -44,10 +44,11 @@ namespace iPhoneGUI
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("/");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Applications");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Ringtones");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("System Sounds");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Themes");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Applications (PXL)");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Applications (nullriver)");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Ringtones");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("System Sounds");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Themes");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iPhoneList));
             System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Folders", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("App Folders", System.Windows.Forms.HorizontalAlignment.Left);
@@ -172,28 +173,34 @@ namespace iPhoneGUI
             treeNode1.Tag = "/";
             treeNode1.Text = "/";
             treeNode2.ImageKey = "Folder-App";
-            treeNode2.Name = "_Applications";
+            treeNode2.Name = "_ApplicationsPXL";
             treeNode2.SelectedImageKey = "Folder-App";
             treeNode2.Tag = "//Applications";
-            treeNode2.Text = "Applications";
-            treeNode3.ImageKey = "Folder-Audio";
-            treeNode3.Name = "_Ringtones";
-            treeNode3.SelectedImageKey = "Folder-Audio";
-            treeNode3.Tag = "//var/root/Library/Ringtones";
-            treeNode3.Text = "Ringtones";
-            treeNode4.Name = "_SystemSounds";
-            treeNode4.Text = "System Sounds";
-            treeNode5.ImageKey = "Folder-Image";
-            treeNode5.Name = "_Themes";
-            treeNode5.SelectedImageKey = "Folder-Image";
-            treeNode5.Tag = "//var/root/Media/Themes";
-            treeNode5.Text = "Themes";
+            treeNode2.Text = "Applications (PXL)";
+            treeNode3.ImageKey = "Folder-App";
+            treeNode3.Name = "_Applications";
+            treeNode3.SelectedImageKey = "Folder-App";
+            treeNode3.Tag = "//private/var/root/Library/Installer";
+            treeNode3.Text = "Applications (nullriver)";
+            treeNode4.ImageKey = "Folder-Audio";
+            treeNode4.Name = "_Ringtones";
+            treeNode4.SelectedImageKey = "Folder-Audio";
+            treeNode4.Tag = "//var/root/Library/Ringtones";
+            treeNode4.Text = "Ringtones";
+            treeNode5.Name = "_SystemSounds";
+            treeNode5.Text = "System Sounds";
+            treeNode6.ImageKey = "Folder-Image";
+            treeNode6.Name = "_Themes";
+            treeNode6.SelectedImageKey = "Folder-Image";
+            treeNode6.Tag = "//var/root/Media/Themes";
+            treeNode6.Text = "Themes";
             this.treeFolders.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2,
             treeNode3,
             treeNode4,
-            treeNode5});
+            treeNode5,
+            treeNode6});
             this.treeFolders.PathSeparator = "/";
             this.treeFolders.SelectedImageIndex = 0;
             this.treeFolders.ShowRootLines = false;
@@ -744,7 +751,7 @@ namespace iPhoneGUI
             this.toolsFileView.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolsFileView.Location = new System.Drawing.Point(3, 0);
             this.toolsFileView.Name = "toolsFileView";
-            this.toolsFileView.Size = new System.Drawing.Size(225, 25);
+            this.toolsFileView.Size = new System.Drawing.Size(194, 25);
             this.toolsFileView.TabIndex = 1;
             // 
             // toolsFileViewSelect

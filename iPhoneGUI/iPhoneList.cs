@@ -71,7 +71,6 @@ namespace iPhoneGUI
             }
             catch (Exception err) {
                 Console.WriteLine(err.Message);
-                //Console.WriteLine(err.InnerException.Message);
             }
             ipItems.Phone = myPhone;
             splitFilesViewer.Panel2Collapsed = true;
@@ -154,7 +153,6 @@ namespace iPhoneGUI
             control.Width = thisItem.Width;
             control.Height = thisItem.Height;
         }
-
 
         private void SetObjectSizes() {
             labelStatus.Width = statusMain.Width - 120;
@@ -331,7 +329,12 @@ namespace iPhoneGUI
             }
         }
 
-        private void ShowApplications() {
+        private void ShowApplicationsNull() {
+            String installedAppPath = "//private/var/root/Library/Installer/LocalPackages.plist";
+
+        }
+
+        private void ShowApplicationsPXL() {
 
         }
 
@@ -343,7 +346,6 @@ namespace iPhoneGUI
 
         private void ShowSystemSounds() {
         }
-
 
         private void ShowFiles() {
             ShowFiles(treeFolders.TopNode, "/");
