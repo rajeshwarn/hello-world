@@ -30,12 +30,14 @@ using Tools;
 using System.Xml;
 using System.Xml.Serialization;
 using iPhoneList;
+using CoreFoundation;
 
 namespace iPhoneGUI
 {
     public partial class iPhoneList: Form
     {
         internal iPhone myPhone = new iPhone();
+        //internal CFPropertyList core = new CoreFoundation();
         internal Boolean connected = false;
         internal Boolean connecting = false;
         internal String lastSaveFolder = "";
@@ -639,11 +641,29 @@ namespace iPhoneGUI
         }
 
         private String DecodePListFile(String inFile) {
-            return ReadTextFile(inFile, 1024);
+            String plist = null;
+            try {
+                plist = CFPropertyList.PropertyListToXML(ReadFile(inFile));
+            }
+            catch (Exception err) {
+                plist = ReadTextFile(inFile, 1024);
+            }
+            return plist;
         }
 
         private String DecodePListData(Byte[] inData) {
-            return System.Text.Encoding.ASCII.GetString(inData);
+            String plist = null;
+            Boolean decodeFailed = false;
+            try {
+                plist = CFPropertyList.PropertyListToXML(inData);
+            }
+            catch (Exception err) {
+                decodeFailed = true;
+            }
+            if (decodeFailed) {
+                plist = System.Text.Encoding.ASCII.GetString(inData);
+            }
+            return plist;
         }
 
         private String ReadTextFile(String inFile, Int32 length) {
@@ -656,7 +676,11 @@ namespace iPhoneGUI
             } else {
                 text = System.Text.Encoding.ASCII.GetString(fileData);
             }
-            return String.Join(Environment.NewLine, text.Split('\n'));
+            if (text == null) {
+                return null;
+            } else {
+                return String.Join(Environment.NewLine, text.Split('\n'));
+            }
         }
 
         private Byte[] ReadFile(String inFile) {
@@ -755,6 +779,7 @@ namespace iPhoneGUI
         }
 
         private void listFiles_SelectedIndexChanged(object sender, EventArgs e) {
+            timerMain.Enabled = false;
             if (listFiles.SelectedItems.Count > 0 && !splitFilesViewer.Panel2Collapsed) {
                 PreviewSelectedItem(treeFolders.SelectedNode, listFiles.SelectedItems[0]);
             } else {
@@ -763,6 +788,7 @@ namespace iPhoneGUI
                 previewTextBox.Visible = true;
                 previewImageBox.Visible = false;
             }
+            timerMain.Enabled = true;
         }
 
         private void toolItemViewSmallIcons_Click(object sender, EventArgs e) {

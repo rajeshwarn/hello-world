@@ -29,6 +29,10 @@ namespace iPhoneGUI
         [STAThread]
         static void Main() {
             Application.EnableVisualStyles();
+            String dllPath = Environment.GetEnvironmentVariable("CommonProgramFiles");
+            String IMDPath = dllPath + "\\Apple\\Mobile Device Support\\bin";
+
+            Environment.SetEnvironmentVariable("PATH", IMDPath + ";" + Environment.GetEnvironmentVariable("PATH"));
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new iPhoneList());
         }

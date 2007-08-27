@@ -148,7 +148,7 @@ namespace Manzana
 
 		internal MobileDevice(){
             String dllPath = Environment.GetEnvironmentVariable("CommonProgramFiles");
-            String IMDPath = dllPath + "\\Apple\\Mobile Device Support\\";
+            String IMDPath = dllPath + "\\Apple\\Mobile Device Support\\bin";
 
             Environment.SetEnvironmentVariable("PATH", IMDPath + ";" + Environment.GetEnvironmentVariable("PATH"));
     }
