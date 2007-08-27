@@ -84,8 +84,28 @@ namespace iPhoneGUI
         }
 
         private void LoadConfig() {
-            ipItems = ipItems.LoadConfig();
-            links = links.LoadConfig();
+            try {
+                ipItems = ipItems.LoadConfig();
+            }
+            catch ( Exception err ) {
+                Console.WriteLine(err.Message);
+            }
+            try {
+                links = links.LoadConfig();
+                for ( Int32 i = 0; i < links.Nodes.Length; i++) {
+                    LinkNode link = (LinkNode)links.Nodes[i];
+                    ToolStripMenuItem menuItem = new ToolStripMenuItem();
+                    menuItem.Name = "link" + link.Name;
+                    menuItem.Text = link.Name;
+                    menuItem.ToolTipText = link.Description;
+                    menuItem.Tag = link.Location;
+                    menuItem.Click += new System.EventHandler(this.toolsLinksSelect);
+                    this.toolsFileFavorites.DropDownItems.Add(menuItem);
+                }
+            }
+            catch ( Exception err ) {
+                Console.WriteLine(err.Message);
+            }
         }
 
         private void SaveConfig() {
@@ -656,9 +676,13 @@ namespace iPhoneGUI
             Boolean decodeFailed = false;
             try {
                 plist = CFPropertyList.PropertyListToXML(inData);
+                if ( plist == null ) {
+                    decodeFailed = true;
+                }
             }
             catch (Exception err) {
                 decodeFailed = true;
+                Console.WriteLine(err.Message);
             }
             if (decodeFailed) {
                 plist = System.Text.Encoding.ASCII.GetString(inData);
@@ -745,7 +769,9 @@ namespace iPhoneGUI
                 maxBytes = -1;
             }
             String previewText = ReadTextFile(fullName, maxBytes);
-            previewTextBox.Text = previewText.Replace("\t", new String(' ', prefs.Preview.TabSpaces));
+            if ( previewText != null ) {
+                previewTextBox.Text = previewText.Replace("\t", new String(' ', prefs.Preview.TabSpaces));
+            }
             previewTextBox.Visible = true;
             previewImageBox.Visible = false;
         }

@@ -26,17 +26,17 @@ namespace CoreFoundation
         }
         //QTGetCFConstant("kCFAllocatorDefault"))
         [DllImport("CoreFoundation.dll", CallingConvention = CallingConvention.Cdecl)]
-        private extern static Byte[] CFPropertyListCreateFromXMLData(uint allocator, String xmlData,
+        private extern static Byte[] CFPropertyListCreateFromXMLData(IntPtr allocator, String xmlData,
             CFPropertyListMutabilityOptions optionFlags, StringBuilder errorString);
 
         [DllImport("CoreFoundation.dll", CallingConvention = CallingConvention.Cdecl)]
-        private extern static String CFPropertyListCreateXMLData(uint allocator, IntPtr propertyList );
+        private extern static String CFPropertyListCreateXMLData(IntPtr allocator, IntPtr propertyList );
 
         public static Byte[] PropertyListFromXML(String xmlData) {
             StringBuilder errorString = new StringBuilder(1024);
             Byte[] plist = null;
             try {
-                plist = CFPropertyListCreateFromXMLData(0, xmlData, CFPropertyListMutabilityOptions.kCFPropertyListImmutable, errorString);
+                plist = CFPropertyListCreateFromXMLData(ptr, xmlData, CFPropertyListMutabilityOptions.kCFPropertyListImmutable, errorString);
             }
             catch (Exception err) {
                 Console.WriteLine(err.Message);
@@ -48,7 +48,7 @@ namespace CoreFoundation
             try {
                 GCHandle gch = GCHandle.Alloc(propertyList);
                 IntPtr buffer = GCHandle.ToIntPtr(gch);
-                xmlData = CFPropertyListCreateXMLData(0, buffer);
+                xmlData = CFPropertyListCreateXMLData(ptr, buffer);
             }
             catch (Exception err) {
                 Console.WriteLine(err.Message);

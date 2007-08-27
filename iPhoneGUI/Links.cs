@@ -7,6 +7,16 @@ using System.IO;
 
 namespace iPhoneList
 {
+    public class LinkSelectEventArgs: EventArgs
+    {
+        public String Name;
+        public String Location;
+        public LinkSelectEventArgs(String Name, String Location) {
+            this.Name = Name;
+            this.Location = Location;
+        }
+    }
+
     public class LinkNode
     {
         [XmlElement("Name")]
@@ -19,9 +29,13 @@ namespace iPhoneList
         public LinkNode Parent;
         [XmlElement("Nodes")]
         public LinkNodes Nodes;
-
+        //public delegate void LinkEventHandler(object sender, LinkSelectEventArgs linkInfo);
+        //public event LinkEventHandler LinkSelect;
+        //public void SelectLink(String Name, String Location) {
+        //    LinkSelectEventArgs linkSelect = new LinkSelectEventArgs(Name, Location);
+        //    LinkSelect(this, linkSelect);
+        //}
         public LinkNode() { }
-
     }
 
     [XmlRoot("Links")]
@@ -97,7 +111,15 @@ namespace iPhoneList
             }
             if ( !prefsLoaded || (nodes.Nodes.Length == 0) ) {
                 // Files
+                nodes.Add("System Files", "", "System Files");
+                nodes.Add("Applications", "//Applications", "Location of the Media folder");
+                nodes.Add("SpringBoard", "//System/Library/CoreServices/SpringBoard.app", "Location of the Media folder");
+                nodes.Add("Ringtones", "//Library/Ringtones", "Location of the Media folder");
+                nodes.Add("User Files", "", "System Files");
                 nodes.Add("Media Library", "//var/root/Media", "Location of the Media folder");
+                nodes.Add("Camera Roll", "//var/root/Media/DCIM", "Location of the Media folder");
+                nodes.Add("Photo Gallery", "//var/root/Media/Photos", "Location of the Media folder");
+                nodes.Add("User Ringtones", "//var/root/Library/Ringtones", "Location of the Media folder");
             }
             return nodes;
         }
@@ -117,6 +139,5 @@ namespace iPhoneList
         public LinkTree() {
             Nodes = new LinkNodes();
         }
-
     }
 }
