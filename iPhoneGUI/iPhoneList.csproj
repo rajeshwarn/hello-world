@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoreFoundation.cs" />
+    <Compile Include="iPhoneApps.cs" />
     <Compile Include="ItemProperties.cs" />
     <Compile Include="LinkProperties.cs">
       <SubType>Form</SubType>
