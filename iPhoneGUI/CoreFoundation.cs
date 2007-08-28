@@ -57,15 +57,17 @@ namespace CoreFoundation
             return xmlData;
         }
     }
+
     public enum PListNodeType
     {
         PLDict = 0,
         PLArray = 1,
-        PLBoolean = 2,
-        PLString = 3,
+        PLKey = 2,
+        PLBoolean = 3,
+        PLString = 4,
         PLValue = 4,
         PLDate = 5,
-        PLCDATA = 6
+        PLCDATA = 7
     }
 
     public class PListNodes

@@ -47,6 +47,8 @@ namespace iPhoneGUI
         internal Boolean overWriteExistingFile = false;
         internal Boolean dontAskAboutOverWrite = false;
 
+        internal iPhoneApps localApps = null;
+
         public ItemProperties ipItems;
         public UserPrefs prefs;
         public LinkNodes links;
@@ -335,102 +337,31 @@ namespace iPhoneGUI
         }
 
         private void ShowApplicationsNull() {
-            int declaration = 0;
-            int attribute = 0;
-            int comment = 0;
-            int document = 0;
-            int element = 0;
-            int endelement = 0;
-            int entity = 0;
-            int endentity = 0;
-            int none = 0;
-            int notation = 0;
-            int text = 0;
-            int whitespace = 0;
-            int other = 0;
-            String installedAppPath = "//private/var/root/Library/Installer/LocalPackages.plist";
-            XmlTextReader textReader = null;
-            if ( myPhone.Exists(installedAppPath) ) {
-                using ( Stream inStream = iPhoneFile.OpenRead(myPhone, installedAppPath) ) {
-                    textReader = new XmlTextReader(inStream);
-                    textReader.Normalization = true;
-                    textReader.MoveToContent();
-                    while ( textReader.Read() ) {
-                        XmlNodeType nType = textReader.NodeType;
-                        switch ( nType ) {
-                            case XmlNodeType.XmlDeclaration:
-                                Console.WriteLine("Declaration:" + textReader.Name.ToString());
-                                declaration++;
-                                break;
-                            case XmlNodeType.Attribute:
-                                Console.WriteLine("Attribute: " + textReader.Name.ToString());
-                                attribute++;
-                                break;
-                            case XmlNodeType.CDATA:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                break;
-                            case XmlNodeType.Comment:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                comment++;
-                                break;
-                            case XmlNodeType.Document:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                document++;
-                                break;
-                            case XmlNodeType.DocumentType:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                break;
-                            case XmlNodeType.Element:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                //textReader.MoveToElement();
-                                element++;
-                                break;
-                            case XmlNodeType.EndElement:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                endelement++;
-                                break;
-                            case XmlNodeType.Entity:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                entity++;
-                                break;
-                            case XmlNodeType.EndEntity:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                endentity++;
-                                break;
-                            case XmlNodeType.None:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                none++;
-                                break;
-                            case XmlNodeType.Notation:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                notation++;
-                                break;
-                            case XmlNodeType.Text:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Value.ToString());
-                                text++;
-                                break;
-                            case XmlNodeType.Whitespace:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                whitespace++;
-                                break;
-                            default:
-                                Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
-                                other++;
-                                break;
-                        }
-                        //Console.WriteLine(textReader.XmlSpace.ToString());
+            this.statusMain.Text = "Loading Application List";
+            if (localApps == null) {
+                String installedAppPath = "//private/var/root/Library/Installer/LocalPackages.plist";
+                if (myPhone.Exists(installedAppPath)) {
+                    using (Stream inStream = iPhoneFile.OpenRead(myPhone, installedAppPath)) {
+                        localApps = AppList.ReadXmlStream(inStream);
                     }
                 }
-                // Write the summary
-                Console.WriteLine("Total Comments:" + comment.ToString());
-                Console.WriteLine("Total Attributes:" + attribute.ToString());
-                Console.WriteLine("Total Elements:" + element.ToString());
-                Console.WriteLine("Total Entity:" + entity.ToString());
-                //Console.WriteLine("Total Process Instructions:" + pi.ToString());
-                Console.WriteLine("Total Declaration:" + declaration.ToString());
-                //Console.WriteLine("Total DocumentType:" + .ToString());
-                Console.WriteLine("Total WhiteSpaces:" + whitespace.ToString());
+                listApps.Items.Clear();
+                for (Int32 i = 0; i < localApps.Applications.Length; i++) {
+                    iPhoneApp app = localApps.Applications[i];
+                    ListViewItem item = new ListViewItem();
+                    item.Name = app.Name;
+                    item.Text = app.Name;
+                    item.ToolTipText = app.Name + Environment.NewLine + app.Description;
+                    ListViewItem.ListViewSubItem desc = new ListViewItem.ListViewSubItem();
+                    desc.Name = "Description";
+                    desc.Text = app.Description;
+                    item.SubItems.Add(desc);
+                    listApps.Items.Add(item);
+                }
             }
+            listApps.Visible = true;
+            listFiles.Visible = false;
+            SetStatus();
         }
 
         private void ShowApplicationsPXL() {
@@ -515,6 +446,10 @@ namespace iPhoneGUI
             listFiles.EndUpdate();
             if (listFiles.Items.Count > 0) {
                 listFiles.Items[0].Selected = true;
+            }
+            if (!listFiles.Visible) {
+                listApps.Visible = false;
+                listFiles.Visible = true;
             }
         }
 
