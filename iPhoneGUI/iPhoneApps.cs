@@ -152,6 +152,14 @@ namespace iPhoneList
         }
     }
 
+    public class SpringBoardNode
+    {
+        private String name;
+        private String identifier;
+
+    }
+
+    public class 
     public class NodeCount
     {
         private XmlNodeType type;
@@ -218,7 +226,6 @@ namespace iPhoneList
     {
         public static iPhoneApps ReadNullSoftPList(String fullPath){
             return null;
-
         }
 
         public static iPhoneApps ReadXmlStream(Stream inStream) {
@@ -278,7 +285,7 @@ namespace iPhoneList
                     case XmlNodeType.Whitespace:
                         break;
                     default:
-                        Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                        //Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
                         break;
                 }
             }
