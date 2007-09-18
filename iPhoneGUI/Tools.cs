@@ -184,5 +184,4 @@ namespace Tools
             return extension;
         }
     }
-
 }

@@ -24,6 +24,58 @@ namespace iPhoneList
         }
     }
 
+    public class iPhoneAppCategory
+    {
+        public String Name;
+        public iPhoneAppCategory() {
+        }
+        public override string ToString() {
+            return Name;
+        }
+    }
+
+    public class iPhoneAppCategories
+    {
+        private Int32 currentItem;
+        private ArrayList categories;
+        public iPhoneAppCategories() {
+            categories = new ArrayList();
+        }
+
+        public iPhoneAppCategory[] Items {
+            get { return (iPhoneAppCategory[])categories.ToArray(typeof(iPhoneAppCategory)); }
+            set {
+                categories.Clear();
+                foreach ( iPhoneAppCategory cat in value ) {
+                    categories.Add(cat);
+                }
+            }
+        }
+
+        public Int32 IndexOf(String Name) {
+            for ( Int32 i = 0; i < categories.Count; i++ ) {
+                if ( categories[i].ToString() == Name ) {
+                    currentItem = i;
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public void Add(String Name) {
+            if ( IndexOf(Name) == -1) {
+                iPhoneAppCategory cat = new iPhoneAppCategory();
+                cat.Name = Name;
+                categories.Add(cat);
+                currentItem = categories.Count - 1;
+            }
+        }
+
+        public void Sort() {
+            categories.Sort();
+        }
+    }
+
     public class iPhoneApps
     {
         private ArrayList apps;
@@ -31,8 +83,10 @@ namespace iPhoneList
         public PListNodeType Last;
         private String key;
         public String Value;
+        public iPhoneAppCategories Categories;
         public iPhoneApps() {
             apps = new ArrayList();
+            Categories = new iPhoneAppCategories();
             Last = PListNodeType.PLDict;
         }
 
@@ -73,6 +127,7 @@ namespace iPhoneList
                     break;
                 case "Category":
                     ((iPhoneApp)apps[index]).Category = Value;
+                    Categories.Add(Value);
                     break;
                 case "Contact":
                     ((iPhoneApp)apps[index]).Contact = Value;
@@ -159,7 +214,6 @@ namespace iPhoneList
 
     }
 
-    public class 
     public class NodeCount
     {
         private XmlNodeType type;
@@ -244,7 +298,7 @@ namespace iPhoneList
                 nodes.Inc(nType);
                 switch (nType) {
                     case XmlNodeType.Element:
-                        Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
+                        //Console.WriteLine(nType.ToString() + ": " + textReader.Name.ToString());
                         switch (name) {
                             case "dict":
                                 if (!inDict) {

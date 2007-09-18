@@ -48,7 +48,16 @@ namespace iPhoneGUI
         internal Boolean dontAskAboutOverWrite = false;
 
         internal iPhoneApps localApps = null;
-
+        internal iPhoneAppCategories localAppCats = null;
+        internal enum OperatingMode
+        {
+            Explorer = 1,
+            ApplicationsNull = 2,
+            ApplicationsPXL = 3,
+            RingTones = 4,
+            Themes = 5
+        }
+        
         public ItemProperties ipItems;
         public UserPrefs prefs;
         public LinkNodes links;
@@ -76,8 +85,7 @@ namespace iPhoneGUI
             }
             ipItems.Phone = myPhone;
             splitFilesViewer.Panel2Collapsed = true;
-            if (prefs.Preview.TabSpaces == null ||
-                prefs.Preview.TabSpaces == 0) {
+            if (prefs.Preview.TabSpaces == 0) {
                 prefs.Preview.TabSpaces = 4;
             }
             previewTextBox.Tag = "empty";
@@ -299,40 +307,55 @@ namespace iPhoneGUI
         }
 
         private void treeFolders_AfterSelect(object sender, TreeViewEventArgs e) {
-            timerMain.Enabled = false;
-            switch (e.Node.Name) {
-                case "/":
-                    String currentPath = e.Node.FullPath;
-                    ShowFiles(e.Node, currentPath); // showFiles should get the dirlist, too (unless it's already gotten)
-                    break;
-                case "_ApplicationsPXL":
-                    ShowApplicationsPXL();
-                    break;
-                case "_ApplicationsNull":
-                    ShowApplicationsNull();
-                    break;
-                case "Ringtones":
-                    ShowRingtones();
-                    break;
-                case "Themes":
-                    ShowThemes();
-                    break;
-                case "SystemSounds":
-                    ShowSystemSounds();
-                    break;
-                default:
-                    String path = e.Node.FullPath;
-                    ShowFiles(e.Node, path); // showFiles should get the dirlist, too (unless it's already gotten)
-                    break;
+            if ( myPhone.IsConnected ) {
+                timerMain.Enabled = false;
+                Cursor = Cursors.WaitCursor;
+                switch ( e.Node.Name ) {
+                    case "/":
+                        String currentPath = e.Node.FullPath;
+                        ShowFiles(e.Node, currentPath); // showFiles should get the dirlist, too (unless it's already gotten)
+                        break;
+                    case "_ApplicationsPXL":
+                        ShowApplicationsPXL();
+                        break;
+                    case "_ApplicationsNull":
+                        ShowApplicationsNull();
+                        break;
+                    case "Ringtones":
+                        ShowRingtones();
+                        break;
+                    case "Themes":
+                        ShowThemes();
+                        break;
+                    case "SystemSounds":
+                        ShowSystemSounds();
+                        break;
+                    default:
+                        String path = e.Node.FullPath;
+                        ShowFiles(e.Node, path); // showFiles should get the dirlist, too (unless it's already gotten)
+                        break;
+                }
+                SetStatus();
+                this.Text = Application.ProductName + " - " + treeFolders.SelectedNode.FullPath;
+                Cursor = Cursors.Default;
+                timerMain.Enabled = true;
             }
-            SetStatus();
-            this.Text = Application.ProductName + " - " + treeFolders.SelectedNode.FullPath;
-            timerMain.Enabled = true;
         }
 
         private void treeFolders_BeforeExpand(object sender, TreeViewCancelEventArgs e) {
             if (e.Node.Tag.ToString() == "notloaded") {
                 FillTree(e.Node, e.Node.FullPath);
+            }
+        }
+
+        private void CreateAppListGroups(iPhoneApps Applications) {
+            iPhoneAppCategories appCats = Applications.Categories;
+            listApps.Groups.Clear();
+            for ( Int32 i = 0; i < appCats.Items.Length; i++ ) {
+                ListViewGroup group = new ListViewGroup();
+                group.Name = appCats.Items[i].Name;
+                group.Header = appCats.Items[i].Name + " Files";
+                listApps.Groups.Add(group);
             }
         }
 
@@ -345,6 +368,7 @@ namespace iPhoneGUI
                         localApps = AppList.ReadXmlStream(inStream);
                     }
                 }
+                CreateAppListGroups(localApps);
                 listApps.Items.Clear();
                 for (Int32 i = 0; i < localApps.Applications.Length; i++) {
                     iPhoneApp app = localApps.Applications[i];
@@ -352,13 +376,23 @@ namespace iPhoneGUI
                     item.Name = app.Name;
                     item.Text = app.Name;
                     item.ToolTipText = app.Name + Environment.NewLine + app.Description;
+                    ListViewItem.ListViewSubItem version = new ListViewItem.ListViewSubItem();
+                    version.Name = "Version";
+                    version.Text = app.Version;
+                    item.SubItems.Add(version);
                     ListViewItem.ListViewSubItem desc = new ListViewItem.ListViewSubItem();
                     desc.Name = "Description";
                     desc.Text = app.Description;
                     item.SubItems.Add(desc);
+                    ListViewItem.ListViewSubItem pub = new ListViewItem.ListViewSubItem();
+                    pub.Name = "Publisher";
+                    pub.Text = app.Source;
+                    item.SubItems.Add(pub);
+                    item.Group = listApps.Groups[app.Category];
                     listApps.Items.Add(item);
                 }
             }
+            listApps.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             listApps.Visible = true;
             listFiles.Visible = false;
             SetStatus();
