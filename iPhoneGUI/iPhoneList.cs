@@ -995,5 +995,10 @@ namespace iPhoneGUI
             }
             timerMain.Enabled = true;
         }
+
+        private void menuMainHelpAbout_Click(object sender, EventArgs e) {
+            AboutBox about = new AboutBox();
+            about.ShowDialog();
+        }
     }
 }

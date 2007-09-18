@@ -30,7 +30,7 @@
     <ProductName>iPhoneList</ProductName>
     <PublisherName>Computer Aces</PublisherName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationVersion>0.9.1.%2a</ApplicationVersion>
+    <ApplicationVersion>0.9.8.%2a</ApplicationVersion>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="CoreFoundation.cs" />
     <Compile Include="iPhoneApps.cs" />
     <Compile Include="ItemProperties.cs" />
@@ -98,6 +104,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AboutBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="iPhoneList.resx">
       <SubType>Designer</SubType>
       <DependentUpon>iPhoneList.cs</DependentUpon>

@@ -108,6 +108,11 @@ namespace iPhoneGUI
             this.menuMainHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMainHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
+            this.toolsMain = new System.Windows.Forms.ToolStrip();
+            this.toolItemRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolItemGetFiles = new System.Windows.Forms.ToolStripButton();
+            this.toolItemDelete = new System.Windows.Forms.ToolStripButton();
+            this.toolItemCancel = new System.Windows.Forms.ToolStripButton();
             this.toolsFileView = new System.Windows.Forms.ToolStrip();
             this.toolsFileViewSelect = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolItemViewSmallIcons = new System.Windows.Forms.ToolStripMenuItem();
@@ -118,11 +123,6 @@ namespace iPhoneGUI
             this.toolsFileFavorites = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolsFileNewLocation = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolsMain = new System.Windows.Forms.ToolStrip();
-            this.toolItemRefresh = new System.Windows.Forms.ToolStripButton();
-            this.toolItemGetFiles = new System.Windows.Forms.ToolStripButton();
-            this.toolItemDelete = new System.Windows.Forms.ToolStripButton();
-            this.toolItemCancel = new System.Windows.Forms.ToolStripButton();
             this.panelList.Panel1.SuspendLayout();
             this.panelList.Panel2.SuspendLayout();
             this.panelList.SuspendLayout();
@@ -138,8 +138,8 @@ namespace iPhoneGUI
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
-            this.toolsFileView.SuspendLayout();
             this.toolsMain.SuspendLayout();
+            this.toolsFileView.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelList
@@ -157,7 +157,7 @@ namespace iPhoneGUI
             // panelList.Panel2
             // 
             this.panelList.Panel2.Controls.Add(this.splitFilesViewer);
-            this.panelList.Size = new System.Drawing.Size(659, 386);
+            this.panelList.Size = new System.Drawing.Size(659, 411);
             this.panelList.SplitterDistance = 241;
             this.panelList.TabIndex = 5;
             // 
@@ -204,7 +204,7 @@ namespace iPhoneGUI
             this.treeFolders.PathSeparator = "/";
             this.treeFolders.SelectedImageIndex = 0;
             this.treeFolders.ShowRootLines = false;
-            this.treeFolders.Size = new System.Drawing.Size(237, 382);
+            this.treeFolders.Size = new System.Drawing.Size(237, 407);
             this.treeFolders.TabIndex = 0;
             this.treeFolders.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeFolders_BeforeExpand);
             this.treeFolders.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeFolders_AfterSelect);
@@ -294,8 +294,8 @@ namespace iPhoneGUI
             this.splitFilesViewer.Panel2.Controls.Add(this.previewTextBox);
             this.splitFilesViewer.Panel2.Controls.Add(this.panelPreviewOptions);
             this.splitFilesViewer.Panel2.Padding = new System.Windows.Forms.Padding(2);
-            this.splitFilesViewer.Size = new System.Drawing.Size(414, 386);
-            this.splitFilesViewer.SplitterDistance = 199;
+            this.splitFilesViewer.Size = new System.Drawing.Size(414, 411);
+            this.splitFilesViewer.SplitterDistance = 211;
             this.splitFilesViewer.TabIndex = 1;
             this.splitFilesViewer.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitFilesViewer_SplitterMoved);
             // 
@@ -313,7 +313,7 @@ namespace iPhoneGUI
             this.listApps.Location = new System.Drawing.Point(0, 0);
             this.listApps.Name = "listApps";
             this.listApps.ShowItemToolTips = true;
-            this.listApps.Size = new System.Drawing.Size(410, 195);
+            this.listApps.Size = new System.Drawing.Size(410, 207);
             this.listApps.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listApps.TabIndex = 1;
             this.listApps.UseCompatibleStateImageBehavior = false;
@@ -411,7 +411,7 @@ namespace iPhoneGUI
             this.listFiles.Location = new System.Drawing.Point(0, 0);
             this.listFiles.Name = "listFiles";
             this.listFiles.ShowItemToolTips = true;
-            this.listFiles.Size = new System.Drawing.Size(410, 195);
+            this.listFiles.Size = new System.Drawing.Size(410, 207);
             this.listFiles.SmallImageList = this.imageFilesSmall;
             this.listFiles.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listFiles.TabIndex = 0;
@@ -523,7 +523,7 @@ namespace iPhoneGUI
             this.previewImageBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.previewImageBox.Location = new System.Drawing.Point(2, 25);
             this.previewImageBox.Name = "previewImageBox";
-            this.previewImageBox.Size = new System.Drawing.Size(406, 152);
+            this.previewImageBox.Size = new System.Drawing.Size(406, 165);
             this.previewImageBox.TabIndex = 1;
             this.previewImageBox.TabStop = false;
             this.previewImageBox.Visible = false;
@@ -536,7 +536,7 @@ namespace iPhoneGUI
             this.previewTextBox.Name = "previewTextBox";
             this.previewTextBox.ReadOnly = true;
             this.previewTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.previewTextBox.Size = new System.Drawing.Size(406, 152);
+            this.previewTextBox.Size = new System.Drawing.Size(406, 165);
             this.previewTextBox.TabIndex = 0;
             this.previewTextBox.Tag = "-";
             this.previewTextBox.WordWrap = false;
@@ -675,8 +675,9 @@ namespace iPhoneGUI
             // menuMainHelpAbout
             // 
             this.menuMainHelpAbout.Name = "menuMainHelpAbout";
-            this.menuMainHelpAbout.Size = new System.Drawing.Size(113, 22);
+            this.menuMainHelpAbout.Size = new System.Drawing.Size(152, 22);
             this.menuMainHelpAbout.Text = "About";
+            this.menuMainHelpAbout.Click += new System.EventHandler(this.menuMainHelpAbout_Click);
             // 
             // toolStripContainer1
             // 
@@ -684,7 +685,7 @@ namespace iPhoneGUI
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.panelList);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(659, 386);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(659, 411);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 24);
             this.toolStripContainer1.Name = "toolStripContainer1";
@@ -695,6 +696,57 @@ namespace iPhoneGUI
             // toolStripContainer1.TopToolStripPanel
             // 
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolsMain);
+            // 
+            // toolsMain
+            // 
+            this.toolsMain.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolItemRefresh,
+            this.toolItemGetFiles,
+            this.toolItemDelete,
+            this.toolItemCancel});
+            this.toolsMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolsMain.Location = new System.Drawing.Point(3, 0);
+            this.toolsMain.Name = "toolsMain";
+            this.toolsMain.Size = new System.Drawing.Size(206, 25);
+            this.toolsMain.TabIndex = 0;
+            // 
+            // toolItemRefresh
+            // 
+            this.toolItemRefresh.Image = global::iPhoneList.Properties.Resources.Retry;
+            this.toolItemRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItemRefresh.Name = "toolItemRefresh";
+            this.toolItemRefresh.Size = new System.Drawing.Size(66, 22);
+            this.toolItemRefresh.Text = "Refresh";
+            this.toolItemRefresh.Click += new System.EventHandler(this.toolItemRefresh_Click);
+            // 
+            // toolItemGetFiles
+            // 
+            this.toolItemGetFiles.Image = global::iPhoneList.Properties.Resources.CopyHS;
+            this.toolItemGetFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItemGetFiles.Name = "toolItemGetFiles";
+            this.toolItemGetFiles.Size = new System.Drawing.Size(68, 22);
+            this.toolItemGetFiles.Text = "GetFiles";
+            this.toolItemGetFiles.Click += new System.EventHandler(this.popupFilesGetFiles_Click);
+            // 
+            // toolItemDelete
+            // 
+            this.toolItemDelete.Image = global::iPhoneList.Properties.Resources.DeleteHS;
+            this.toolItemDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItemDelete.Name = "toolItemDelete";
+            this.toolItemDelete.Size = new System.Drawing.Size(60, 22);
+            this.toolItemDelete.Text = "Delete";
+            this.toolItemDelete.Click += new System.EventHandler(this.popupFilesDelete_Click);
+            // 
+            // toolItemCancel
+            // 
+            this.toolItemCancel.Image = global::iPhoneList.Properties.Resources.StopHS;
+            this.toolItemCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolItemCancel.Name = "toolItemCancel";
+            this.toolItemCancel.Size = new System.Drawing.Size(90, 22);
+            this.toolItemCancel.Text = "Cancel Copy";
+            this.toolItemCancel.Visible = false;
+            this.toolItemCancel.Click += new System.EventHandler(this.toolItemCancel_Click);
             // 
             // toolsFileView
             // 
@@ -787,56 +839,6 @@ namespace iPhoneGUI
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(166, 6);
             // 
-            // toolsMain
-            // 
-            this.toolsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolItemRefresh,
-            this.toolItemGetFiles,
-            this.toolItemDelete,
-            this.toolItemCancel});
-            this.toolsMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.toolsMain.Location = new System.Drawing.Point(3, 0);
-            this.toolsMain.Name = "toolsMain";
-            this.toolsMain.Size = new System.Drawing.Size(206, 25);
-            this.toolsMain.TabIndex = 0;
-            // 
-            // toolItemRefresh
-            // 
-            this.toolItemRefresh.Image = global::iPhoneList.Properties.Resources.Retry;
-            this.toolItemRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolItemRefresh.Name = "toolItemRefresh";
-            this.toolItemRefresh.Size = new System.Drawing.Size(66, 22);
-            this.toolItemRefresh.Text = "Refresh";
-            this.toolItemRefresh.Click += new System.EventHandler(this.toolItemRefresh_Click);
-            // 
-            // toolItemGetFiles
-            // 
-            this.toolItemGetFiles.Image = global::iPhoneList.Properties.Resources.CopyHS;
-            this.toolItemGetFiles.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolItemGetFiles.Name = "toolItemGetFiles";
-            this.toolItemGetFiles.Size = new System.Drawing.Size(68, 22);
-            this.toolItemGetFiles.Text = "GetFiles";
-            this.toolItemGetFiles.Click += new System.EventHandler(this.popupFilesGetFiles_Click);
-            // 
-            // toolItemDelete
-            // 
-            this.toolItemDelete.Image = global::iPhoneList.Properties.Resources.DeleteHS;
-            this.toolItemDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolItemDelete.Name = "toolItemDelete";
-            this.toolItemDelete.Size = new System.Drawing.Size(60, 22);
-            this.toolItemDelete.Text = "Delete";
-            this.toolItemDelete.Click += new System.EventHandler(this.popupFilesDelete_Click);
-            // 
-            // toolItemCancel
-            // 
-            this.toolItemCancel.Image = global::iPhoneList.Properties.Resources.StopHS;
-            this.toolItemCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolItemCancel.Name = "toolItemCancel";
-            this.toolItemCancel.Size = new System.Drawing.Size(90, 22);
-            this.toolItemCancel.Text = "Cancel Copy";
-            this.toolItemCancel.Visible = false;
-            this.toolItemCancel.Click += new System.EventHandler(this.toolItemCancel_Click);
-            // 
             // iPhoneList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -873,10 +875,10 @@ namespace iPhoneGUI
             this.toolStripContainer1.TopToolStripPanel.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
-            this.toolsFileView.ResumeLayout(false);
-            this.toolsFileView.PerformLayout();
             this.toolsMain.ResumeLayout(false);
             this.toolsMain.PerformLayout();
+            this.toolsFileView.ResumeLayout(false);
+            this.toolsFileView.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
